@@ -35,27 +35,37 @@ class BTick(TernaryTick):
         return super(TernaryTick, self)._get_text1()
 
     def update_position(self, loc):
+        'Set the location of tick in data coords with scalar *loc*'
         xmin, xmax = self.axes.get_xlim()
         ymin, ymax = self.axes.get_ylim()
-        locx1 = loc + (xmax - loc) * 0.5
-        a = (ymax - ymin) / (xmax - xmin)
-        locy1 = ymin + a * (xmax - loc)
+        xavg = (xmin + xmax) * 0.5
+
+        bmin, bmax = self.taxes.get_blim()
+
+        sx0 = (xmax - xmin) / (bmax - bmin)
+        sx1 = (xmax - xavg) / (bmax - bmin)
+        sy1 = (ymin - ymax) / (bmax - bmin)
+
+        locx0 = xmin + sx0 * (loc - bmin)
+        locx1 = xavg + sx1 * (loc - bmin)
+        locy0 = ymin
+        locy1 = ymax + sy1 * (loc - bmin)
 
         if self.tick1On:
-            self.tick1line.set_xdata((loc,))
-            self.tick1line.set_ydata((ymin,))
+            self.tick1line.set_xdata((locx0,))
+            self.tick1line.set_ydata((locy0,))
         if self.tick2On:
-            self.tick2line.set_xdata((loc,))
-            self.tick2line.set_ydata((ymin,))
+            self.tick2line.set_xdata((locx0,))
+            self.tick2line.set_ydata((locy0,))
         if self.gridOn:
-            self.gridline.set_xdata((loc, locx1))
-            self.gridline.set_ydata((ymin, locy1))
+            self.gridline.set_xdata((locx0, locx1))
+            self.gridline.set_ydata((locy0, locy1))
         if self.label1On:
-            self.label1.set_x(loc)
-            self.label1.set_y(ymin)
+            self.label1.set_x(locx0)
+            self.label1.set_y(locy0)
         if self.label2On:
-            self.label2.set_x(loc)
-            self.label2.set_y(ymin)
+            self.label2.set_x(locx0)
+            self.label2.set_y(locy0)
 
         self._loc = loc
         self.stale = True

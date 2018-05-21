@@ -38,10 +38,18 @@ class LTick(TernaryTick):
         'Set the location of tick in data coords with scalar *loc*'
         xmin, xmax = self.axes.get_xlim()
         ymin, ymax = self.axes.get_ylim()
-        locx0 = xmin + (xmax - loc) * 0.5
-        locx1 = xmin + (xmax - loc)
-        a = (ymax - ymin) / (xmax - xmin)
-        locy0 = ymin + a * (xmax - loc)
+        xavg = (xmin + xmax) * 0.5
+
+        lmin, lmax = self.taxes.get_llim()
+
+        sx0 = (xmin - xavg) / (lmax - lmin)
+        sx1 = (xmin - xmax) / (lmax - lmin)
+        sy1 = (ymin - ymax) / (lmax - lmin)
+
+        locx0 = xavg + sx0 * (loc - lmin)
+        locx1 = xmax + sx1 * (loc - lmin)
+        locy0 = ymax + sy1 * (loc - lmin)
+        locy1 = ymin
 
         if self.tick1On:
             self.tick1line.set_xdata((locx0,))
@@ -51,7 +59,7 @@ class LTick(TernaryTick):
             self.tick2line.set_ydata((locy0,))
         if self.gridOn:
             self.gridline.set_xdata((locx0, locx1))
-            self.gridline.set_ydata((locy0, ymin))
+            self.gridline.set_ydata((locy0, locy1))
         if self.label1On:
             self.label1.set_x(locx0)
             self.label1.set_y(locy0)

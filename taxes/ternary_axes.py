@@ -11,7 +11,6 @@ import numpy as np
 
 import matplotlib.patches as mpatches
 import matplotlib.transforms as mtransforms
-import matplotlib.spines as mspines
 import matplotlib.artist as martist
 import matplotlib.image as mimage
 from matplotlib.axes import Axes
@@ -127,10 +126,6 @@ class TernaryAxesBase(martist.Artist):
         self.spines['right'].register_axis(self.raxis)
         self.spines['left'].register_axis(self.laxis)
 
-        # self._axes.add_artist(self.baxis)
-        # self._axes.add_artist(self.raxis)
-        # self._axes.add_artist(self.laxis)
-
     # def get_baxis_text1_transform(self, pad_points):
     #     return (self._ax.transData +
     #             mtransforms.ScaledTranslation(0, -1 * pad_points / 72.0,
@@ -215,6 +210,10 @@ class TernaryAxesBase(martist.Artist):
         return Axes.set_axis_on(self)
 
     def cla(self):
+        self._blim = (0.0, 1.0)
+        self._rlim = (0.0, 1.0)
+        self._llim = (0.0, 1.0)
+
         # The patch draws the background of the axes.  We want this to be below
         # the other artists.  We use the frame to draw the edges so we are
         # setting the edgecolor to None.
@@ -226,6 +225,36 @@ class TernaryAxesBase(martist.Artist):
         self.patch.set_transform(self._axes.transAxes)
 
         self.set_axis_on()
+
+    def set_tlim(self, bmin, bmax, rmin, rmax, lmin, lmax, *args, **kwargs):
+        b = bmax + rmin + lmin
+        r = bmin + rmax + lmin
+        l = bmin + rmin + lmax
+        s = self._scale
+        if (abs(b - s) > 1e-12) or (abs(r - s) > 1e-12) or (abs(l - s) > 1e-12):
+            raise ValueError(b, r, l, s)
+        ax = self._axes
+
+        xmin = bmin + 0.5 * rmin
+        xmax = bmax + 0.5 * rmin
+        ax.set_xlim(xmin, xmax, *args, **kwargs)
+
+        ymin = 0.5 * np.sqrt(3.0) * rmin
+        ymax = 0.5 * np.sqrt(3.0) * rmax
+        ax.set_ylim(ymin, ymax, *args, **kwargs)
+
+        self._blim = (bmin, bmax)
+        self._rlim = (rmin, rmax)
+        self._llim = (lmin, lmax)
+
+    def get_blim(self):
+        return self._blim
+
+    def get_rlim(self):
+        return self._rlim
+
+    def get_llim(self):
+        return self._llim
 
 
 class TernaryAxes(TernaryAxesBase):
@@ -239,8 +268,8 @@ class TernaryAxes(TernaryAxesBase):
 
         ax.axis('off')
         ax.axis('scaled')
-        ax.set_xlim(0.0, scale)
-        ax.set_ylim(0.0, scale * 0.5 * np.sqrt(3.0))
+
+        self.set_tlim(0.0, scale, 0.0, scale, 0.0, scale)
 
     def plot(self, a, b, c, *args, **kwargs):
         x, y = abc2xy(a, b, c)

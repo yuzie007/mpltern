@@ -63,3 +63,7 @@ class LAxis(TernaryAxis):
             self.label.set_position(
                 (left - self.labelpad * self.figure.dpi / 72.0, y)
             )
+
+    def get_view_interval(self):
+        'return the Interval instance for this axis view limits'
+        return self.taxes.get_llim()

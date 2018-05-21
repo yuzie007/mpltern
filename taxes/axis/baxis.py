@@ -57,3 +57,7 @@ class BAxis(TernaryAxis):
             self.label.set_position(
                 (x, bottom - self.labelpad * self.figure.dpi / 72.0)
             )
+
+    def get_view_interval(self):
+        'return the Interval instance for this axis view limits'
+        return self.taxes.get_blim()
