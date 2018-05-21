@@ -35,18 +35,27 @@ class BTick(TernaryTick):
         return super(TernaryTick, self)._get_text1()
 
     def update_position(self, loc):
-        xmax = self.axes.get_xlim()[-1]
+        xmin, xmax = self.axes.get_xlim()
+        ymin, ymax = self.axes.get_ylim()
+        locx1 = loc + (xmax - loc) * 0.5
+        a = (ymax - ymin) / (xmax - xmin)
+        locy1 = ymin + a * (xmax - loc)
+
         if self.tick1On:
             self.tick1line.set_xdata((loc,))
+            self.tick1line.set_ydata((ymin,))
         if self.tick2On:
             self.tick2line.set_xdata((loc,))
+            self.tick2line.set_ydata((ymin,))
         if self.gridOn:
-            self.gridline.set_xdata((loc, loc + (xmax - loc) * 0.5))
-            self.gridline.set_ydata((0, (xmax - loc) * np.sqrt(3.0) * 0.5))
+            self.gridline.set_xdata((loc, locx1))
+            self.gridline.set_ydata((ymin, locy1))
         if self.label1On:
             self.label1.set_x(loc)
+            self.label1.set_y(ymin)
         if self.label2On:
             self.label2.set_x(loc)
+            self.label2.set_y(ymin)
 
         self._loc = loc
         self.stale = True

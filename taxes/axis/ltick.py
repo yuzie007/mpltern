@@ -36,24 +36,28 @@ class LTick(TernaryTick):
 
     def update_position(self, loc):
         'Set the location of tick in data coords with scalar *loc*'
-        xmax = self.axes.get_xlim()[-1]
-        locx = (xmax - loc) * 0.5
-        locy = (xmax - loc) * np.sqrt(3.0) * 0.5
+        xmin, xmax = self.axes.get_xlim()
+        ymin, ymax = self.axes.get_ylim()
+        locx0 = xmin + (xmax - loc) * 0.5
+        locx1 = xmin + (xmax - loc)
+        a = (ymax - ymin) / (xmax - xmin)
+        locy0 = ymin + a * (xmax - loc)
+
         if self.tick1On:
-            self.tick1line.set_xdata((locx,))
-            self.tick1line.set_ydata((locy,))
+            self.tick1line.set_xdata((locx0,))
+            self.tick1line.set_ydata((locy0,))
         if self.tick2On:
-            self.tick2line.set_xdata((loc,))
-            self.tick2line.set_ydata((loc,))
+            self.tick2line.set_xdata((locx0,))
+            self.tick2line.set_ydata((locy0,))
         if self.gridOn:
-            self.gridline.set_xdata((locx, locx * 2.0))
-            self.gridline.set_ydata((locy, 0))
+            self.gridline.set_xdata((locx0, locx1))
+            self.gridline.set_ydata((locy0, ymin))
         if self.label1On:
-            self.label1.set_x(locx)
-            self.label1.set_y(locy)
+            self.label1.set_x(locx0)
+            self.label1.set_y(locy0)
         if self.label2On:
-            self.label2.set_x(locx)
-            self.label2.set_y(locy)
+            self.label2.set_x(locx0)
+            self.label2.set_y(locy0)
 
         self._loc = loc
         self.stale = True
