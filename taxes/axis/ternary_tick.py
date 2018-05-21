@@ -3,6 +3,7 @@ from __future__ import (absolute_import, division, print_function,
 from matplotlib.artist import allow_rasterization
 from matplotlib import rcParams
 import matplotlib.lines as mlines
+import matplotlib.transforms as mtransforms
 from matplotlib.axis import XTick, GRIDLINE_INTERPOLATION_STEPS
 
 
@@ -37,43 +38,32 @@ class TernaryTick(XTick):
     def _get_tick1line(self):
         'Get the default line2D instance'
         # both x and y in data coords
-        scale = {'in': 2, 'inout': 1, 'out': 2}[self._tickdir]
-        l = mlines.Line2D(xdata=(0,), ydata=(0,), color=self._color,
-                          linestyle='None', marker=self._tickmarkers[0],
-                          markersize=self._size * scale,
-                          markeredgewidth=self._width, zorder=self._zorder)
-        # l.set_transform(self.axes.get_xaxis_transform(which='tick1'))
+        l = super(TernaryTick, self)._get_tick1line()
         l.set_transform(self.axes.transData)
-        self._set_artist_props(l)
         return l
 
     def _get_tick2line(self):
         'Get the default line2D instance'
         # both x and y in data coords
-        scale = {'in': 2, 'inout': 1, 'out': 2}[self._tickdir]
-        l = mlines.Line2D(xdata=(0,), ydata=(1,),
-                          color=self._color,
-                          linestyle='None',
-                          marker=self._tickmarkers[1],
-                          markersize=self._size * scale,
-                          markeredgewidth=self._width, zorder=self._zorder)
-        # l.set_transform(self.axes.get_xaxis_transform(which='tick2'))
+        l = super(TernaryTick, self)._get_tick2line()
         l.set_transform(self.axes.transData)
-        self._set_artist_props(l)
         return l
 
     def _get_gridline(self):
         'Get the default line2D instance'
         # both x and y in data coords
-        l = mlines.Line2D(xdata=(0.0, 0.0), ydata=(0, 1.0),
-                          color=rcParams['grid.color'],
-                          linestyle=rcParams['grid.linestyle'],
-                          linewidth=rcParams['grid.linewidth'],
-                          alpha=rcParams['grid.alpha'],
-                          markersize=0)
-        # l.set_transform(self.axes.get_xaxis_transform(which='grid'))
+        l = super(TernaryTick, self)._get_gridline()
         l.set_transform(self.axes.transData)
-        l.get_path()._interpolation_steps = GRIDLINE_INTERPOLATION_STEPS
-        self._set_artist_props(l)
-
         return l
+
+    def tilt(self, line, angle):
+        if self._tickdir == 'in':
+            trans = mtransforms.Affine2D().scale(1.0).rotate(angle)
+        elif self._tickdir == 'inout':
+            trans = mtransforms.Affine2D().scale(0.5).rotate(angle)
+        elif self._tickdir == 'out':
+            trans = mtransforms.Affine2D().scale(-1.0).rotate(angle)
+        else:
+            # Don't modify custom tick line markers.
+            trans = line._marker._transform
+        line._marker._transform = trans

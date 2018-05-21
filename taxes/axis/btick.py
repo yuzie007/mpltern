@@ -16,20 +16,6 @@ class BTick(TernaryTick):
     def _get_text2_transform(self):
         return self.taxes.get_baxis_text1_transform(self._pad)
 
-    def apply_tickdir(self, tickdir):
-        if tickdir is None:
-            tickdir = rcParams['%s.direction' % self._name]
-        self._tickdir = tickdir
-
-        if self._tickdir == 'in':
-            self._tickmarkers = ((1, 2, 330), (1, 2, 150))
-        elif self._tickdir == 'inout':
-            self._tickmarkers = ((2, 2, 330), (2, 2, 330))
-        else:
-            self._tickmarkers = ((1, 2, 150), (1, 2, 330))
-        self._pad = self._base_pad + self.get_tick_padding()
-        self.stale = True
-
     def _get_text1(self):
         'This may be overridden when rotating tick labels'
         return super(TernaryTick, self)._get_text1()
@@ -51,12 +37,16 @@ class BTick(TernaryTick):
         locy0 = ymin
         locy1 = ymax + sy1 * (loc - bmin)
 
+        angle = np.deg2rad(330)
+
         if self.tick1On:
             self.tick1line.set_xdata((locx0,))
             self.tick1line.set_ydata((locy0,))
+            self.tilt(self.tick1line, angle)
         if self.tick2On:
             self.tick2line.set_xdata((locx0,))
             self.tick2line.set_ydata((locy0,))
+            self.tilt(self.tick2line, angle)
         if self.gridOn:
             self.gridline.set_xdata((locx0, locx1))
             self.gridline.set_ydata((locy0, locy1))
