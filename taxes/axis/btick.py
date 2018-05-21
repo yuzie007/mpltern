@@ -37,7 +37,11 @@ class BTick(TernaryTick):
         locy0 = ymin
         locy1 = ymax + sy1 * (loc - bmin)
 
-        angle = np.deg2rad(330)
+        # angle = np.deg2rad(330)
+        points = self.axes.transAxes.transform([[0.0, 0.0], [-0.5, 1.0]])
+        angle = np.arctan2(
+            points[1, 0] - points[0, 0],
+            points[1, 1] - points[0, 1])
 
         if self.tick1On:
             self.tick1line.set_xdata((locx0,))

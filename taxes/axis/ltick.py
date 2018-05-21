@@ -37,7 +37,11 @@ class LTick(TernaryTick):
         locy0 = ymax + sy1 * (loc - lmin)
         locy1 = ymin
 
-        angle = np.deg2rad(210)
+        # angle = np.deg2rad(210)
+        points = self.axes.transAxes.transform([[0.0, 0.0], [-0.5, -1.0]])
+        angle = np.arctan2(
+            points[1, 0] - points[0, 0],
+            points[1, 1] - points[0, 1])
 
         if self.tick1On:
             self.tick1line.set_xdata((locx0,))
