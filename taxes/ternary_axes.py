@@ -258,6 +258,12 @@ class TernaryAxesBase(martist.Artist):
 
 
 class TernaryAxes(TernaryAxesBase):
+    """
+    A ternary graph projection, where the input dimensions are *b*, *r*, *l*.
+    The plot starts from the bottom and goes anti-clockwise.
+    """
+    name = 'ternary'
+
     def __init__(self, *args, **kwargs):
         super(TernaryAxes, self).__init__(*args, **kwargs)
         self._init_axes()
