@@ -1,5 +1,10 @@
 # Tips for the Implementation
 
+## Aim of Taxes
+
+- To use rcParams rather than hard-coded defaults
+
+
 ## AxesSubplot
 
 `AxesSubplot`などのclassは，静的に定義されているのではなく，
