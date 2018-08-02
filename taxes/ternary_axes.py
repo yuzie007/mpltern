@@ -273,7 +273,7 @@ class TernaryAxes(TernaryAxesBase):
         scale = self._scale
 
         ax.axis('off')
-        ax.axis('scaled')
+        ax.set_aspect('equal', adjustable='box', anchor='C')
 
         self.set_tlim(0.0, scale, 0.0, scale, 0.0, scale)
 
