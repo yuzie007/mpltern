@@ -277,9 +277,17 @@ class TernaryAxes(TernaryAxesBase):
 
         self.set_tlim(0.0, scale, 0.0, scale, 0.0, scale)
 
-    def plot(self, a, b, c, *args, **kwargs):
-        x, y = abc2xy(a, b, c)
-        self._axes.plot(x, y, *args, **kwargs)
+    def text(self, b, r, l, s, *args, **kwargs):
+        x, y = abc2xy(b, r, l)
+        return self._axes.text(x, y, s, *args, **kwargs)
+
+    def plot(self, b, r, l, *args, **kwargs):
+        x, y = abc2xy(b, r, l)
+        return self._axes.plot(x, y, *args, **kwargs)
+
+    def scatter(self, b, r, l, *args, **kwargs):
+        x, y = abc2xy(b, r, l)
+        return self._axes.scatter(x, y, *args, **kwargs)
 
     def _create_triangulation(self, a, b, c):
         x, y = abc2xy(a, b, c)
