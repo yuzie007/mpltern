@@ -24,6 +24,8 @@ class Spine(mspines.Spine):
                 v1[0, 1] = self.axes.viewLim.intervaly[0]
                 v1[1, 0] = self.axes.viewLim.intervalx[1]
                 v1[1, 1] = self.axes.viewLim.intervaly[0]
+            elif self.spine_type in ['top']:
+                pass
             else:
                 raise ValueError('unable to set bounds for spine "%s"' %
                                  self.spine_type)
