@@ -81,7 +81,7 @@ class RAxis(TernaryAxis):
                 x = bbox_axes.x1 + (bbox_axes.y1 - y) * 0.5
                 return self.axes.transAxes.transform((x, y))[0]
 
-            right = min([extract_right(bbox) for bbox in bboxes])
+            right = max([extract_right(bbox) for bbox in bboxes])
 
             self.label.set_position(
                 (right + self.labelpad * self.figure.dpi / 72, y)
