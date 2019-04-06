@@ -69,7 +69,7 @@ class TernaryAxesBase(Axes):
 
         """
         return OrderedDict((side, Spine.linear_spine(self, side))
-                           for side in ['left', 'right', 'bottom', 'top'])
+                           for side in ['left', 'right', 'bottom'])
 
     def get_axes(self):
         return self._axes

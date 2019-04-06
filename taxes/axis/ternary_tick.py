@@ -45,8 +45,18 @@ class TernaryTick(XTick):
     def _get_tick2line(self):
         'Get the default line2D instance'
         # both x and y in data coords
-        l = super(TernaryTick, self)._get_tick2line()
+        # We must give blank xdata and ydata, not to show unexpected lines
+        # or points.
+        l = mlines.Line2D(xdata=(), ydata=(),
+                          color=self._color,
+                          linestyle='None',
+                          marker=self._tickmarkers[1],
+                          markersize=self._size,
+                          markeredgewidth=self._width,
+                          zorder=self._zorder)
+
         l.set_transform(self.axes.transData)
+        self._set_artist_props(l)
         return l
 
     def _get_gridline(self):
