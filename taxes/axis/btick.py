@@ -1,6 +1,3 @@
-from __future__ import (absolute_import, division, print_function,
-                        unicode_literals)
-
 import numpy as np
 
 from matplotlib import rcParams
@@ -43,23 +40,22 @@ class BTick(TernaryTick):
             points[1, 0] - points[0, 0],
             points[1, 1] - points[0, 1])
 
-        if self.tick1On:
-            self.tick1line.set_xdata((locx0,))
-            self.tick1line.set_ydata((locy0,))
-            self.tilt(self.tick1line, angle)
-        if self.tick2On:
-            self.tick2line.set_xdata((locx0,))
-            self.tick2line.set_ydata((locy0,))
-            self.tilt(self.tick2line, angle)
-        if self.gridOn:
-            self.gridline.set_xdata((locx0, locx1))
-            self.gridline.set_ydata((locy0, locy1))
-        if self.label1On:
-            self.label1.set_x(locx0)
-            self.label1.set_y(locy0)
-        if self.label2On:
-            self.label2.set_x(locx0)
-            self.label2.set_y(locy0)
+        self.tick1line.set_xdata((locx0,))
+        self.tick1line.set_ydata((locy0,))
+        self.tilt(self.tick1line, angle)
+
+        self.tick2line.set_xdata((locx0,))
+        self.tick2line.set_ydata((locy0,))
+        self.tilt(self.tick2line, angle)
+
+        self.gridline.set_xdata((locx0, locx1))
+        self.gridline.set_ydata((locy0, locy1))
+
+        self.label1.set_x(locx0)
+        self.label1.set_y(locy0)
+
+        self.label2.set_x(locx0)
+        self.label2.set_y(locy0)
 
         self._loc = loc
         self.stale = True

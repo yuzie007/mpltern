@@ -1,5 +1,3 @@
-from __future__ import (absolute_import, division, print_function,
-                        unicode_literals)
 from matplotlib.artist import allow_rasterization
 from matplotlib import rcParams
 import matplotlib.lines as mlines
@@ -18,21 +16,11 @@ class TernaryTick(XTick):
         if not self.get_visible():
             self.stale = False
             return
-
         renderer.open_group(self.__name__)
-        if self.gridOn:
-            self.gridline.draw(renderer)
-        if self.tick1On:
-            self.tick1line.draw(renderer)
-        # if self.tick2On:
-        #     self.tick2line.draw(renderer)
-
-        if self.label1On:
-            self.label1.draw(renderer)
-        # if self.label2On:
-        #     self.label2.draw(renderer)
+        for artist in [self.gridline, self.tick1line, self.tick2line,
+                       self.label1, self.label2]:
+            artist.draw(renderer)
         renderer.close_group(self.__name__)
-
         self.stale = False
 
     def _get_tick1line(self):
