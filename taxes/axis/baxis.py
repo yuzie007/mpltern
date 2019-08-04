@@ -47,7 +47,7 @@ class BAxis(TernaryAxis):
         # get the Grouper that keeps track of x-label groups for this figure
         grp = self.figure._align_xlabel_grp
         # if we want to align labels from other axes:
-        ticks_to_draw = self._update_ticks(renderer)
+        ticks_to_draw = self._update_ticks()
         tlb, tlb2 = self._get_tick_bboxes(ticks_to_draw, renderer)
         bboxes.extend(tlb)
         bboxes2.extend(tlb2)
