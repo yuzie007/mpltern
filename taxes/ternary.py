@@ -131,31 +131,6 @@ class TernaryAxesBase(Axes):
         """Return the LAxis instance"""
         return self.laxis
 
-    def get_children(self):
-        """return a list of child artists"""
-        children = []
-        children.extend(self.collections)
-        children.extend(self.patches)
-        children.extend(self.lines)
-        children.extend(self.texts)
-        children.extend(self.artists)
-        children.extend(self.spines.values())
-        children.append(self.baxis)
-        children.append(self.raxis)
-        children.append(self.laxis)
-        children.append(self.title)
-        children.append(self._left_title)
-        children.append(self._right_title)
-        children.extend(self.tables)
-        children.extend(self.images)
-        children.extend(self.child_axes)
-
-        if self.legend_ is not None:
-            children.append(self.legend_)
-        children.append(self.patch)
-
-        return children
-
     def cla(self):
         self._blim = (0.0, 1.0)
         self._rlim = (0.0, 1.0)
