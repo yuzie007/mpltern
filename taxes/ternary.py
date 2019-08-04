@@ -2,8 +2,9 @@ from collections import OrderedDict
 
 import numpy as np
 
+from matplotlib import cbook, rcParams
 from matplotlib.cbook import (
-    _OrderedSet, _check_1d, _string_to_bool, iterable, index_of, get_label)
+    _OrderedSet, _check_1d, iterable, index_of, get_label)
 from matplotlib import docstring
 from matplotlib.axes import Axes
 import matplotlib.patches as mpatches
@@ -168,17 +169,17 @@ class TernaryAxesBase(Axes):
 
         Parameters
         ----------
-        b : bool or None
+        b : bool or None, optional
             Whether to show the grid lines. If any *kwargs* are supplied,
             it is assumed you want the grid on and *b* will be set to True.
 
             If *b* is *None* and there are no *kwargs*, this toggles the
             visibility of the lines.
 
-        which : {'major', 'minor', 'both'}
+        which : {'major', 'minor', 'both'}, optional
             The grid lines to apply the changes on.
 
-        axis : {'both', 'x', 'y'}
+        axis : {'both', 'b', 'r', 'l'}, optional
             The axis to apply the changes on.
 
         **kwargs : `.Line2D` properties
@@ -188,22 +189,24 @@ class TernaryAxesBase(Axes):
 
             Valid *kwargs* are
 
-            %(Line2D)s
+        %(_Line2D_docstr)s
 
         Notes
         -----
-        The grid will be drawn according to the axes' zorder and not its own.
+        The axis is drawn as a unit, so the effective zorder for drawing the
+        grid is determined by the zorder of each axis, not by the zorder of the
+        `.Line2D` objects comprising the grid.  Therefore, to set grid zorder,
+        use `.set_axisbelow` or, for more control, call the
+        `~matplotlib.axis.Axis.set_zorder` method of each axis.
         """
         if len(kwargs):
             b = True
-        elif b is not None:
-            b = _string_to_bool(b)
-
-        if axis == 'b' or axis == 'both':
+        cbook._check_in_list(['b', 'r', 'l', 'both'], axis=axis)
+        if axis in ['b', 'both']:
             self.baxis.grid(b, which=which, **kwargs)
-        if axis == 'r' or axis == 'both':
+        if axis in ['r', 'both']:
             self.raxis.grid(b, which=which, **kwargs)
-        if axis == 'l' or axis == 'both':
+        if axis in ['l', 'both']:
             self.laxis.grid(b, which=which, **kwargs)
 
     def _get_corner_points(self):
