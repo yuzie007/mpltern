@@ -231,6 +231,42 @@ class TernaryAxes(TernaryAxesBase):
     """
     name = 'ternary'
 
+    def get_blabel(self):
+        """
+        Get the blabel text string.
+        """
+        label = self.baxis.get_label()
+        return label.get_text()
+
+    def set_blabel(self, blabel, fontdict=None, labelpad=None, **kwargs):
+        if labelpad is not None:
+            self.baxis.labelpad = labelpad
+        return self.baxis.set_label_text(blabel, fontdict, **kwargs)
+
+    def get_rlabel(self):
+        """
+        Get the rlabel text string.
+        """
+        label = self.raxis.get_label()
+        return label.get_text()
+
+    def set_rlabel(self, rlabel, fontdict=None, labelpad=None, **kwargs):
+        if labelpad is not None:
+            self.raxis.labelpad = labelpad
+        return self.raxis.set_label_text(rlabel, fontdict, **kwargs)
+
+    def get_llabel(self):
+        """
+        Get the llabel text string.
+        """
+        label = self.laxis.get_label()
+        return label.get_text()
+
+    def set_llabel(self, llabel, fontdict=None, labelpad=None, **kwargs):
+        if labelpad is not None:
+            self.laxis.labelpad = labelpad
+        return self.laxis.set_label_text(llabel, fontdict, **kwargs)
+
     def text(self, b, r, l, s, *args, **kwargs):
         x, y = abc2xy(b, r, l)
         return super().text(x, y, s, *args, **kwargs)
@@ -242,12 +278,29 @@ class TernaryAxes(TernaryAxesBase):
         x, y = abc2xy(b, r, l)
         return super().plot(x, y, *args, **kwargs)
 
-    def triplot(self, *args, **kwargs):
-        return mtri.triplot(super(), *args, **kwargs)
-
     def scatter(self, b, r, l, *args, **kwargs):
         x, y = abc2xy(b, r, l)
         return super().scatter(x, y, *args, **kwargs)
+
+    def tricontour(self, b, r, l, *args, **kwargs):
+        x, y = abc2xy(b, r, l)
+        return super().tricontour(x, y, *args, **kwargs)
+
+    def tricontourf(self, b, r, l, *args, **kwargs):
+        x, y = abc2xy(b, r, l)
+        return super().tricontourf(x, y, *args, **kwargs)
+
+    def tripcolor(self, b, r, l, *args, **kwargs):
+        x, y = abc2xy(b, r, l)
+        return super().tripcolor(x, y, *args, **kwargs)
+
+    def triplot(self, b, r, l, *args, **kwargs):
+        x, y = abc2xy(b, r, l)
+        tplot = self.plot
+        self.plot = super().plot
+        tmp = super().triplot(x, y, *args, **kwargs)
+        self.plot = tplot
+        return tmp
 
     def _create_triangulation(self, a, b, c):
         x, y = abc2xy(a, b, c)
