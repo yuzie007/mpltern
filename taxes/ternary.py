@@ -282,6 +282,13 @@ class TernaryAxes(TernaryAxesBase):
         x, y = abc2xy(b, r, l)
         return super().scatter(x, y, *args, **kwargs)
 
+    def quiver(self, b, r, l, db, dr, dl, *args, **kwargs):
+        x, y = abc2xy(b, r, l)
+        u, v = abc2xy(b + db, r + dr, l + dl)
+        u -= x
+        v -= y
+        return super().quiver(x, y, u, v, *args, **kwargs)
+
     def tricontour(self, b, r, l, *args, **kwargs):
         x, y = abc2xy(b, r, l)
         return super().tricontour(x, y, *args, **kwargs)
