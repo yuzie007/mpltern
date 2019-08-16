@@ -1,6 +1,3 @@
-from __future__ import (absolute_import, division, print_function,
-                        unicode_literals)
-
 import matplotlib.spines as mspines
 
 
@@ -29,3 +26,6 @@ class Spine(mspines.Spine):
             else:
                 raise ValueError('unable to set bounds for spine "%s"' %
                                  self.spine_type)
+
+    def get_spine_transform(self):
+        return self.axes.transData
