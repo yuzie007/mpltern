@@ -247,7 +247,7 @@ class TernaryAxes(TernaryAxesBase):
 
     def scatter(self, b, r, l, *args, **kwargs):
         x, y = abc2xy(b, r, l)
-        return self._axes.scatter(x, y, *args, **kwargs)
+        return super().scatter(x, y, *args, **kwargs)
 
     def _create_triangulation(self, a, b, c):
         x, y = abc2xy(a, b, c)
