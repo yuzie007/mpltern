@@ -1,6 +1,3 @@
-from __future__ import (absolute_import, division, print_function,
-                        unicode_literals)
-
 from matplotlib import rcParams
 import matplotlib.font_manager as font_manager
 import matplotlib.text as mtext
