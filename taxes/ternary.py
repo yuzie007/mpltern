@@ -7,6 +7,7 @@ from matplotlib.cbook import (
     _OrderedSet, _check_1d, iterable, index_of, get_label)
 from matplotlib import docstring
 from matplotlib.axes import Axes
+import matplotlib.lines as mlines
 import matplotlib.patches as mpatches
 import matplotlib.transforms as mtransforms
 import matplotlib.tri as mtri
@@ -194,6 +195,13 @@ class TernaryAxesBase(Axes):
         return np.array(points)
 
     def set_tlim(self, bmin, bmax, rmin, rmax, lmin, lmax, *args, **kwargs):
+        """
+
+        Notes
+        -----
+        xmin, xmax : holizontal limits of the triangle
+        ymin, ymax : bottom and top of the triangle
+        """
         b = bmax + rmin + lmin
         r = bmin + rmax + lmin
         l = bmin + rmin + lmax
@@ -274,6 +282,72 @@ class TernaryAxes(TernaryAxesBase):
     def text_xy(self, x, y, s, *args, **kwargs):
         super().text(x, y, s, *args, **kwargs)
 
+    def axbline(self, b=0, **kwargs):
+        rmin, rmax = self.get_rlim()
+        lmin, lmax = self.get_llim()
+        xmin, ymin = abc2xy(b, rmin, lmax - b)
+        xmax, ymax = abc2xy(b, rmax - b, lmin)
+        l = mlines.Line2D([xmin, xmax], [ymin, ymax], **kwargs)
+        self.add_line(l)
+        return l
+
+    def axrline(self, r=0, **kwargs):
+        lmin, lmax = self.get_llim()
+        bmin, bmax = self.get_blim()
+        xmin, ymin = abc2xy(bmax - r, r, lmin)
+        xmax, ymax = abc2xy(bmin, r, lmax - r)
+        l = mlines.Line2D([xmin, xmax], [ymin, ymax], **kwargs)
+        self.add_line(l)
+        return l
+
+    def axlline(self, l=0, **kwargs):
+        bmin, bmax = self.get_blim()
+        rmin, rmax = self.get_rlim()
+        xmin, ymin = abc2xy(bmin, rmax - l, l)
+        xmax, ymax = abc2xy(bmax - l, rmin, l)
+        l = mlines.Line2D([xmin, xmax], [ymin, ymax], **kwargs)
+        self.add_line(l)
+        return l
+
+    def axbspan(self, bmin, bmax, **kwargs):
+        rmin, rmax = self.get_rlim()
+        lmin, lmax = self.get_llim()
+        x0, y0 = abc2xy(bmin, rmin, lmax - bmin)
+        x1, y1 = abc2xy(bmin, rmax - bmin, lmin)
+        x2, y2 = abc2xy(bmax, rmax - bmax, lmin)
+        x3, y3 = abc2xy(bmax, rmin, lmax - bmax)
+
+        verts = (x0, y0), (x1, y1), (x2, y2), (x3, y3)
+        p = mpatches.Polygon(verts, **kwargs)
+        self.add_patch(p)
+        return p
+
+    def axrspan(self, rmin, rmax, **kwargs):
+        lmin, lmax = self.get_llim()
+        bmin, bmax = self.get_blim()
+        x0, y0 = abc2xy(bmax - rmin, rmin, lmin)
+        x1, y1 = abc2xy(bmin, rmin, lmin - rmin)
+        x2, y2 = abc2xy(bmin, rmax, lmin - rmax)
+        x3, y3 = abc2xy(bmax - rmax, rmax, lmin)
+
+        verts = (x0, y0), (x1, y1), (x2, y2), (x3, y3)
+        p = mpatches.Polygon(verts, **kwargs)
+        self.add_patch(p)
+        return p
+
+    def axlspan(self, lmin, lmax, **kwargs):
+        bmin, bmax = self.get_blim()
+        rmin, rmax = self.get_rlim()
+        x0, y0 = abc2xy(bmin, rmax - lmin, lmin)
+        x1, y1 = abc2xy(bmax - lmin, rmin, lmin)
+        x2, y2 = abc2xy(bmax - lmax, rmin, lmax)
+        x3, y3 = abc2xy(bmin, rmax - lmax, lmax)
+
+        verts = (x0, y0), (x1, y1), (x2, y2), (x3, y3)
+        p = mpatches.Polygon(verts, **kwargs)
+        self.add_patch(p)
+        return p
+
     def plot(self, b, r, l, *args, **kwargs):
         x, y = abc2xy(b, r, l)
         return super().plot(x, y, *args, **kwargs)
@@ -282,12 +356,20 @@ class TernaryAxes(TernaryAxesBase):
         x, y = abc2xy(b, r, l)
         return super().scatter(x, y, *args, **kwargs)
 
+    def hexbin(self, b, r, l, *args, **kwargs):
+        x, y = abc2xy(b, r, l)
+        return super().hexbin(x, y, *args, **kwargs)
+
     def quiver(self, b, r, l, db, dr, dl, *args, **kwargs):
         x, y = abc2xy(b, r, l)
         u, v = abc2xy(b + db, r + dr, l + dl)
         u -= x
         v -= y
         return super().quiver(x, y, u, v, *args, **kwargs)
+
+    def fill(self, b, r, l, *args, **kwargs):
+        x, y = abc2xy(b, r, l)
+        return super().fill(x, y, *args, **kwargs)
 
     def tricontour(self, b, r, l, *args, **kwargs):
         x, y = abc2xy(b, r, l)
