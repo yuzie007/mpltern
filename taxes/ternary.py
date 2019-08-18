@@ -10,9 +10,7 @@ from matplotlib.axes import Axes
 import matplotlib.lines as mlines
 import matplotlib.patches as mpatches
 import matplotlib.transforms as mtransforms
-import matplotlib.tri as mtri
 from .spines import Spine
-from matplotlib.tri import Triangulation
 from .axis.baxis import BAxis
 from .axis.raxis import RAxis
 from .axis.laxis import LAxis
@@ -20,17 +18,23 @@ from .axis.laxis import LAxis
 __author__ = 'Yuji Ikeda'
 
 
-def abc2xy(a, b, c):
-    x = a + 0.5 * b
-    y = 0.5 * np.sqrt(3.0) * b
+def brl2xy(b, r, l):
+    b = np.asarray(b)
+    r = np.asarray(r)
+    l = np.asarray(l)
+    x = b + 0.5 * r
+    y = 0.5 * np.sqrt(3.0) * r
     return x, y
 
 
-def xy2abc(x, y, s=1.0):
-    a = s * (x - y / np.sqrt(3.0))
-    b = s * (y / np.sqrt(3.0) * 2.0)
-    c = s * (1.0 - x - y / np.sqrt(3.0))
-    return a, b, c
+def xy2brl(x, y, s=1.0):
+    x = np.asarray(x)
+    y = np.asarray(y)
+    s = np.asarray(s)
+    b = s * (x - y / np.sqrt(3.0))
+    r = s * (y / np.sqrt(3.0) * 2.0)
+    l = s * (1.0 - x - y / np.sqrt(3.0))
+    return b, r, l
 
 
 class TernaryAxesBase(Axes):
@@ -276,7 +280,7 @@ class TernaryAxes(TernaryAxesBase):
         return self.laxis.set_label_text(llabel, fontdict, **kwargs)
 
     def text(self, b, r, l, s, *args, **kwargs):
-        x, y = abc2xy(b, r, l)
+        x, y = brl2xy(b, r, l)
         return super().text(x, y, s, *args, **kwargs)
 
     def text_xy(self, x, y, s, *args, **kwargs):
@@ -285,8 +289,8 @@ class TernaryAxes(TernaryAxesBase):
     def axbline(self, b=0, **kwargs):
         rmin, rmax = self.get_rlim()
         lmin, lmax = self.get_llim()
-        xmin, ymin = abc2xy(b, rmin, lmax - b)
-        xmax, ymax = abc2xy(b, rmax - b, lmin)
+        xmin, ymin = brl2xy(b, rmin, lmax - b)
+        xmax, ymax = brl2xy(b, rmax - b, lmin)
         l = mlines.Line2D([xmin, xmax], [ymin, ymax], **kwargs)
         self.add_line(l)
         return l
@@ -294,8 +298,8 @@ class TernaryAxes(TernaryAxesBase):
     def axrline(self, r=0, **kwargs):
         lmin, lmax = self.get_llim()
         bmin, bmax = self.get_blim()
-        xmin, ymin = abc2xy(bmax - r, r, lmin)
-        xmax, ymax = abc2xy(bmin, r, lmax - r)
+        xmin, ymin = brl2xy(bmax - r, r, lmin)
+        xmax, ymax = brl2xy(bmin, r, lmax - r)
         l = mlines.Line2D([xmin, xmax], [ymin, ymax], **kwargs)
         self.add_line(l)
         return l
@@ -303,8 +307,8 @@ class TernaryAxes(TernaryAxesBase):
     def axlline(self, l=0, **kwargs):
         bmin, bmax = self.get_blim()
         rmin, rmax = self.get_rlim()
-        xmin, ymin = abc2xy(bmin, rmax - l, l)
-        xmax, ymax = abc2xy(bmax - l, rmin, l)
+        xmin, ymin = brl2xy(bmin, rmax - l, l)
+        xmax, ymax = brl2xy(bmax - l, rmin, l)
         l = mlines.Line2D([xmin, xmax], [ymin, ymax], **kwargs)
         self.add_line(l)
         return l
@@ -312,10 +316,10 @@ class TernaryAxes(TernaryAxesBase):
     def axbspan(self, bmin, bmax, **kwargs):
         rmin, rmax = self.get_rlim()
         lmin, lmax = self.get_llim()
-        x0, y0 = abc2xy(bmin, rmin, lmax - bmin)
-        x1, y1 = abc2xy(bmin, rmax - bmin, lmin)
-        x2, y2 = abc2xy(bmax, rmax - bmax, lmin)
-        x3, y3 = abc2xy(bmax, rmin, lmax - bmax)
+        x0, y0 = brl2xy(bmin, rmin, lmax - bmin)
+        x1, y1 = brl2xy(bmin, rmax - bmin, lmin)
+        x2, y2 = brl2xy(bmax, rmax - bmax, lmin)
+        x3, y3 = brl2xy(bmax, rmin, lmax - bmax)
 
         verts = (x0, y0), (x1, y1), (x2, y2), (x3, y3)
         p = mpatches.Polygon(verts, **kwargs)
@@ -325,10 +329,10 @@ class TernaryAxes(TernaryAxesBase):
     def axrspan(self, rmin, rmax, **kwargs):
         lmin, lmax = self.get_llim()
         bmin, bmax = self.get_blim()
-        x0, y0 = abc2xy(bmax - rmin, rmin, lmin)
-        x1, y1 = abc2xy(bmin, rmin, lmin - rmin)
-        x2, y2 = abc2xy(bmin, rmax, lmin - rmax)
-        x3, y3 = abc2xy(bmax - rmax, rmax, lmin)
+        x0, y0 = brl2xy(bmax - rmin, rmin, lmin)
+        x1, y1 = brl2xy(bmin, rmin, lmin - rmin)
+        x2, y2 = brl2xy(bmin, rmax, lmin - rmax)
+        x3, y3 = brl2xy(bmax - rmax, rmax, lmin)
 
         verts = (x0, y0), (x1, y1), (x2, y2), (x3, y3)
         p = mpatches.Polygon(verts, **kwargs)
@@ -338,10 +342,10 @@ class TernaryAxes(TernaryAxesBase):
     def axlspan(self, lmin, lmax, **kwargs):
         bmin, bmax = self.get_blim()
         rmin, rmax = self.get_rlim()
-        x0, y0 = abc2xy(bmin, rmax - lmin, lmin)
-        x1, y1 = abc2xy(bmax - lmin, rmin, lmin)
-        x2, y2 = abc2xy(bmax - lmax, rmin, lmax)
-        x3, y3 = abc2xy(bmin, rmax - lmax, lmax)
+        x0, y0 = brl2xy(bmin, rmax - lmin, lmin)
+        x1, y1 = brl2xy(bmax - lmin, rmin, lmin)
+        x2, y2 = brl2xy(bmax - lmax, rmin, lmax)
+        x3, y3 = brl2xy(bmin, rmax - lmax, lmax)
 
         verts = (x0, y0), (x1, y1), (x2, y2), (x3, y3)
         p = mpatches.Polygon(verts, **kwargs)
@@ -349,54 +353,44 @@ class TernaryAxes(TernaryAxesBase):
         return p
 
     def plot(self, b, r, l, *args, **kwargs):
-        x, y = abc2xy(b, r, l)
+        x, y = brl2xy(b, r, l)
         return super().plot(x, y, *args, **kwargs)
 
     def scatter(self, b, r, l, *args, **kwargs):
-        x, y = abc2xy(b, r, l)
+        x, y = brl2xy(b, r, l)
         return super().scatter(x, y, *args, **kwargs)
 
     def hexbin(self, b, r, l, *args, **kwargs):
-        x, y = abc2xy(b, r, l)
+        x, y = brl2xy(b, r, l)
         return super().hexbin(x, y, *args, **kwargs)
 
     def quiver(self, b, r, l, db, dr, dl, *args, **kwargs):
-        x, y = abc2xy(b, r, l)
-        u, v = abc2xy(b + db, r + dr, l + dl)
+        x, y = brl2xy(b, r, l)
+        u, v = brl2xy(b + db, r + dr, l + dl)
         u -= x
         v -= y
         return super().quiver(x, y, u, v, *args, **kwargs)
 
     def fill(self, b, r, l, *args, **kwargs):
-        x, y = abc2xy(b, r, l)
+        x, y = brl2xy(b, r, l)
         return super().fill(x, y, *args, **kwargs)
 
     def tricontour(self, b, r, l, *args, **kwargs):
-        x, y = abc2xy(b, r, l)
+        x, y = brl2xy(b, r, l)
         return super().tricontour(x, y, *args, **kwargs)
 
     def tricontourf(self, b, r, l, *args, **kwargs):
-        x, y = abc2xy(b, r, l)
+        x, y = brl2xy(b, r, l)
         return super().tricontourf(x, y, *args, **kwargs)
 
     def tripcolor(self, b, r, l, *args, **kwargs):
-        x, y = abc2xy(b, r, l)
+        x, y = brl2xy(b, r, l)
         return super().tripcolor(x, y, *args, **kwargs)
 
     def triplot(self, b, r, l, *args, **kwargs):
-        x, y = abc2xy(b, r, l)
+        x, y = brl2xy(b, r, l)
         tplot = self.plot
         self.plot = super().plot
         tmp = super().triplot(x, y, *args, **kwargs)
         self.plot = tplot
         return tmp
-
-    def _create_triangulation(self, a, b, c):
-        x, y = abc2xy(a, b, c)
-        return Triangulation(x, y)
-
-
-class TernaryTriangulation(Triangulation):
-    def __init__(self, a, b, c, *args, **kwargs):
-        x, y = abc2xy(a, b, c)
-        super().__init__(x, y, *args, **kwargs)
