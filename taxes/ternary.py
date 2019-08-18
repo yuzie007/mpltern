@@ -287,39 +287,43 @@ class TernaryAxes(TernaryAxesBase):
         super().text(x, y, s, *args, **kwargs)
 
     def axbline(self, b=0, **kwargs):
-        rmin, rmax = self.get_rlim()
-        lmin, lmax = self.get_llim()
-        xmin, ymin = brl2xy(b, rmin, lmax - b)
-        xmax, ymax = brl2xy(b, rmax - b, lmin)
+        s = self._scale
+        rmin = self.get_rlim()[0]
+        lmin = self.get_llim()[0]
+        xmin, ymin = brl2xy(b, rmin, s - lmin - b)
+        xmax, ymax = brl2xy(b, s - rmin - b, lmin)
         l = mlines.Line2D([xmin, xmax], [ymin, ymax], **kwargs)
         self.add_line(l)
         return l
 
     def axrline(self, r=0, **kwargs):
-        lmin, lmax = self.get_llim()
-        bmin, bmax = self.get_blim()
-        xmin, ymin = brl2xy(bmax - r, r, lmin)
-        xmax, ymax = brl2xy(bmin, r, lmax - r)
+        s = self._scale
+        lmin = self.get_llim()[0]
+        bmin = self.get_blim()[0]
+        xmin, ymin = brl2xy(s - bmin - r, r, lmin)
+        xmax, ymax = brl2xy(bmin, r, s - lmin - r)
         l = mlines.Line2D([xmin, xmax], [ymin, ymax], **kwargs)
         self.add_line(l)
         return l
 
     def axlline(self, l=0, **kwargs):
-        bmin, bmax = self.get_blim()
-        rmin, rmax = self.get_rlim()
-        xmin, ymin = brl2xy(bmin, rmax - l, l)
-        xmax, ymax = brl2xy(bmax - l, rmin, l)
+        s = self._scale
+        bmin = self.get_blim()[0]
+        rmin = self.get_rlim()[0]
+        xmin, ymin = brl2xy(bmin, s - rmin - l, l)
+        xmax, ymax = brl2xy(s - bmin - l, rmin, l)
         l = mlines.Line2D([xmin, xmax], [ymin, ymax], **kwargs)
         self.add_line(l)
         return l
 
     def axbspan(self, bmin, bmax, **kwargs):
-        rmin, rmax = self.get_rlim()
-        lmin, lmax = self.get_llim()
-        x0, y0 = brl2xy(bmin, rmin, lmax - bmin)
-        x1, y1 = brl2xy(bmin, rmax - bmin, lmin)
-        x2, y2 = brl2xy(bmax, rmax - bmax, lmin)
-        x3, y3 = brl2xy(bmax, rmin, lmax - bmax)
+        s = self._scale
+        rmin = self.get_rlim()[0]
+        lmin = self.get_llim()[0]
+        x0, y0 = brl2xy(bmin, rmin, s - lmin - bmin)
+        x1, y1 = brl2xy(bmin, s - rmin - bmin, lmin)
+        x2, y2 = brl2xy(bmax, s - rmin - bmax, lmin)
+        x3, y3 = brl2xy(bmax, rmin, s - lmin - bmax)
 
         verts = (x0, y0), (x1, y1), (x2, y2), (x3, y3)
         p = mpatches.Polygon(verts, **kwargs)
@@ -327,12 +331,13 @@ class TernaryAxes(TernaryAxesBase):
         return p
 
     def axrspan(self, rmin, rmax, **kwargs):
-        lmin, lmax = self.get_llim()
-        bmin, bmax = self.get_blim()
-        x0, y0 = brl2xy(bmax - rmin, rmin, lmin)
-        x1, y1 = brl2xy(bmin, rmin, lmin - rmin)
-        x2, y2 = brl2xy(bmin, rmax, lmin - rmax)
-        x3, y3 = brl2xy(bmax - rmax, rmax, lmin)
+        s = self._scale
+        lmin = self.get_llim()[0]
+        bmin = self.get_blim()[0]
+        x0, y0 = brl2xy(s - bmin - rmin, rmin, lmin)
+        x1, y1 = brl2xy(bmin, rmin, s - lmin - rmin)
+        x2, y2 = brl2xy(bmin, rmax, s - lmin - rmax)
+        x3, y3 = brl2xy(s - bmin - rmax, rmax, lmin)
 
         verts = (x0, y0), (x1, y1), (x2, y2), (x3, y3)
         p = mpatches.Polygon(verts, **kwargs)
@@ -340,12 +345,13 @@ class TernaryAxes(TernaryAxesBase):
         return p
 
     def axlspan(self, lmin, lmax, **kwargs):
-        bmin, bmax = self.get_blim()
-        rmin, rmax = self.get_rlim()
-        x0, y0 = brl2xy(bmin, rmax - lmin, lmin)
-        x1, y1 = brl2xy(bmax - lmin, rmin, lmin)
-        x2, y2 = brl2xy(bmax - lmax, rmin, lmax)
-        x3, y3 = brl2xy(bmin, rmax - lmax, lmax)
+        s = self._scale
+        bmin = self.get_blim()[0]
+        rmin = self.get_rlim()[0]
+        x0, y0 = brl2xy(bmin, s - rmin - lmin, lmin)
+        x1, y1 = brl2xy(s - bmin - lmin, rmin, lmin)
+        x2, y2 = brl2xy(s - bmin - lmax, rmin, lmax)
+        x3, y3 = brl2xy(bmin, s - rmin - lmax, lmax)
 
         verts = (x0, y0), (x1, y1), (x2, y2), (x3, y3)
         p = mpatches.Polygon(verts, **kwargs)
