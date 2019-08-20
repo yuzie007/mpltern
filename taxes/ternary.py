@@ -2,20 +2,17 @@ from collections import OrderedDict
 
 import numpy as np
 
-from matplotlib import cbook, rcParams
-from matplotlib.cbook import (
-    _OrderedSet, _check_1d, iterable, index_of, get_label)
+from matplotlib import cbook
 from matplotlib import docstring
 from matplotlib.axes import Axes
 import matplotlib.lines as mlines
 import matplotlib.patches as mpatches
 import matplotlib.transforms as mtransforms
 from .spines import Spine
+from .transforms import BAxisTransform, RAxisTransform, LAxisTransform
 from .axis.baxis import BAxis
 from .axis.raxis import RAxis
 from .axis.laxis import LAxis
-
-__author__ = 'Yuji Ikeda'
 
 
 def brl2xy(b, r, l):
@@ -39,10 +36,16 @@ def xy2brl(x, y, s=1.0):
 
 class TernaryAxesBase(Axes):
     def __init__(self, *args, scale=1.0, **kwargs):
+        self._scale = scale
         super().__init__(*args, **kwargs)
         self.set_aspect('equal', adjustable='box', anchor='C')
-        self._scale = scale
         self.set_tlim(0.0, scale, 0.0, scale, 0.0, scale)
+
+    def set_figure(self, fig):
+        self.viewBLim = mtransforms.Bbox.unit()
+        self.viewRLim = mtransforms.Bbox.unit()
+        self.viewLLim = mtransforms.Bbox.unit()
+        super().set_figure(fig)
 
     def _gen_axes_patch(self):
         """
@@ -89,16 +92,39 @@ class TernaryAxesBase(Axes):
         TODO: Manage spines
         """
         self.baxis = BAxis(self)
-        self.xaxis = self.baxis
         self.raxis = RAxis(self)
-        self.yaxis = self.raxis
         self.laxis = LAxis(self)
+
+        self.xaxis = self.baxis  # TODO
+        self.yaxis = self.laxis  # TODO
 
         self.spines['bottom'].register_axis(self.baxis)
         self.spines['right'].register_axis(self.raxis)
         self.spines['left'].register_axis(self.laxis)
 
         self._update_transScale()
+
+    def _set_lim_and_transforms(self):
+        super()._set_lim_and_transforms()
+        transBLimits = mtransforms.BboxTransformFrom(
+            mtransforms.TransformedBbox(self.viewBLim, self.transScale))
+        transRLimits = mtransforms.BboxTransformFrom(
+            mtransforms.TransformedBbox(self.viewRLim, self.transScale))
+        transLLimits = mtransforms.BboxTransformFrom(
+            mtransforms.TransformedBbox(self.viewLLim, self.transScale))
+
+        self._baxis_transform = transBLimits + BAxisTransform() + self.transAxes
+        self._raxis_transform = transRLimits + RAxisTransform() + self.transAxes
+        self._laxis_transform = transLLimits + LAxisTransform() + self.transAxes
+
+    def get_baxis_transform(self, which='grid'):
+        return self._baxis_transform
+
+    def get_raxis_transform(self, which='grid'):
+        return self._raxis_transform
+
+    def get_laxis_transform(self, which='grid'):
+        return self._laxis_transform
 
     # def get_baxis_text1_transform(self, pad_points):
     #     return (self._ax.transData +
@@ -137,9 +163,9 @@ class TernaryAxesBase(Axes):
         return self.laxis
 
     def cla(self):
-        self._blim = (0.0, 1.0)
-        self._rlim = (0.0, 1.0)
-        self._llim = (0.0, 1.0)
+        self.set_blim(0.0, self._scale)
+        self.set_rlim(0.0, self._scale)
+        self.set_llim(0.0, self._scale)
         super().cla()
 
     @docstring.dedent_interpd
@@ -189,15 +215,6 @@ class TernaryAxesBase(Axes):
         if axis in ['l', 'both']:
             self.laxis.grid(b, which=which, **kwargs)
 
-    def _get_corner_points(self):
-        scale = self._scale
-        points = [
-            [0.0, 0.0],
-            [scale, 0.0],
-            [0.5 * scale, np.sqrt(3.0) * 0.5 * scale],
-            ]
-        return np.array(points)
-
     def set_tlim(self, bmin, bmax, rmin, rmax, lmin, lmax, *args, **kwargs):
         """
 
@@ -222,18 +239,33 @@ class TernaryAxesBase(Axes):
         ymax = 0.5 * np.sqrt(3.0) * rmax
         ax.set_ylim(ymin, ymax, *args, **kwargs)
 
-        self._blim = (bmin, bmax)
-        self._rlim = (rmin, rmax)
-        self._llim = (lmin, lmax)
+        self.set_blim(bmin, bmax)
+        self.set_rlim(rmin, rmax)
+        self.set_llim(lmin, lmax)
 
     def get_blim(self):
-        return self._blim
+        return tuple(self.viewBLim.intervalx)
 
     def get_rlim(self):
-        return self._rlim
+        return tuple(self.viewRLim.intervalx)
 
     def get_llim(self):
-        return self._llim
+        return tuple(self.viewLLim.intervalx)
+
+    def set_blim(self, bmin, bmax):
+        self.viewBLim.intervalx = (bmin, bmax)
+        self.stale = True
+        return bmin, bmax
+
+    def set_rlim(self, rmin, rmax):
+        self.viewRLim.intervalx = (rmin, rmax)
+        self.stale = True
+        return rmin, rmax
+
+    def set_llim(self, lmin, lmax):
+        self.viewLLim.intervalx = (lmin, lmax)
+        self.stale = True
+        return lmin, lmax
 
 
 class TernaryAxes(TernaryAxesBase):
@@ -284,77 +316,248 @@ class TernaryAxes(TernaryAxesBase):
         return super().text(x, y, s, *args, **kwargs)
 
     def text_xy(self, x, y, s, *args, **kwargs):
-        super().text(x, y, s, *args, **kwargs)
+        return super().text(x, y, s, *args, **kwargs)
 
-    def axbline(self, b=0, **kwargs):
-        s = self._scale
-        rmin = self.get_rlim()[0]
-        lmin = self.get_llim()[0]
-        xmin, ymin = brl2xy(b, rmin, s - lmin - b)
-        xmax, ymax = brl2xy(b, s - rmin - b, lmin)
-        l = mlines.Line2D([xmin, xmax], [ymin, ymax], **kwargs)
+    def axbline(self, x=0, ymin=0, ymax=1, **kwargs):
+        """
+        Add a equi-b line across the axes.
+
+        Parameters
+        ----------
+        x : scalar, optional, default: 0
+            x position in data coordinates of the equi-b line.
+
+        ymin : scalar, optional, default: 0
+            Should be between 0 and 1, 0 being one end of the plot, 1 the
+            other of the plot.
+
+        ymax : scalar, optional, default: 1
+            Should be between 0 and 1, 0 being one end of the plot, 1 the
+            other of the plot.
+
+        Returns
+        -------
+        line : :class:`~matplotlib.lines.Line2D`
+
+        Other Parameters
+        ----------------
+        **kwargs
+            Valid kwargs are :class:`~matplotlib.lines.Line2D` properties,
+            with the exception of 'transform':
+
+        %(_Line2D_docstr)s
+
+        See also
+        --------
+        axbspan : Add a equi-b span across the axis.
+        """
+        if "transform" in kwargs:
+            raise ValueError(
+                "'transform' is not allowed as a kwarg;"
+                + "axbline generates its own transform.")
+        trans = self.get_baxis_transform(which='grid')
+        l = mlines.Line2D([x, x], [ymin, ymax], transform=trans, **kwargs)
         self.add_line(l)
         return l
 
-    def axrline(self, r=0, **kwargs):
-        s = self._scale
-        lmin = self.get_llim()[0]
-        bmin = self.get_blim()[0]
-        xmin, ymin = brl2xy(s - bmin - r, r, lmin)
-        xmax, ymax = brl2xy(bmin, r, s - lmin - r)
-        l = mlines.Line2D([xmin, xmax], [ymin, ymax], **kwargs)
+    def axrline(self, x=0, ymin=0, ymax=1, **kwargs):
+        """
+        Add a equi-r line across the axes.
+
+        Parameters
+        ----------
+        x : scalar, optional, default: 0
+            x position in data coordinates of the equi-r line.
+
+        ymin : scalar, optional, default: 0
+            Should be between 0 and 1, 0 being one end of the plot, 1 the
+            other of the plot.
+
+        ymax : scalar, optional, default: 1
+            Should be between 0 and 1, 0 being one end of the plot, 1 the
+            other of the plot.
+
+        Returns
+        -------
+        line : :class:`~matplotlib.lines.Line2D`
+
+        Other Parameters
+        ----------------
+        **kwargs
+            Valid kwargs are :class:`~matplotlib.lines.Line2D` properties,
+            with the exception of 'transform':
+
+        %(_Line2D_docstr)s
+
+        See also
+        --------
+        axrspan : Add a equi-r span across the axis.
+        """
+        if "transform" in kwargs:
+            raise ValueError(
+                "'transform' is not allowed as a kwarg;"
+                + "axrline generates its own transform.")
+        trans = self.get_raxis_transform(which='grid')
+        l = mlines.Line2D([x, x], [ymin, ymax], transform=trans, **kwargs)
         self.add_line(l)
         return l
 
-    def axlline(self, l=0, **kwargs):
-        s = self._scale
-        bmin = self.get_blim()[0]
-        rmin = self.get_rlim()[0]
-        xmin, ymin = brl2xy(bmin, s - rmin - l, l)
-        xmax, ymax = brl2xy(s - bmin - l, rmin, l)
-        l = mlines.Line2D([xmin, xmax], [ymin, ymax], **kwargs)
+    def axlline(self, x=0, ymin=0, ymax=1, **kwargs):
+        """
+        Add a equi-l line across the axes.
+
+        Parameters
+        ----------
+        x : scalar, optional, default: 0
+            x position in data coordinates of the equi-l line.
+
+        ymin : scalar, optional, default: 0
+            Should be between 0 and 1, 0 being one end of the plot, 1 the
+            other of the plot.
+
+        ymax : scalar, optional, default: 1
+            Should be between 0 and 1, 0 being one end of the plot, 1 the
+            other of the plot.
+
+        Returns
+        -------
+        line : :class:`~matplotlib.lines.Line2D`
+
+        Other Parameters
+        ----------------
+        **kwargs
+            Valid kwargs are :class:`~matplotlib.lines.Line2D` properties,
+            with the exception of 'transform':
+
+        %(_Line2D_docstr)s
+
+        See also
+        --------
+        axlspan : Add a equi-l span across the axis.
+        """
+        if "transform" in kwargs:
+            raise ValueError(
+                "'transform' is not allowed as a kwarg;"
+                + "axlline generates its own transform.")
+        trans = self.get_laxis_transform(which='grid')
+        l = mlines.Line2D([x, x], [ymin, ymax], transform=trans, **kwargs)
         self.add_line(l)
         return l
 
-    def axbspan(self, bmin, bmax, **kwargs):
-        s = self._scale
-        rmin = self.get_rlim()[0]
-        lmin = self.get_llim()[0]
-        x0, y0 = brl2xy(bmin, rmin, s - lmin - bmin)
-        x1, y1 = brl2xy(bmin, s - rmin - bmin, lmin)
-        x2, y2 = brl2xy(bmax, s - rmin - bmax, lmin)
-        x3, y3 = brl2xy(bmax, rmin, s - lmin - bmax)
+    def axbspan(self, xmin, xmax, ymin=0, ymax=1, **kwargs):
+        """
+        Add a span for the bottom coordinate.
 
-        verts = (x0, y0), (x1, y1), (x2, y2), (x3, y3)
+        Parameters
+        ----------
+        xmin : float
+               Lower limit of the bottom span in data units.
+        xmax : float
+               Upper limit of the bottom span in data units.
+        ymin : float, optional, default: 0
+               Lower limit of the span from end to end in relative
+               (0-1) units.
+        ymax : float, optional, default: 1
+               Upper limit of the span from end to end in relative
+               (0-1) units.
+
+        Returns
+        -------
+        Polygon : `~matplotlib.patches.Polygon`
+
+        Other Parameters
+        ----------------
+        **kwargs : `~matplotlib.patches.Polygon` properties.
+
+        %(Polygon)s
+
+        See Also
+        --------
+        axrspan : Add a span for the right coordinate.
+        axlspan : Add a span for the left coordinate.
+        """
+        trans = self.get_baxis_transform(which='grid')
+        verts = (xmin, ymin), (xmin, ymax), (xmax, ymax), (xmax, ymin)
         p = mpatches.Polygon(verts, **kwargs)
+        p.set_transform(trans)
         self.add_patch(p)
         return p
 
-    def axrspan(self, rmin, rmax, **kwargs):
-        s = self._scale
-        lmin = self.get_llim()[0]
-        bmin = self.get_blim()[0]
-        x0, y0 = brl2xy(s - bmin - rmin, rmin, lmin)
-        x1, y1 = brl2xy(bmin, rmin, s - lmin - rmin)
-        x2, y2 = brl2xy(bmin, rmax, s - lmin - rmax)
-        x3, y3 = brl2xy(s - bmin - rmax, rmax, lmin)
+    def axrspan(self, xmin, xmax, ymin=0, ymax=1, **kwargs):
+        """
+        Add a span for the right coordinate.
 
-        verts = (x0, y0), (x1, y1), (x2, y2), (x3, y3)
+        Parameters
+        ----------
+        xmin : float
+               Lower limit of the right span in data units.
+        xmax : float
+               Upper limit of the right span in data units.
+        ymin : float, optional, default: 0
+               Lower limit of the span from end to end in relative
+               (0-1) units.
+        ymax : float, optional, default: 1
+               Upper limit of the span from end to end in relative
+               (0-1) units.
+
+        Returns
+        -------
+        Polygon : `~matplotlib.patches.Polygon`
+
+        Other Parameters
+        ----------------
+        **kwargs : `~matplotlib.patches.Polygon` properties.
+
+        %(Polygon)s
+
+        See Also
+        --------
+        axbspan : Add a span for the bottom coordinate.
+        axlspan : Add a span for the left coordinate.
+        """
+        trans = self.get_raxis_transform(which='grid')
+        verts = (xmin, ymin), (xmin, ymax), (xmax, ymax), (xmax, ymin)
         p = mpatches.Polygon(verts, **kwargs)
+        p.set_transform(trans)
         self.add_patch(p)
         return p
 
-    def axlspan(self, lmin, lmax, **kwargs):
-        s = self._scale
-        bmin = self.get_blim()[0]
-        rmin = self.get_rlim()[0]
-        x0, y0 = brl2xy(bmin, s - rmin - lmin, lmin)
-        x1, y1 = brl2xy(s - bmin - lmin, rmin, lmin)
-        x2, y2 = brl2xy(s - bmin - lmax, rmin, lmax)
-        x3, y3 = brl2xy(bmin, s - rmin - lmax, lmax)
+    def axlspan(self, xmin, xmax, ymin=0, ymax=1, **kwargs):
+        """
+        Add a span for the left coordinate.
 
-        verts = (x0, y0), (x1, y1), (x2, y2), (x3, y3)
+        Parameters
+        ----------
+        xmin : float
+               Lower limit of the left span in data units.
+        xmax : float
+               Upper limit of the left span in data units.
+        ymin : float, optional, default: 0
+               Lower limit of the span from end to end in relative
+               (0-1) units.
+        ymax : float, optional, default: 1
+               Upper limit of the span from end to end in relative
+               (0-1) units.
+
+        Returns
+        -------
+        Polygon : `~matplotlib.patches.Polygon`
+
+        Other Parameters
+        ----------------
+        **kwargs : `~matplotlib.patches.Polygon` properties.
+
+        %(Polygon)s
+
+        See Also
+        --------
+        axbspan : Add a span for the bottom coordinate.
+        axrspan : Add a span for the right coordinate.
+        """
+        trans = self.get_laxis_transform(which='grid')
+        verts = (xmin, ymin), (xmin, ymax), (xmax, ymax), (xmax, ymin)
         p = mpatches.Polygon(verts, **kwargs)
+        p.set_transform(trans)
         self.add_patch(p)
         return p
 
