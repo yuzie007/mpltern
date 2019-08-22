@@ -1,21 +1,8 @@
-from matplotlib.artist import allow_rasterization
 import matplotlib.transforms as mtransforms
 from matplotlib.axis import XTick
 
 
 class TernaryTick(XTick):
-    @allow_rasterization
-    def draw(self, renderer):
-        if not self.get_visible():
-            self.stale = False
-            return
-        renderer.open_group(self.__name__)
-        for artist in [self.gridline, self.tick1line, self.tick2line,
-                       self.label1, self.label2]:
-            artist.draw(renderer)
-        renderer.close_group(self.__name__)
-        self.stale = False
-
     def _get_tick2line(self):
         # Instead of _get_tick2line, _get_tick1line is called to avoid
         # the dependence on spines.
