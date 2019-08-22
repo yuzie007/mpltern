@@ -1,8 +1,5 @@
 import numpy as np
 
-from matplotlib import rcParams
-import matplotlib.font_manager as font_manager
-import matplotlib.text as mtext
 from .ternary_tick import TernaryTick
 
 
@@ -15,47 +12,27 @@ class LTick(TernaryTick):
 
     def _get_text1(self):
         'This may be overridden when rotating tick labels'
-        return super(TernaryTick, self)._get_text1()
+        return super()._get_text1()
+
+    def _get_tick1line(self):
+        l = super()._get_tick1line()
+        l.set_transform(self.axes.get_laxis_transform(which='tick1'))
+        return l
+
+    def _get_tick2line(self):
+        l = super()._get_tick2line()
+        l.set_transform(self.axes.get_laxis_transform(which='tick2'))
+        return l
+
+    def _get_gridline(self):
+        l = super()._get_gridline()
+        l.set_transform(self.axes.get_laxis_transform(which='grid'))
+        return l
 
     def update_position(self, loc):
-        'Set the location of tick in data coords with scalar *loc*'
-        xmin, xmax = self.axes.get_xlim()
-        ymin, ymax = self.axes.get_ylim()
-        xavg = (xmin + xmax) * 0.5
-
-        lmin, lmax = self.taxes.get_llim()
-
-        sx0 = (xmin - xavg) / (lmax - lmin)
-        sx1 = (xmin - xmax) / (lmax - lmin)
-        sy1 = (ymin - ymax) / (lmax - lmin)
-
-        locx0 = xavg + sx0 * (loc - lmin)
-        locx1 = xmax + sx1 * (loc - lmin)
-        locy0 = ymax + sy1 * (loc - lmin)
-        locy1 = ymin
-
+        super().update_position(loc)
         # angle = np.deg2rad(210)
-        points = self.axes.transAxes.transform([[0.0, 0.0], [-0.5, -1.0]])
-        angle = np.arctan2(
-            points[1, 0] - points[0, 0],
-            points[1, 1] - points[0, 1])
-
-        self.tick1line.set_xdata((locx0,))
-        self.tick1line.set_ydata((locy0,))
+        ps = self.axes.transAxes.transform([[0.0, 0.0], [-0.5, -1.0]])
+        angle = np.arctan2(ps[1, 0] - ps[0, 0], ps[1, 1] - ps[0, 1])
         self.tilt(self.tick1line, angle)
-
-        self.tick2line.set_xdata((locx0,))
-        self.tick2line.set_ydata((locy0,))
         self.tilt(self.tick2line, angle)
-
-        self.gridline.set_xdata((locx0, locx1))
-        self.gridline.set_ydata((locy0, locy1))
-
-        self.label1.set_x(locx0)
-        self.label1.set_y(locy0)
-
-        self.label2.set_x(locx0)
-        self.label2.set_y(locy0)
-
-        self._loc = loc
-        self.stale = True

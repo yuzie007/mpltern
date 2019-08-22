@@ -133,20 +133,26 @@ class TernaryAxesBase(Axes):
     #             "top", "center")
 
     def get_baxis_text1_transform(self, pad_points):
-        return (self._axes.transData +
-                mtransforms.ScaledTranslation(-0.5 * pad_points / 72.0, -np.sqrt(3.0) * 0.5 * pad_points / 72.0,
+        x = pad_points / 72.0 * -0.5
+        y = pad_points / 72.0 * -np.sqrt(3.0) * 0.5
+        return (self.get_baxis_transform(which='tick1') +
+                mtransforms.ScaledTranslation(x, y,
                                               self.figure.dpi_scale_trans),
                 "top", "center")
 
     def get_raxis_text1_transform(self, pad_points):
-        return (self._axes.transData +
-                mtransforms.ScaledTranslation(1 * pad_points / 72.0, 0,
+        x = pad_points / 72.0
+        y = 0
+        return (self.get_raxis_transform(which='tick1') +
+                mtransforms.ScaledTranslation(x, y,
                                               self.figure.dpi_scale_trans),
                 "center_baseline", "left")
 
     def get_laxis_text1_transform(self, pad_points):
-        return (self._axes.transData +
-                mtransforms.ScaledTranslation(-0.5 * pad_points / 72.0, np.sqrt(3.0) * 0.5 * pad_points / 72.0,
+        x = pad_points / 72.0 * -0.5
+        y = pad_points / 72.0 * np.sqrt(3.0) * 0.5
+        return (self.get_laxis_transform(which='tick1') +
+                mtransforms.ScaledTranslation(x, y,
                                               self.figure.dpi_scale_trans),
                 "baseline", "right")
 

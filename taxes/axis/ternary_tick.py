@@ -1,8 +1,6 @@
 from matplotlib.artist import allow_rasterization
-from matplotlib import rcParams
-import matplotlib.lines as mlines
 import matplotlib.transforms as mtransforms
-from matplotlib.axis import XTick, GRIDLINE_INTERPOLATION_STEPS
+from matplotlib.axis import XTick
 
 
 class TernaryTick(XTick):
@@ -23,35 +21,13 @@ class TernaryTick(XTick):
         renderer.close_group(self.__name__)
         self.stale = False
 
-    def _get_tick1line(self):
-        'Get the default line2D instance'
-        # both x and y in data coords
-        l = super(TernaryTick, self)._get_tick1line()
-        l.set_transform(self.axes.transData)
-        return l
-
     def _get_tick2line(self):
-        'Get the default line2D instance'
-        # both x and y in data coords
-        # We must give blank xdata and ydata, not to show unexpected lines
-        # or points.
-        l = mlines.Line2D(xdata=(), ydata=(),
-                          color=self._color,
-                          linestyle='None',
-                          marker=self._tickmarkers[1],
-                          markersize=self._size,
-                          markeredgewidth=self._width,
-                          zorder=self._zorder)
-
-        l.set_transform(self.axes.transData)
-        self._set_artist_props(l)
-        return l
-
-    def _get_gridline(self):
-        'Get the default line2D instance'
-        # both x and y in data coords
-        l = super(TernaryTick, self)._get_gridline()
-        l.set_transform(self.axes.transData)
+        # Instead of _get_tick2line, _get_tick1line is called
+        # to avoid the dependence on spines.
+        l = super()._get_tick1line()
+        # xdata and ydata must be blank to suppress unexpected lines/points.
+        l.set_xdata(())
+        l.set_ydata(())
         return l
 
     def tilt(self, line, angle):
