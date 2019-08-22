@@ -10,10 +10,6 @@ class BTick(TernaryTick):
     def _get_text2_transform(self):
         return self.axes.get_baxis_text1_transform(self._pad)
 
-    def _get_text1(self):
-        'This may be overridden when rotating tick labels'
-        return super()._get_text1()
-
     def _get_tick1line(self):
         l = super()._get_tick1line()
         l.set_transform(self.axes.get_baxis_transform(which='tick1'))
