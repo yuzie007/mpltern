@@ -123,12 +123,6 @@ class TernaryAxesBase(Axes):
     def get_laxis_transform(self, which='grid'):
         return self._laxis_transform
 
-    # def get_baxis_text1_transform(self, pad_points):
-    #     return (self._ax.transData +
-    #             mtransforms.ScaledTranslation(0, -1 * pad_points / 72.0,
-    #                                           self.figure.dpi_scale_trans),
-    #             "top", "center")
-
     def get_baxis_text1_transform(self, pad_points):
         x = pad_points / 72.0 * -0.5
         y = pad_points / 72.0 * -np.sqrt(3.0) * 0.5
