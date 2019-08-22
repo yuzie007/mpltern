@@ -4,11 +4,6 @@ from matplotlib.axis import XTick
 
 
 class TernaryTick(XTick):
-    def __init__(self, taxes, loc, label, *args, **kwargs):
-        self.taxes = taxes
-        axes = self.taxes.get_axes()
-        super(TernaryTick, self).__init__(axes, loc, label, *args, **kwargs)
-
     @allow_rasterization
     def draw(self, renderer):
         if not self.get_visible():
@@ -22,8 +17,8 @@ class TernaryTick(XTick):
         self.stale = False
 
     def _get_tick2line(self):
-        # Instead of _get_tick2line, _get_tick1line is called
-        # to avoid the dependence on spines.
+        # Instead of _get_tick2line, _get_tick1line is called to avoid
+        # the dependence on spines.
         l = super()._get_tick1line()
         # xdata and ydata must be blank to suppress unexpected lines/points.
         l.set_xdata(())

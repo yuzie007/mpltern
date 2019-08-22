@@ -2,17 +2,17 @@ from matplotlib import rcParams
 import matplotlib.font_manager as font_manager
 import matplotlib.text as mtext
 import matplotlib.transforms as mtransforms
-from .ternary_axis import TernaryAxis
+from matplotlib.axis import XAxis
 from .btick import BTick
 
 
-class BAxis(TernaryAxis):
+class BAxis(XAxis):
     def _get_tick(self, major):
         if major:
             tick_kw = self._major_tick_kw
         else:
             tick_kw = self._minor_tick_kw
-        return BTick(self.taxes, 0, '', major=major, **tick_kw)
+        return BTick(self.axes, 0, '', major=major, **tick_kw)
 
     def _get_label(self):
         # x in axes coords, y in display coords (to be updated at draw
@@ -80,4 +80,4 @@ class BAxis(TernaryAxis):
 
     def get_view_interval(self):
         'return the Interval instance for this axis view limits'
-        return self.taxes.get_blim()
+        return self.axes.get_blim()

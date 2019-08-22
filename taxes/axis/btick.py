@@ -5,10 +5,10 @@ from .ternary_tick import TernaryTick
 
 class BTick(TernaryTick):
     def _get_text1_transform(self):
-        return self.taxes.get_baxis_text1_transform(self._pad)
+        return self.axes.get_baxis_text1_transform(self._pad)
 
     def _get_text2_transform(self):
-        return self.taxes.get_baxis_text1_transform(self._pad)
+        return self.axes.get_baxis_text1_transform(self._pad)
 
     def _get_text1(self):
         'This may be overridden when rotating tick labels'

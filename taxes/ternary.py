@@ -80,9 +80,6 @@ class TernaryAxesBase(Axes):
         return OrderedDict((side, Spine.linear_spine(self, side))
                            for side in ['left', 'right', 'bottom'])
 
-    def get_axes(self):
-        return self._axes
-
     def _get_axis_list(self):
         return (self.baxis, self.raxis, self.laxis)
 
