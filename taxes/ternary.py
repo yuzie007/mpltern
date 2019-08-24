@@ -8,6 +8,7 @@ from matplotlib.axes import Axes
 import matplotlib.lines as mlines
 import matplotlib.patches as mpatches
 import matplotlib.transforms as mtransforms
+import matplotlib.axis as maxis
 from .spines import Spine
 from .transforms import BAxisTransform, RAxisTransform, LAxisTransform
 from .axis.baxis import BAxis
@@ -47,53 +48,16 @@ class TernaryAxesBase(Axes):
         self.viewLLim = mtransforms.Bbox.unit()
         super().set_figure(fig)
 
-    def _gen_axes_patch(self):
-        """
-        Returns the patch used to draw the background of the axes.  It
-        is also used as the clipping path for any data elements on the
-        axes.
-
-        In the standard axes, this is a rectangle, but in other
-        projections it may not be.
-
-        .. note::
-
-            Intended to be overridden by new projection types.
-
-        """
-        return mpatches.Polygon(((0.0, 0.0), (1.0, 0.0), (0.5, 1.0)))
-
-    def _gen_axes_spines(self, locations=None, offset=0.0, units='inches'):
-        """
-        Returns a dict whose keys are spine names and values are
-        Line2D or Patch instances. Each element is used to draw a
-        spine of the axes.
-
-        In the standard axes, this is a single line segment, but in
-        other projections it may not be.
-
-        .. note::
-
-            Intended to be overridden by new projection types.
-
-        """
-        return OrderedDict((side, Spine.linear_spine(self, side))
-                           for side in ['left', 'right', 'bottom'])
-
     def _get_axis_list(self):
         return (self.baxis, self.raxis, self.laxis)
 
     def _init_axis(self):
-        """Reference: matplotlib/axes/_base.py, _init_axis
+        self.xaxis = maxis.XAxis(self)
+        self.yaxis = maxis.YAxis(self)
 
-        TODO: Manage spines
-        """
         self.baxis = BAxis(self)
         self.raxis = RAxis(self)
         self.laxis = LAxis(self)
-
-        self.xaxis = self.baxis  # TODO
-        self.yaxis = self.laxis  # TODO
 
         self.spines['bottom'].register_axis(self.baxis)
         self.spines['right'].register_axis(self.raxis)
@@ -146,6 +110,40 @@ class TernaryAxesBase(Axes):
                 mtransforms.ScaledTranslation(x, y,
                                               self.figure.dpi_scale_trans),
                 "baseline", "right")
+
+    def _gen_axes_patch(self):
+        """
+        Returns the patch used to draw the background of the axes.  It
+        is also used as the clipping path for any data elements on the
+        axes.
+
+        In the standard axes, this is a rectangle, but in other
+        projections it may not be.
+
+        .. note::
+
+            Intended to be overridden by new projection types.
+
+        """
+        return mpatches.Polygon(((0.0, 0.0), (1.0, 0.0), (0.5, 1.0)))
+
+    def _gen_axes_spines(self, locations=None, offset=0.0, units='inches'):
+        """
+        Returns
+        -------
+        dict
+            Mapping of spine names to `Line2D` or `Patch` instances that are
+            used to draw axes spines.
+
+            In the standard axes, this is a single line segment, but in
+            other projections it may not be.
+
+        Notes
+        -----
+        Intended to be overridden by new projection types.
+        """
+        return OrderedDict((side, Spine.linear_spine(self, side))
+                           for side in ['left', 'right', 'bottom', 'top'])
 
     def get_baxis(self):
         """Return the BAxis instance"""
@@ -211,6 +209,31 @@ class TernaryAxesBase(Axes):
             self.raxis.grid(b, which=which, **kwargs)
         if axis in ['l', 'both']:
             self.laxis.grid(b, which=which, **kwargs)
+
+    def tick_params(self, axis='both', **kwargs):
+        super().tick_params(axis, **kwargs)
+        cbook._check_in_list(['b', 'r', 'l', 'both'], axis=axis)
+        if axis in ['b', 'both']:
+            bkw = dict(kwargs)
+            bkw.pop('left', None)
+            bkw.pop('right', None)
+            bkw.pop('labelleft', None)
+            bkw.pop('labelright', None)
+            self.baxis.set_tick_params(**bkw)
+        if axis in ['r', 'both']:
+            rkw = dict(kwargs)
+            rkw.pop('left', None)
+            rkw.pop('right', None)
+            rkw.pop('labelleft', None)
+            rkw.pop('labelright', None)
+            self.raxis.set_tick_params(**rkw)
+        if axis in ['l', 'both']:
+            lkw = dict(kwargs)
+            lkw.pop('left', None)
+            lkw.pop('right', None)
+            lkw.pop('labelleft', None)
+            lkw.pop('labelright', None)
+            self.laxis.set_tick_params(**lkw)
 
     def set_tlim(self, bmin, bmax, rmin, rmax, lmin, lmax, *args, **kwargs):
         """

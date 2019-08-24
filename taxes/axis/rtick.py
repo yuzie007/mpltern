@@ -29,4 +29,4 @@ class RTick(TernaryTick):
         super().update_position(loc)
         angle = np.deg2rad(90)
         self.tilt(self.tick1line, angle)
-        self.tilt(self.tick2line, angle)
+        self.tilt(self.tick2line, angle + np.pi)

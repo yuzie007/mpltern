@@ -31,4 +31,4 @@ class BTick(TernaryTick):
         ps = self.axes.transAxes.transform([[0.0, 0.0], [-0.5, 1.0]])
         angle = np.arctan2(ps[1, 0] - ps[0, 0], ps[1, 1] - ps[0, 1])
         self.tilt(self.tick1line, angle)
-        self.tilt(self.tick2line, angle)
+        self.tilt(self.tick2line, angle + np.pi)
