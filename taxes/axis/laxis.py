@@ -30,8 +30,19 @@ class LAxis(XAxis):
             mtransforms.IdentityTransform(), self.axes.transAxes))
 
         self._set_artist_props(label)
-        self.label_position = 'left'
+        self.label_position = 'edge'
         return label
+
+    def set_label_position(self, position):
+        """
+        Set the label position (edge or corner)
+
+        Parameters
+        ----------
+        position : {'edge', 'corner'}
+        """
+        self.label_position = position
+        self.stale = True
 
     def _get_tick_boxes_siblings(self, renderer):
         """
@@ -42,8 +53,8 @@ class LAxis(XAxis):
         """
         bboxes = []
         bboxes2 = []
-        # get the Grouper that keeps track of y-label groups for this figure
-        grp = self.figure._align_ylabel_grp
+        # get the Grouper that keeps track of x-label groups for this figure
+        grp = self.figure._align_xlabel_grp
         # if we want to align labels from other axes:
         ticks_to_draw = self._update_ticks()
         tlb, tlb2 = self._get_tick_bboxes(ticks_to_draw, renderer)
@@ -60,29 +71,28 @@ class LAxis(XAxis):
             return
 
         # get bounding boxes for this axis and any siblings
-        # that have been set by `fig.align_ylabels()`
+        # that have been set by `fig.align_xlabels()`
         bboxes, bboxes2 = self._get_tick_boxes_siblings(renderer=renderer)
 
         x, y = self.label.get_position()
-        if self.label_position == 'left':
-            try:
-                spine = self.axes.spines['left']
-                spinebbox = spine.get_transform().transform_path(
-                    spine.get_path()).get_extents()
-            except KeyError:
-                # use axes if spine doesn't exist
-                spinebbox = self.axes.bbox
-
+        if self.label_position == 'edge':
             def extract_left(bbox):
                 bbox_axes = bbox.transformed(self.axes.transAxes.inverted())
                 x = bbox_axes.x0 - (bbox_axes.y1 - y) * 0.5
                 return self.axes.transAxes.transform((x, y))[0]
 
             left = min([extract_left(bbox) for bbox in bboxes])
-
             self.label.set_position(
                 (left - self.labelpad * self.figure.dpi / 72, y)
             )
+        else:
+            y, x = min([(bbox.y0, bbox.x0) for bbox in bboxes])
+            position = (x - self.labelpad * self.figure.dpi / 72, y)
+            self.label.set_position(position)
+            self.label.set_horizontalalignment('right')
+            self.label.set_rotation(0.0)
+            self.label.set_rotation_mode('default')
+            self.label.set_transform(mtransforms.IdentityTransform())
 
     def get_view_interval(self):
         'return the Interval instance for this axis view limits'

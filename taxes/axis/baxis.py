@@ -29,8 +29,19 @@ class BAxis(XAxis):
             self.axes.transAxes, mtransforms.IdentityTransform()))
 
         self._set_artist_props(label)
-        self.label_position = 'bottom'
+        self.label_position = 'edge'
         return label
+
+    def set_label_position(self, position):
+        """
+        Set the label position (edge or corner)
+
+        Parameters
+        ----------
+        position : {'edge', 'corner'}
+        """
+        self.label_position = position
+        self.stale = True
 
     def _get_tick_boxes_siblings(self, renderer):
         """
@@ -63,7 +74,7 @@ class BAxis(XAxis):
         bboxes, bboxes2 = self._get_tick_boxes_siblings(renderer=renderer)
 
         x, y = self.label.get_position()
-        if self.label_position == 'bottom':
+        if self.label_position == 'edge':
             try:
                 spine = self.axes.spines['bottom']
                 spinebbox = spine.get_transform().transform_path(
@@ -77,6 +88,24 @@ class BAxis(XAxis):
             self.label.set_position(
                 (x, bottom - self.labelpad * self.figure.dpi / 72)
             )
+
+        else:
+            try:
+                spine = self.axes.spines['bottom']
+                spinebbox = spine.get_transform().transform_path(
+                    spine.get_path()).get_extents()
+            except KeyError:
+                # use axes if spine doesn't exist
+                spinebbox = self.axes.bbox
+            bbox = mtransforms.Bbox.union(bboxes + [spinebbox])
+            bottom = bbox.y0
+
+            x = max([bbox.x0 for bbox in bboxes])
+
+            position = (x, bottom - self.labelpad * self.figure.dpi / 72)
+            self.label.set_position(position)
+            self.label.set_horizontalalignment('left')
+            self.label.set_transform(mtransforms.IdentityTransform())
 
     def get_view_interval(self):
         'return the Interval instance for this axis view limits'
