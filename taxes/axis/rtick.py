@@ -27,6 +27,9 @@ class RTick(TernaryTick):
 
     def update_position(self, loc):
         super().update_position(loc)
-        angle = np.deg2rad(90)
-        self.tilt(self.tick1line, angle)
-        self.tilt(self.tick2line, angle + np.pi)
+        # The angle here is given for the "in" ticks.
+        trans = self.axes.get_raxis_transform(which='grid')
+        ps = trans.transform([[0.0, 0.0], [0.0, 1.0]])
+        angle = np.arctan2(ps[1, 1] - ps[0, 1], ps[1, 0] - ps[0, 0])
+        self.tilt(self.tick1line, angle - np.pi / 2)
+        self.tilt(self.tick2line, angle + np.pi / 2)
