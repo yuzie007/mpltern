@@ -3,14 +3,14 @@ import numpy as np
 from matplotlib.transforms import Transform
 
 
-class BAxisTransform(Transform):
-    """Transform convenient for BAxis.
+class TernaryTransform(Transform):
+    """Transform convenient for TernaryAxis.
 
     Input
     -----
     0 <= x <= 1, 0 <= y <= 1.
-    x == 0 corresponds to bmin.
-    x == 1 corresponds to bmax.
+    x == 0 corresponds to ternary min.
+    x == 1 corresponds to ternary max.
     Output
     ------
     (x, y) in the "original" Axes coordinates
@@ -18,6 +18,8 @@ class BAxisTransform(Transform):
     input_dims = 2
     output_dims = 2
 
+
+class BAxisTransform(TernaryTransform):
     def transform_non_affine(self, points):
         s = points[:, 0]
         p = points[:, 1]
@@ -26,21 +28,16 @@ class BAxisTransform(Transform):
         return np.column_stack((x, y)).astype(float)
 
 
-class RAxisTransform(Transform):
-    """Transform convenient for RAxis.
+class BAxisClockwiseTransform(TernaryTransform):
+    def transform_non_affine(self, points):
+        s = points[:, 0]
+        p = points[:, 1]
+        x = (1.0 - s) * (1.0 - p) + 0.5 * (1.0 - s) * p
+        y = (1.0 - s) * p
+        return np.column_stack((x, y)).astype(float)
 
-    Input
-    -----
-    0 <= x <= 1, 0 <= y <= 1.
-    x == 0 corresponds to rmin.
-    x == 1 corresponds to rmax.
-    Output
-    ------
-    (x, y) in the "original" Axes coordinates
-    """
-    input_dims = 2
-    output_dims = 2
 
+class RAxisTransform(TernaryTransform):
     def transform_non_affine(self, points):
         s = points[:, 0]
         p = points[:, 1]
@@ -49,24 +46,48 @@ class RAxisTransform(Transform):
         return np.column_stack((x, y)).astype(float)
 
 
-class LAxisTransform(Transform):
-    """Transform convenient for LAxis.
+class RAxisClockwiseTransform(TernaryTransform):
+    def transform_non_affine(self, points):
+        s = points[:, 0]
+        p = points[:, 1]
+        x = 1.0 - 0.5 * (1.0 - s) * (1.0 - p) - (1.0 - s) * p
+        y = (1.0 - s) * (1.0 - p)
+        return np.column_stack((x, y)).astype(float)
 
-    Input
-    -----
-    0 <= x <= 1, 0 <= y <= 1.
-    x == 0 corresponds to lmin.
-    x == 1 corresponds to lmax.
-    Output
-    ------
-    (x, y) in the "original" Axes coordinates
-    """
-    input_dims = 2
-    output_dims = 2
 
+class LAxisTransform(TernaryTransform):
     def transform_non_affine(self, points):
         s = points[:, 0]
         p = points[:, 1]
         x = 0.5 * (1.0 - s) * (1.0 - p) + (1.0 - s) * p
         y = 1.0 * (1.0 - s) * (1.0 - p)
         return np.column_stack((x, y)).astype(float)
+
+
+class LAxisClockwiseTransform(TernaryTransform):
+    def transform_non_affine(self, points):
+        s = points[:, 0]
+        p = points[:, 1]
+        x = 0.5 - 0.5 * (1.0 - s) * (1.0 - p) + 0.5 * (1.0 - s) * p
+        y = s
+        return np.column_stack((x, y)).astype(float)
+
+
+def create_ternary_transform(side, clockwise):
+    if side == 'bottom':
+        if clockwise:
+            return BAxisClockwiseTransform()
+        else:
+            return BAxisTransform()
+    elif side == 'right':
+        if clockwise:
+            return RAxisClockwiseTransform()
+        else:
+            return RAxisTransform()
+    elif side == 'left':
+        if clockwise:
+            return LAxisClockwiseTransform()
+        else:
+            return LAxisTransform()
+    else:
+        raise ValueError(side)
