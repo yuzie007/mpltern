@@ -73,39 +73,30 @@ class BAxis(XAxis):
         # that have been set by `fig.align_xlabels()`
         bboxes, bboxes2 = self._get_tick_boxes_siblings(renderer=renderer)
 
-        x, y = self.label.get_position()
-        if self.label_position == 'edge':
-            try:
-                spine = self.axes.spines['bottom']
-                spinebbox = spine.get_transform().transform_path(
-                    spine.get_path()).get_extents()
-            except KeyError:
-                # use axes if spine doesn't exist
-                spinebbox = self.axes.bbox
-            bbox = mtransforms.Bbox.union(bboxes + [spinebbox])
-            bottom = bbox.y0
+        pad = self.labelpad * self.figure.dpi / 72
 
-            self.label.set_position(
-                (x, bottom - self.labelpad * self.figure.dpi / 72)
-            )
+        x, y = self.label.get_position()
+
+        try:
+            spine = self.axes.spines['bottom']
+            spinebbox = spine.get_transform().transform_path(
+                spine.get_path()).get_extents()
+        except KeyError:
+            # use axes if spine doesn't exist
+            spinebbox = self.axes.bbox
+        bbox = mtransforms.Bbox.union(bboxes + [spinebbox])
+        bottom = bbox.y0
+
+        if self.label_position == 'edge':
+            position = (x, bottom - pad)
+            self.label.set_position(position)
 
         else:
-            try:
-                spine = self.axes.spines['bottom']
-                spinebbox = spine.get_transform().transform_path(
-                    spine.get_path()).get_extents()
-            except KeyError:
-                # use axes if spine doesn't exist
-                spinebbox = self.axes.bbox
-            bbox = mtransforms.Bbox.union(bboxes + [spinebbox])
-            bottom = bbox.y0
-
-            x = max([bbox.x0 for bbox in bboxes])
-
-            position = (x, bottom - self.labelpad * self.figure.dpi / 72)
+            if self.axes.clockwise:
+                position = (0.0, bottom - pad)
+            else:
+                position = (1.0, bottom - pad)
             self.label.set_position(position)
-            self.label.set_horizontalalignment('left')
-            self.label.set_transform(mtransforms.IdentityTransform())
 
     def get_view_interval(self):
         'return the Interval instance for this axis view limits'

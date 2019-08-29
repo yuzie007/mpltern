@@ -74,6 +74,8 @@ class LAxis(XAxis):
         # that have been set by `fig.align_xlabels()`
         bboxes, bboxes2 = self._get_tick_boxes_siblings(renderer=renderer)
 
+        pad = self.labelpad * self.figure.dpi / 72
+
         x, y = self.label.get_position()
         if self.label_position == 'edge':
             def extract_left(bbox):
@@ -82,17 +84,32 @@ class LAxis(XAxis):
                 return self.axes.transAxes.transform((x, y))[0]
 
             left = min([extract_left(bbox) for bbox in bboxes])
-            self.label.set_position(
-                (left - self.labelpad * self.figure.dpi / 72, y)
-            )
-        else:
-            y, x = min([(bbox.y0, bbox.x0) for bbox in bboxes])
-            position = (x - self.labelpad * self.figure.dpi / 72, y)
+            position = (left - pad, y)
             self.label.set_position(position)
-            self.label.set_horizontalalignment('right')
+        else:
+            baxis = self.axes.baxis
+            raxis = self.axes.raxis
+            laxis = self.axes.laxis
+
+            if self.axes.clockwise:
+                bboxes, bboxes2 = raxis._get_tick_boxes_siblings(renderer=renderer)
+                y = max([bbox.y1 for bbox in bboxes])
+                top = max(y, self.axes.bbox.y1)
+                position = (0.5, top + pad)
+                self.label.set_verticalalignment('bottom')
+            else:
+                bboxes, bboxes2 = baxis._get_tick_boxes_siblings(renderer=renderer)
+                y = min([bbox.y0 for bbox in bboxes])
+                bottom = min(y, self.axes.bbox.y0)
+                position = (0.0, bottom - pad)
+                self.label.set_verticalalignment('top')
+
+            self.label.set_position(position)
             self.label.set_rotation(0.0)
             self.label.set_rotation_mode('default')
-            self.label.set_transform(mtransforms.IdentityTransform())
+            trans = mtransforms.blended_transform_factory(
+                self.axes.transAxes, mtransforms.IdentityTransform())
+            self.label.set_transform(trans)
 
     def get_view_interval(self):
         'return the Interval instance for this axis view limits'
