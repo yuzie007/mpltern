@@ -10,18 +10,27 @@ import matplotlib.patches as mpatches
 import matplotlib.transforms as mtransforms
 import matplotlib.axis as maxis
 from .spines import Spine
-from .transforms import BAxisTransform, RAxisTransform, LAxisTransform
+from .transforms import create_ternary_transform
 from .axis.baxis import BAxis
 from .axis.raxis import RAxis
 from .axis.laxis import LAxis
 
 
-def brl2xy(b, r, l):
+def brl2xy_counter_clockwise(b, r, l):
     b = np.asarray(b)
     r = np.asarray(r)
     l = np.asarray(l)
     x = b + 0.5 * r
     y = 0.5 * np.sqrt(3.0) * r
+    return x, y
+
+
+def brl2xy_clockwise(b, r, l):
+    b = np.asarray(b)
+    r = np.asarray(r)
+    l = np.asarray(l)
+    x = r + 0.5 * l
+    y = 0.5 * np.sqrt(3.0) * l
     return x, y
 
 
@@ -36,8 +45,13 @@ def xy2brl(x, y, s=1.0):
 
 
 class TernaryAxesBase(Axes):
-    def __init__(self, *args, scale=1.0, **kwargs):
+    def __init__(self, *args, scale=1.0, clockwise=False, **kwargs):
         self._scale = scale
+        self.clockwise = clockwise
+        if self.clockwise:
+            self.brl2xy = brl2xy_clockwise
+        else:
+            self.brl2xy = brl2xy_counter_clockwise
         super().__init__(*args, **kwargs)
         self.set_aspect('equal', adjustable='box', anchor='C')
         self.set_tlim(0.0, scale, 0.0, scale, 0.0, scale)
@@ -74,9 +88,13 @@ class TernaryAxesBase(Axes):
         transLLimits = mtransforms.BboxTransformFrom(
             mtransforms.TransformedBbox(self.viewLLim, self.transScale))
 
-        self._baxis_transform = transBLimits + BAxisTransform() + self.transAxes
-        self._raxis_transform = transRLimits + RAxisTransform() + self.transAxes
-        self._laxis_transform = transLLimits + LAxisTransform() + self.transAxes
+        baxis_transform = create_ternary_transform('bottom', self.clockwise)
+        raxis_transform = create_ternary_transform('right' , self.clockwise)
+        laxis_transform = create_ternary_transform('left'  , self.clockwise)
+
+        self._baxis_transform = transBLimits + baxis_transform + self.transAxes
+        self._raxis_transform = transRLimits + raxis_transform + self.transAxes
+        self._laxis_transform = transLLimits + laxis_transform + self.transAxes
 
     def get_baxis_transform(self, which='grid'):
         return self._baxis_transform
@@ -88,28 +106,37 @@ class TernaryAxesBase(Axes):
         return self._laxis_transform
 
     def get_baxis_text1_transform(self, pad_points):
-        x = pad_points / 72.0 * -0.5
-        y = pad_points / 72.0 * -np.sqrt(3.0) * 0.5
+        trans = self.get_baxis_transform(which='tick1')
+        ps = trans.transform([[0.0, 0.0], [0.0, 1.0]])
+        d = ps[1] - ps[0]
+        x, y = -d / np.linalg.norm(d) * pad_points / 72.0
+        align = 'top'
         return (self.get_baxis_transform(which='tick1') +
                 mtransforms.ScaledTranslation(x, y,
                                               self.figure.dpi_scale_trans),
-                "top", "center")
+                align, "center")
 
     def get_raxis_text1_transform(self, pad_points):
-        x = pad_points / 72.0
-        y = 0
+        trans = self.get_raxis_transform(which='tick1')
+        ps = trans.transform([[0.0, 0.0], [0.0, 1.0]])
+        d = ps[1] - ps[0]
+        x, y = -d / np.linalg.norm(d) * pad_points / 72.0
+        align = 'baseline' if self.clockwise else 'center_baseline'
         return (self.get_raxis_transform(which='tick1') +
                 mtransforms.ScaledTranslation(x, y,
                                               self.figure.dpi_scale_trans),
-                "center_baseline", "left")
+                align, "left")
 
     def get_laxis_text1_transform(self, pad_points):
-        x = pad_points / 72.0 * -0.5
-        y = pad_points / 72.0 * np.sqrt(3.0) * 0.5
+        trans = self.get_laxis_transform(which='tick1')
+        ps = trans.transform([[0.0, 0.0], [0.0, 1.0]])
+        d = ps[1] - ps[0]
+        x, y = -d / np.linalg.norm(d) * pad_points / 72.0
+        align = 'center_baseline' if self.clockwise else 'baseline'
         return (self.get_laxis_transform(which='tick1') +
                 mtransforms.ScaledTranslation(x, y,
                                               self.figure.dpi_scale_trans),
-                "baseline", "right")
+                align, "right")
 
     def _gen_axes_patch(self):
         """
@@ -247,21 +274,21 @@ class TernaryAxesBase(Axes):
         r = bmin + rmax + lmin
         l = bmin + rmin + lmax
         s = self._scale
-        if (abs(b - s) > 1e-12) or (abs(r - s) > 1e-12) or (abs(l - s) > 1e-12):
+        tol = 1e-12
+        if (abs(b - s) > tol) or (abs(r - s) > tol) or (abs(l - s) > tol):
             raise ValueError(b, r, l, s)
-        ax = self._axes
-
-        xmin = bmin + 0.5 * rmin
-        xmax = bmax + 0.5 * rmin
-        ax.set_xlim(xmin, xmax, *args, **kwargs)
-
-        ymin = 0.5 * np.sqrt(3.0) * rmin
-        ymax = 0.5 * np.sqrt(3.0) * rmax
-        ax.set_ylim(ymin, ymax, *args, **kwargs)
 
         self.set_blim(bmin, bmax)
         self.set_rlim(rmin, rmax)
         self.set_llim(lmin, lmax)
+
+        xmin = bmin + 0.5 * rmin
+        xmax = bmax + 0.5 * rmin
+        self.set_xlim(xmin, xmax, *args, **kwargs)
+
+        ymin = 0.5 * np.sqrt(3.0) * rmin
+        ymax = 0.5 * np.sqrt(3.0) * rmax
+        self.set_ylim(ymin, ymax, *args, **kwargs)
 
     def get_blim(self):
         return tuple(self.viewBLim.intervalx)
@@ -332,7 +359,7 @@ class TernaryAxes(TernaryAxesBase):
         return self.laxis.set_label_text(llabel, fontdict, **kwargs)
 
     def text(self, b, r, l, s, *args, **kwargs):
-        x, y = brl2xy(b, r, l)
+        x, y = self.brl2xy(b, r, l)
         return super().text(x, y, s, *args, **kwargs)
 
     def text_xy(self, x, y, s, *args, **kwargs):
@@ -582,42 +609,42 @@ class TernaryAxes(TernaryAxesBase):
         return p
 
     def plot(self, b, r, l, *args, **kwargs):
-        x, y = brl2xy(b, r, l)
+        x, y = self.brl2xy(b, r, l)
         return super().plot(x, y, *args, **kwargs)
 
     def scatter(self, b, r, l, *args, **kwargs):
-        x, y = brl2xy(b, r, l)
+        x, y = self.brl2xy(b, r, l)
         return super().scatter(x, y, *args, **kwargs)
 
     def hexbin(self, b, r, l, *args, **kwargs):
-        x, y = brl2xy(b, r, l)
+        x, y = self.brl2xy(b, r, l)
         return super().hexbin(x, y, *args, **kwargs)
 
     def quiver(self, b, r, l, db, dr, dl, *args, **kwargs):
-        x, y = brl2xy(b, r, l)
-        u, v = brl2xy(b + db, r + dr, l + dl)
+        x, y = self.brl2xy(b, r, l)
+        u, v = self.brl2xy(b + db, r + dr, l + dl)
         u -= x
         v -= y
         return super().quiver(x, y, u, v, *args, **kwargs)
 
     def fill(self, b, r, l, *args, **kwargs):
-        x, y = brl2xy(b, r, l)
+        x, y = self.brl2xy(b, r, l)
         return super().fill(x, y, *args, **kwargs)
 
     def tricontour(self, b, r, l, *args, **kwargs):
-        x, y = brl2xy(b, r, l)
+        x, y = self.brl2xy(b, r, l)
         return super().tricontour(x, y, *args, **kwargs)
 
     def tricontourf(self, b, r, l, *args, **kwargs):
-        x, y = brl2xy(b, r, l)
+        x, y = self.brl2xy(b, r, l)
         return super().tricontourf(x, y, *args, **kwargs)
 
     def tripcolor(self, b, r, l, *args, **kwargs):
-        x, y = brl2xy(b, r, l)
+        x, y = self.brl2xy(b, r, l)
         return super().tripcolor(x, y, *args, **kwargs)
 
     def triplot(self, b, r, l, *args, **kwargs):
-        x, y = brl2xy(b, r, l)
+        x, y = self.brl2xy(b, r, l)
         tplot = self.plot
         self.plot = super().plot
         tmp = super().triplot(x, y, *args, **kwargs)
