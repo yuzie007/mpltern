@@ -30,7 +30,7 @@ class RAxis(XAxis):
             mtransforms.IdentityTransform(), self.axes.transAxes))
 
         self._set_artist_props(label)
-        self.label_position = 'edge'
+        self.label_position = 'bottom'
         return label
 
     def set_label_position(self, position):
@@ -77,7 +77,7 @@ class RAxis(XAxis):
         pad = self.labelpad * self.figure.dpi / 72
 
         x, y = self.label.get_position()
-        if self.label_position == 'edge':
+        if self.label_position == 'bottom':
             def extract_right(bbox):
                 bbox_axes = bbox.transformed(self.axes.transAxes.inverted())
                 x = bbox_axes.x1 + (bbox_axes.y1 - y) * 0.5
@@ -87,30 +87,34 @@ class RAxis(XAxis):
             position = (right + pad, y)
             self.label.set_position(position)
 
-        else:
+        elif self.label_position == 'top':
+            def extract_left(bbox):
+                bbox_axes = bbox.transformed(self.axes.transAxes.inverted())
+                x = bbox_axes.x0 - (bbox_axes.y1 - y) * 0.5
+                return self.axes.transAxes.transform((x, y))[0]
+
+            left = min([extract_left(bbox) for bbox in bboxes2])
+            position = (left - pad, y)
+            self.label.set_position(position)
+            self.label.set_rotation(60)
+            self.label.set_rotation_mode('anchor')
+
+        else:  # "corner"
             baxis = self.axes.baxis
             raxis = self.axes.raxis
             laxis = self.axes.laxis
-
-            if self.axes.clockwise:
-                bboxes, bboxes2 = baxis._get_tick_boxes_siblings(renderer=renderer)
-                y = min([bbox.y0 for bbox in bboxes])
-                bottom = min(y, self.axes.bbox.y0)
-                position = (1.0, bottom - pad)
-                self.label.set_verticalalignment('top')
-            else:
-                bboxes, bboxes2 = laxis._get_tick_boxes_siblings(renderer=renderer)
-                y = max([bbox.y1 for bbox in bboxes])
-                top = max(y, self.axes.bbox.y1)
-                position = (0.5, top + pad)
-                self.label.set_verticalalignment('bottom')
-
+            bbboxes, bbboxes2 = baxis._get_tick_boxes_siblings(renderer=renderer)
+            rbboxes, rbboxes2 = raxis._get_tick_boxes_siblings(renderer=renderer)
+            lbboxes, lbboxes2 = laxis._get_tick_boxes_siblings(renderer=renderer)
+            bbox = mtransforms.Bbox.union(
+                bbboxes + bbboxes2 + rbboxes + rbboxes2 + lbboxes + lbboxes2)
+            position = (0.5, bbox.y1 + pad)
             self.label.set_position(position)
+            self.label.set_transform(mtransforms.blended_transform_factory(
+                self.axes.transAxes, mtransforms.IdentityTransform()))
+            self.label.set_verticalalignment('bottom')
             self.label.set_rotation(0.0)
             self.label.set_rotation_mode('default')
-            trans = mtransforms.blended_transform_factory(
-                self.axes.transAxes, mtransforms.IdentityTransform())
-            self.label.set_transform(trans)
 
     def get_view_interval(self):
         'return the Interval instance for this axis view limits'

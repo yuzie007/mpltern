@@ -28,30 +28,12 @@ class BAxisTransform(TernaryTransform):
         return np.column_stack((x, y)).astype(float)
 
 
-class BAxisClockwiseTransform(TernaryTransform):
-    def transform_non_affine(self, points):
-        s = points[:, 0]
-        p = points[:, 1]
-        x = (1.0 - s) * (1.0 - p) + 0.5 * (1.0 - s) * p
-        y = (1.0 - s) * p
-        return np.column_stack((x, y)).astype(float)
-
-
 class RAxisTransform(TernaryTransform):
     def transform_non_affine(self, points):
         s = points[:, 0]
         p = points[:, 1]
         x = 0.5 + 0.5 * (1.0 - s) * (1.0 - p) - 0.5 * (1.0 - s) * p
         y = s
-        return np.column_stack((x, y)).astype(float)
-
-
-class RAxisClockwiseTransform(TernaryTransform):
-    def transform_non_affine(self, points):
-        s = points[:, 0]
-        p = points[:, 1]
-        x = 1.0 - 0.5 * (1.0 - s) * (1.0 - p) - (1.0 - s) * p
-        y = (1.0 - s) * (1.0 - p)
         return np.column_stack((x, y)).astype(float)
 
 
@@ -63,31 +45,3 @@ class LAxisTransform(TernaryTransform):
         y = 1.0 * (1.0 - s) * (1.0 - p)
         return np.column_stack((x, y)).astype(float)
 
-
-class LAxisClockwiseTransform(TernaryTransform):
-    def transform_non_affine(self, points):
-        s = points[:, 0]
-        p = points[:, 1]
-        x = 0.5 - 0.5 * (1.0 - s) * (1.0 - p) + 0.5 * (1.0 - s) * p
-        y = s
-        return np.column_stack((x, y)).astype(float)
-
-
-def create_ternary_transform(side, clockwise):
-    if side == 'bottom':
-        if clockwise:
-            return BAxisClockwiseTransform()
-        else:
-            return BAxisTransform()
-    elif side == 'right':
-        if clockwise:
-            return RAxisClockwiseTransform()
-        else:
-            return RAxisTransform()
-    elif side == 'left':
-        if clockwise:
-            return LAxisClockwiseTransform()
-        else:
-            return LAxisTransform()
-    else:
-        raise ValueError(side)

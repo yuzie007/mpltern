@@ -8,7 +8,7 @@ class RTick(TernaryTick):
         return self.axes.get_raxis_text1_transform(self._pad)
 
     def _get_text2_transform(self):
-        return self.axes.get_raxis_text1_transform(self._pad)
+        return self.axes.get_raxis_text2_transform(self._pad)
 
     def _get_tick1line(self):
         l = super()._get_tick1line()
