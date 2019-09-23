@@ -155,38 +155,13 @@ class TernaryAxesBase(Axes):
                 align, "center")
 
     def _gen_axes_patch(self):
-        """
-        Returns the patch used to draw the background of the axes.  It
-        is also used as the clipping path for any data elements on the
-        axes.
-
-        In the standard axes, this is a rectangle, but in other
-        projections it may not be.
-
-        .. note::
-
-            Intended to be overridden by new projection types.
-
-        """
         return mpatches.Polygon(((0.0, 0.0), (1.0, 0.0), (0.5, 1.0)))
+    _gen_axes_patch.__doc__ = Axes._gen_axes_patch.__doc__
 
     def _gen_axes_spines(self, locations=None, offset=0.0, units='inches'):
-        """
-        Returns
-        -------
-        dict
-            Mapping of spine names to `Line2D` or `Patch` instances that are
-            used to draw axes spines.
-
-            In the standard axes, this is a single line segment, but in
-            other projections it may not be.
-
-        Notes
-        -----
-        Intended to be overridden by new projection types.
-        """
         return OrderedDict((side, Spine.linear_spine(self, side))
                            for side in ['left', 'right', 'bottom', 'top'])
+    _gen_axes_spines.__doc__ = Axes._gen_axes_spines.__doc__
 
     def get_baxis(self):
         """Return the BAxis instance"""
