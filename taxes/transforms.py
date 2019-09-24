@@ -17,10 +17,37 @@ class TernaryTransform(Transform):
     """
     input_dims = 2
     output_dims = 2
+    has_inverse = True
 
     def __init__(self, corners, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.corners = corners
+
+
+class InvertedTernaryTransform(Transform):
+    input_dims = 2
+    output_dims = 2
+    has_inverse = True
+
+    def __init__(self, corners, index, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.corners = corners
+        self.index = index
+
+    def transform_non_affine(self, points):
+        c0 = self.corners[(self.index + 0) % 3]
+        c1 = self.corners[(self.index + 1) % 3]
+        c2 = self.corners[(self.index + 2) % 3]
+        v = [
+            [c1[0] - c0[0], c2[0] - c0[0]],
+            [c1[1] - c0[1], c2[1] - c0[1]],
+        ]
+        v = np.array(v)
+        d = points - c0
+        tmp = np.dot(np.linalg.inv(v), d.T)
+        s = tmp[0]
+        p = tmp[1] / (1.0 - s)
+        return np.column_stack((s, p)).astype(float)
 
 
 class BAxisTransform(TernaryTransform):
@@ -35,6 +62,9 @@ class BAxisTransform(TernaryTransform):
         y = c[1] + s * v0[1] + (1.0 - s) * p * v1[1]
         return np.column_stack((x, y)).astype(float)
 
+    def inverted(self):
+        return InvertedTernaryTransform(self.corners, 0)
+
 
 class RAxisTransform(TernaryTransform):
     def transform_non_affine(self, points):
@@ -47,6 +77,9 @@ class RAxisTransform(TernaryTransform):
         x = c[0] + s * v0[0] + (1.0 - s) * p * v1[0]
         y = c[1] + s * v0[1] + (1.0 - s) * p * v1[1]
         return np.column_stack((x, y)).astype(float)
+
+    def inverted(self):
+        return InvertedTernaryTransform(self.corners, 1)
 
 
 class LAxisTransform(TernaryTransform):
@@ -61,3 +94,5 @@ class LAxisTransform(TernaryTransform):
         y = c[1] + s * v0[1] + (1.0 - s) * p * v1[1]
         return np.column_stack((x, y)).astype(float)
 
+    def inverted(self):
+        return InvertedTernaryTransform(self.corners, 2)
