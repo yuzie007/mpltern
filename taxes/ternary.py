@@ -35,8 +35,58 @@ def xy2brl(x, y, s=1.0):
     return b, r, l
 
 
+def _determine_anchor(angle0, angle1):
+    """Determine the tick-label alignments from the spine and the tick angles.
+
+    Parameters
+    ----------
+    angle0 : float
+        Spine angle in radian.
+    angle1 : float
+        Tick angle in radian.
+
+    Returns
+    -------
+    ha : str
+        Horizontal alignment.
+    va : str
+        Vertical alignment.
+    """
+    if angle0 < 0.0:
+        a0 = angle0 + 180.0
+    else:
+        a0 = angle0
+
+    if a0 < 30.0:
+        if angle1 < a0:
+            return 'center', 'top'
+        else:
+            return 'center', 'bottom'
+    elif 30.0 <= a0 < 150.0:
+        if angle1 < a0 - 180.0:
+            return 'right', 'center_baseline'
+        elif a0 - 180.0 <= angle1 < 30.0:
+            return 'left', 'center_baseline'
+        elif 30.0 <= angle1 < a0:
+            return 'left', 'baseline'
+        elif a0 <= angle1 < 150.0:
+            return 'right', 'baseline'
+        else:
+            return 'right', 'center_baseline'
+    elif 150.0 <= a0:
+        if angle1 < a0 - 180.0 or a0 <= angle1:
+            return 'center', 'top'
+        else:
+            return 'center', 'bottom'
+
+
 class TernaryAxesBase(Axes):
-    def __init__(self, *args, scale=1.0, clockwise=False, **kwargs):
+    def __init__(self, *args, scale=1.0, clockwise=False, points=None, **kwargs):
+        if points is None:
+            self.corners = ((0.0, 0.0), (1.0, 0.0), (0.5, 1.0))
+        else:
+            self.corners = points
+
         self._scale = scale
         super().__init__(*args, **kwargs)
         self.set_aspect('equal', adjustable='box', anchor='C')
@@ -75,9 +125,9 @@ class TernaryAxesBase(Axes):
         transLLimits = mtransforms.BboxTransformFrom(
             mtransforms.TransformedBbox(self.viewLLim, self.transScale))
 
-        self._baxis_transform = transBLimits + BAxisTransform() + self.transAxes
-        self._raxis_transform = transRLimits + RAxisTransform() + self.transAxes
-        self._laxis_transform = transLLimits + LAxisTransform() + self.transAxes
+        self._baxis_transform = transBLimits + BAxisTransform(self.corners) + self.transAxes
+        self._raxis_transform = transRLimits + RAxisTransform(self.corners) + self.transAxes
+        self._laxis_transform = transLLimits + LAxisTransform(self.corners) + self.transAxes
 
     def get_baxis_transform(self, which='grid'):
         return self._baxis_transform
@@ -88,74 +138,50 @@ class TernaryAxesBase(Axes):
     def get_laxis_transform(self, which='grid'):
         return self._laxis_transform
 
-    def get_baxis_text1_transform(self, pad_points):
-        trans = self.get_baxis_transform(which='tick1')
-        ps = trans.transform([[0.0, 0.0], [0.0, 1.0]])
-        d = ps[1] - ps[0]
-        x, y = -d / np.linalg.norm(d) * pad_points / 72.0
-        align = 'top'
-        return (self.get_baxis_transform(which='tick1') +
+    def _get_axis_text_transform(self, pad_points, trans, which):
+        if which == 'tick1':
+            ps0 = trans.transform([[0.0, 0.0], [1.0, 0.0]])
+            ps1 = trans.transform([[0.0, 0.0], [0.0, 1.0]])
+        else:
+            ps0 = trans.transform([[0.0, 1.0], [1.0, 1.0]])
+            ps1 = trans.transform([[0.0, 1.0], [0.0, 0.0]])
+        d0 = ps0[0] - ps0[1]
+        d1 = ps1[0] - ps1[1]
+        angle0 = np.rad2deg(np.arctan2(d0[1], d0[0]))
+        angle1 = np.rad2deg(np.arctan2(d1[1], d1[0]))
+        ha, va = _determine_anchor(angle0, angle1)
+        x, y = d1 / np.linalg.norm(d1) * pad_points / 72.0
+        return (trans +
                 mtransforms.ScaledTranslation(x, y,
                                               self.figure.dpi_scale_trans),
-                align, "center")
+                va, ha)
+
+    def get_baxis_text1_transform(self, pad_points):
+        trans = self.get_baxis_transform(which='tick1')
+        return self._get_axis_text_transform(pad_points, trans, 'tick1')
 
     def get_baxis_text2_transform(self, pad_points):
         trans = self.get_baxis_transform(which='tick2')
-        ps = trans.transform([[0.0, 0.0], [0.0, 1.0]])
-        d = ps[1] - ps[0]
-        x, y = +d / np.linalg.norm(d) * pad_points / 72.0
-        align = 'baseline'
-        return (self.get_baxis_transform(which='tick2') +
-                mtransforms.ScaledTranslation(x, y,
-                                              self.figure.dpi_scale_trans),
-                align, "left")
+        return self._get_axis_text_transform(pad_points, trans, 'tick2')
 
     def get_raxis_text1_transform(self, pad_points):
         trans = self.get_raxis_transform(which='tick1')
-        ps = trans.transform([[0.0, 0.0], [0.0, 1.0]])
-        d = ps[1] - ps[0]
-        x, y = -d / np.linalg.norm(d) * pad_points / 72.0
-        align = 'center_baseline'
-        return (self.get_raxis_transform(which='tick1') +
-                mtransforms.ScaledTranslation(x, y,
-                                              self.figure.dpi_scale_trans),
-                align, "left")
+        return self._get_axis_text_transform(pad_points, trans, 'tick1')
 
     def get_raxis_text2_transform(self, pad_points):
         trans = self.get_raxis_transform(which='tick2')
-        ps = trans.transform([[0.0, 0.0], [0.0, 1.0]])
-        d = ps[1] - ps[0]
-        x, y = +d / np.linalg.norm(d) * pad_points / 72.0
-        align = 'center_baseline'
-        return (self.get_raxis_transform(which='tick2') +
-                mtransforms.ScaledTranslation(x, y,
-                                              self.figure.dpi_scale_trans),
-                align, "right")
+        return self._get_axis_text_transform(pad_points, trans, 'tick2')
 
     def get_laxis_text1_transform(self, pad_points):
         trans = self.get_laxis_transform(which='tick1')
-        ps = trans.transform([[0.0, 0.0], [0.0, 1.0]])
-        d = ps[1] - ps[0]
-        x, y = -d / np.linalg.norm(d) * pad_points / 72.0
-        align = 'center'
-        return (self.get_laxis_transform(which='tick1') +
-                mtransforms.ScaledTranslation(x, y,
-                                              self.figure.dpi_scale_trans),
-                align, "right")
+        return self._get_axis_text_transform(pad_points, trans, 'tick1')
 
     def get_laxis_text2_transform(self, pad_points):
         trans = self.get_laxis_transform(which='tick2')
-        ps = trans.transform([[0.0, 0.0], [0.0, 1.0]])
-        d = ps[1] - ps[0]
-        x, y = +d / np.linalg.norm(d) * pad_points / 72.0
-        align = 'top'
-        return (self.get_laxis_transform(which='tick2') +
-                mtransforms.ScaledTranslation(x, y,
-                                              self.figure.dpi_scale_trans),
-                align, "center")
+        return self._get_axis_text_transform(pad_points, trans, 'tick2')
 
     def _gen_axes_patch(self):
-        return mpatches.Polygon(((0.0, 0.0), (1.0, 0.0), (0.5, 1.0)))
+        return mpatches.Polygon(self.corners)
     _gen_axes_patch.__doc__ = Axes._gen_axes_patch.__doc__
 
     def _gen_axes_spines(self, locations=None, offset=0.0, units='inches'):
