@@ -10,7 +10,7 @@ import matplotlib.patches as mpatches
 import matplotlib.transforms as mtransforms
 import matplotlib.axis as maxis
 from .spines import Spine
-from .transforms import BAxisTransform, RAxisTransform, LAxisTransform
+from .transforms import TernaryTransform
 from .axis.baxis import BAxis
 from .axis.raxis import RAxis
 from .axis.laxis import LAxis
@@ -125,9 +125,13 @@ class TernaryAxesBase(Axes):
         transLLimits = mtransforms.BboxTransformFrom(
             mtransforms.TransformedBbox(self.viewLLim, self.transScale))
 
-        self._baxis_transform = transBLimits + BAxisTransform(self.corners) + self.transAxes
-        self._raxis_transform = transRLimits + RAxisTransform(self.corners) + self.transAxes
-        self._laxis_transform = transLLimits + LAxisTransform(self.corners) + self.transAxes
+        baxis_transform = TernaryTransform(self.corners, 0)
+        raxis_transform = TernaryTransform(self.corners, 1)
+        laxis_transform = TernaryTransform(self.corners, 2)
+
+        self._baxis_transform = transBLimits + baxis_transform + self.transAxes
+        self._raxis_transform = transRLimits + raxis_transform + self.transAxes
+        self._laxis_transform = transLLimits + laxis_transform + self.transAxes
 
     def get_baxis_transform(self, which='grid'):
         return self._baxis_transform
