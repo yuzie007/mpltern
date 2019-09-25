@@ -69,55 +69,24 @@ class BAxis(XAxis):
         if not self._autolabelpos:
             return
 
-        # get bounding boxes for this axis and any siblings
-        # that have been set by `fig.align_xlabels()`
-        bboxes, bboxes2 = self._get_tick_boxes_siblings(renderer=renderer)
-
         pad = self.labelpad * self.figure.dpi / 72
 
-        x, y = self.label.get_position()
         if self.label_position == 'bottom':
             trans = self.axes._vertical_baxis_transform
-            points = []
-            for bbox in bboxes:
-                points.extend([
-                    [bbox.x0, bbox.y0],
-                    [bbox.x0, bbox.y1],
-                    [bbox.x1, bbox.y0],
-                    [bbox.x1, bbox.y1],
-                ])
-            # In case bboxes do not exists, spines are used.
-            points.extend(trans.transform(((0.0, 0.0), (1.0, 0.0))))
-            points = trans.inverted().transform(points)
-            y = min(points[:, 1])
-            position = (x, y - pad)
-            self.label.set_position(position)
-            self.label.set_transform(trans)
-
+            lim = max if self.axes.clockwise else min
         elif self.label_position == 'top':
             trans = self.axes._vertical_raxis_transform
-            points = []
-            for bbox in bboxes2:
-                points.extend([
-                    [bbox.x0, bbox.y0],
-                    [bbox.x0, bbox.y1],
-                    [bbox.x1, bbox.y0],
-                    [bbox.x1, bbox.y1],
-                ])
-            # In case bboxes do not exists, spines are used.
-            points.extend(trans.transform(((0.0, 0.0), (1.0, 0.0))))
-            points = trans.inverted().transform(points)
-            y = min(points[:, 1])
-            position = (x, y - pad)
-            self.label.set_position(position)
-            self.label.set_transform(trans)
-
+            lim = max if self.axes.clockwise else min
         else:  # "corner"
             trans = self.axes._vertical_laxis_transform
-            points = self._get_points(renderer=renderer)
-            points = trans.inverted().transform(points)
-            y = max(points[:, 1])
-            position = (x, y + pad)
+            lim = min if self.axes.clockwise else max
+
+        scale = 1.0 if lim == max else -1.0
+
+        points = self._get_points(renderer=renderer)
+        points = trans.inverted().transform(points)
+        y = lim(points[:, 1])
+        position = (0.5, y + scale * pad)
 
         self.label.set_position(position)
         self.label.set_transform(trans)
