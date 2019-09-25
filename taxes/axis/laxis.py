@@ -3,11 +3,11 @@ import numpy as np
 from matplotlib import rcParams
 import matplotlib.font_manager as font_manager
 import matplotlib.text as mtext
-from matplotlib.axis import XAxis
+from .ternary_axis import TernaryAxis
 from .ltick import LTick
 
 
-class LAxis(XAxis):
+class LAxis(TernaryAxis):
     def _get_tick(self, major):
         if major:
             tick_kw = self._major_tick_kw
@@ -33,35 +33,6 @@ class LAxis(XAxis):
 
         self._set_artist_props(label)
         return label
-
-    def set_label_position(self, position):
-        """
-        Set the label position (edge or corner)
-
-        Parameters
-        ----------
-        position : {'edge', 'corner'}
-        """
-        self.label_position = position
-        self.stale = True
-
-    def _get_tick_boxes_siblings(self, renderer):
-        """
-        Get the bounding boxes for this `.axis` and its siblings
-        as set by `.Figure.align_xlabels` or  `.Figure.align_ylablels`.
-
-        By default it just gets bboxes for self.
-        """
-        bboxes = []
-        bboxes2 = []
-        # get the Grouper that keeps track of x-label groups for this figure
-        grp = self.figure._align_xlabel_grp
-        # if we want to align labels from other axes:
-        ticks_to_draw = self._update_ticks()
-        tlb, tlb2 = self._get_tick_bboxes(ticks_to_draw, renderer)
-        bboxes.extend(tlb)
-        bboxes2.extend(tlb2)
-        return bboxes, bboxes2
 
     def _update_label_position(self, renderer):
         """
@@ -100,26 +71,6 @@ class LAxis(XAxis):
     def get_view_interval(self):
         'return the Interval instance for this axis view limits'
         return self.axes.get_llim()
-
-    def _get_points(self, renderer):
-        points = []
-        baxis = self.axes.baxis
-        raxis = self.axes.raxis
-        laxis = self.axes.laxis
-        bbboxes, bbboxes2 = baxis._get_tick_boxes_siblings(renderer=renderer)
-        rbboxes, rbboxes2 = raxis._get_tick_boxes_siblings(renderer=renderer)
-        lbboxes, lbboxes2 = laxis._get_tick_boxes_siblings(renderer=renderer)
-        bboxes = bbboxes + bbboxes2 + rbboxes + rbboxes2 + lbboxes + lbboxes2
-        for bbox in bboxes:
-            points.extend([
-                [bbox.x0, bbox.y0],
-                [bbox.x0, bbox.y1],
-                [bbox.x1, bbox.y0],
-                [bbox.x1, bbox.y1],
-            ])
-        # In case bboxes do not exists, spines are used.
-        points.extend(self.axes.transAxes.transform(self.axes.corners))
-        return np.asarray(points)
 
     def _get_label_rotation(self):
         trans = self.axes._laxis_transform
