@@ -3,7 +3,6 @@ import numpy as np
 from matplotlib import rcParams
 import matplotlib.font_manager as font_manager
 import matplotlib.text as mtext
-import matplotlib.transforms as mtransforms
 from matplotlib.axis import XAxis
 from .btick import BTick
 
@@ -19,17 +18,20 @@ class BAxis(XAxis):
     def _get_label(self):
         # x in axes coords, y in display coords (to be updated at draw
         # time by _update_label_positions)
+        self.label_position = 'bottom'
+        rotation, va = self._get_label_rotation()
         label = mtext.Text(x=0.5, y=0.0,
                            fontproperties=font_manager.FontProperties(
                                size=rcParams['axes.labelsize'],
                                weight=rcParams['axes.labelweight']),
                            color=rcParams['axes.labelcolor'],
-                           verticalalignment='top',
-                           horizontalalignment='center')
+                           verticalalignment=va,
+                           horizontalalignment='center',
+                           rotation=rotation,
+                           rotation_mode='anchor')
         label.set_transform(self.axes._vertical_baxis_transform)
 
         self._set_artist_props(label)
-        self.label_position = 'bottom'
         return label
 
     def set_label_position(self, position):
