@@ -1,3 +1,5 @@
+import numpy as np
+
 from matplotlib import rcParams
 import matplotlib.font_manager as font_manager
 import matplotlib.text as mtext
@@ -96,8 +98,6 @@ class RAxis(XAxis):
             left = min([extract_left(bbox) for bbox in bboxes2])
             position = (left - pad, y)
             self.label.set_position(position)
-            self.label.set_rotation(60)
-            self.label.set_rotation_mode('anchor')
 
         else:  # "corner"
             baxis = self.axes.baxis
@@ -113,9 +113,33 @@ class RAxis(XAxis):
             self.label.set_transform(mtransforms.blended_transform_factory(
                 self.axes.transAxes, mtransforms.IdentityTransform()))
             self.label.set_verticalalignment('bottom')
-            self.label.set_rotation(0.0)
-            self.label.set_rotation_mode('default')
+
+        angle = self._get_label_rotation()
+        self.label.set_rotation(angle)
+        self.label.set_rotation_mode('anchor')
 
     def get_view_interval(self):
         'return the Interval instance for this axis view limits'
         return self.axes.get_rlim()
+
+    def _get_label_rotation(self):
+        trans = self.axes._raxis_transform
+        xmin, xmax = self.axes.get_rlim()
+
+        if self.label_position == 'bottom':
+            points = ((xmin, 0.0), (xmax, 0.0))
+        elif self.label_position == 'top':
+            points = ((xmin, 1.0), (xmax, 1.0))
+        else:
+            points = ((xmin, 0.0), (xmin, 1.0))
+
+        ps = trans.transform(points)
+        d0 = ps[1] - ps[0]
+        angle = np.arctan2(d0[1], d0[0])
+        angle = np.rad2deg(angle)
+
+        # For readability, the angle is adjusted to be in [-90, +90]
+        if abs(angle) > 90.0:
+            angle -= 180.0
+
+        return angle
