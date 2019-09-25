@@ -19,7 +19,7 @@ class RAxis(XAxis):
     def _get_label(self):
         # x in axes coords, y in display coords (to be updated at draw
         # time by _update_label_positions)
-        label = mtext.Text(x=0.75, y=0.5,
+        label = mtext.Text(x=0.5, y=0.0,
                            fontproperties=font_manager.FontProperties(
                                size=rcParams['axes.labelsize'],
                                weight=rcParams['axes.labelweight']),
@@ -28,8 +28,7 @@ class RAxis(XAxis):
                            horizontalalignment='center',
                            rotation=-60,
                            rotation_mode='anchor')
-        label.set_transform(mtransforms.blended_transform_factory(
-            mtransforms.IdentityTransform(), self.axes.transAxes))
+        label.set_transform(self.axes._vertical_raxis_transform)
 
         self._set_artist_props(label)
         self.label_position = 'bottom'
@@ -80,24 +79,40 @@ class RAxis(XAxis):
 
         x, y = self.label.get_position()
         if self.label_position == 'bottom':
-            def extract_right(bbox):
-                bbox_axes = bbox.transformed(self.axes.transAxes.inverted())
-                x = bbox_axes.x1 + (bbox_axes.y1 - y) * 0.5
-                return self.axes.transAxes.transform((x, y))[0]
-
-            right = max([extract_right(bbox) for bbox in bboxes])
-            position = (right + pad, y)
+            trans = self.axes._vertical_raxis_transform
+            points = []
+            for bbox in bboxes:
+                points.extend([
+                    [bbox.x0, bbox.y0],
+                    [bbox.x0, bbox.y1],
+                    [bbox.x1, bbox.y0],
+                    [bbox.x1, bbox.y1],
+                ])
+            # In case bboxes do not exists, spines are used.
+            points.extend(trans.transform(((0.0, 0.0), (1.0, 0.0))))
+            points = trans.inverted().transform(points)
+            y = min(points[:, 1])
+            position = (x, y - pad)
             self.label.set_position(position)
+            self.label.set_transform(trans)
 
         elif self.label_position == 'top':
-            def extract_left(bbox):
-                bbox_axes = bbox.transformed(self.axes.transAxes.inverted())
-                x = bbox_axes.x0 - (bbox_axes.y1 - y) * 0.5
-                return self.axes.transAxes.transform((x, y))[0]
-
-            left = min([extract_left(bbox) for bbox in bboxes2])
-            position = (left - pad, y)
+            trans = self.axes._vertical_laxis_transform
+            points = []
+            for bbox in bboxes2:
+                points.extend([
+                    [bbox.x0, bbox.y0],
+                    [bbox.x0, bbox.y1],
+                    [bbox.x1, bbox.y0],
+                    [bbox.x1, bbox.y1],
+                ])
+            # In case bboxes do not exists, spines are used.
+            points.extend(trans.transform(((0.0, 0.0), (1.0, 0.0))))
+            points = trans.inverted().transform(points)
+            y = min(points[:, 1])
+            position = (x, y - pad)
             self.label.set_position(position)
+            self.label.set_transform(trans)
 
         else:  # "corner"
             baxis = self.axes.baxis
@@ -114,7 +129,8 @@ class RAxis(XAxis):
                 self.axes.transAxes, mtransforms.IdentityTransform()))
             self.label.set_verticalalignment('bottom')
 
-        angle = self._get_label_rotation()
+        angle, va = self._get_label_rotation()
+        self.label.set_verticalalignment(va)
         self.label.set_rotation(angle)
         self.label.set_rotation_mode('anchor')
 
@@ -126,20 +142,48 @@ class RAxis(XAxis):
         trans = self.axes._raxis_transform
         xmin, xmax = self.axes.get_rlim()
 
-        if self.label_position == 'bottom':
-            points = ((xmin, 0.0), (xmax, 0.0))
-        elif self.label_position == 'top':
-            points = ((xmin, 1.0), (xmax, 1.0))
-        else:
-            points = ((xmin, 0.0), (xmin, 1.0))
-
+        points = ((xmin, 0.0), (xmax, 0.0), (xmin, 1.0))
         ps = trans.transform(points)
-        d0 = ps[1] - ps[0]
+
+        if self.label_position == 'bottom':
+            d0 = ps[1] - ps[0]
+        elif self.label_position == 'top':
+            d0 = ps[2] - ps[1]
+        else:
+            d0 = ps[0] - ps[2]
+
         angle = np.arctan2(d0[1], d0[0])
-        angle = np.rad2deg(angle)
+        angle = np.rad2deg(angle)  # [-180, +180]
 
         # For readability, the angle is adjusted to be in [-90, +90]
-        if abs(angle) > 90.0:
-            angle -= 180.0
+        label_rotation = (angle + 90.0) % 180.0 - 90.0
 
-        return angle
+        d0 = ps[1] - ps[0]
+        d1 = ps[2] - ps[1]
+        d = d0[0] * d1[1] - d1[0] * d0[1]
+        clockwise = (d < 0.0)  # For the triangle
+        is_corner = self.label_position not in ['bottom', 'top']
+        if clockwise:
+            if abs(angle) > 90.0:
+                if is_corner:
+                    va = 'bottom'
+                else:
+                    va = 'top'
+            else:
+                if is_corner:
+                    va = 'top'
+                else:
+                    va = 'bottom'
+        else:
+            if abs(angle) > 90.0:
+                if is_corner:
+                    va = 'top'
+                else:
+                    va = 'bottom'
+            else:
+                if is_corner:
+                    va = 'bottom'
+                else:
+                    va = 'top'
+
+        return label_rotation, va
