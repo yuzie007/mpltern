@@ -85,6 +85,7 @@ class TernaryAxesBase(Axes):
         super().__init__(*args, **kwargs)
         self.set_aspect('equal', adjustable='box', anchor='C')
         self.set_tlim(0.0, scale, 0.0, scale, 0.0, scale)
+        self._axis2_list = []
 
     @property
     def clockwise(self):
@@ -360,6 +361,9 @@ class TernaryAxesBase(Axes):
             self.raxis.set_ticks_position('bottom')
             self.laxis.set_ticks_position('bottom')
 
+    def get_children(self):
+        return super().get_children() + self._axis2_list
+
 
 class TernaryAxes(TernaryAxesBase):
     """
@@ -403,6 +407,36 @@ class TernaryAxes(TernaryAxesBase):
         if labelpad is not None:
             self.laxis.labelpad = labelpad
         return self.laxis.set_label_text(llabel, fontdict, **kwargs)
+
+    def secondary_baxis(self, location):
+        axis2 = BAxis(self)
+        axis2.set_label_position(location)
+        # Suppress all ticks and ticklabels
+        axis2.set_tick_params(which='both', top=False, labeltop=False,
+                              bottom=False, labelbottom=False)
+        self._axis2_list.append(axis2)
+        return axis2
+
+    def secondary_raxis(self, location):
+        axis2 = RAxis(self)
+        axis2.set_label_position(location)
+        # Suppress all ticks and ticklabels
+        axis2.set_tick_params(which='both', top=False, labeltop=False,
+                              bottom=False, labelbottom=False)
+        self._axis2_list.append(axis2)
+        return axis2
+
+    def secondary_laxis(self, location):
+        axis2 = LAxis(self)
+        axis2.set_label_position(location)
+        # Suppress all ticks and ticklabels
+        axis2.set_tick_params(which='both', top=False, labeltop=False,
+                              bottom=False, labelbottom=False)
+        self._axis2_list.append(axis2)
+        return axis2
+
+    def _get_axis2_list(self):
+        return self._axis2_list
 
     def text(self, b, r, l, s, *args, **kwargs):
         brl = np.column_stack((b, r, l))
