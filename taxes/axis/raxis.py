@@ -115,20 +115,14 @@ class RAxis(XAxis):
             self.label.set_transform(trans)
 
         else:  # "corner"
-            baxis = self.axes.baxis
-            raxis = self.axes.raxis
-            laxis = self.axes.laxis
-            bbboxes, bbboxes2 = baxis._get_tick_boxes_siblings(renderer=renderer)
-            rbboxes, rbboxes2 = raxis._get_tick_boxes_siblings(renderer=renderer)
-            lbboxes, lbboxes2 = laxis._get_tick_boxes_siblings(renderer=renderer)
-            bbox = mtransforms.Bbox.union(
-                bbboxes + bbboxes2 + rbboxes + rbboxes2 + lbboxes + lbboxes2)
-            position = (0.5, bbox.y1 + pad)
-            self.label.set_position(position)
-            self.label.set_transform(mtransforms.blended_transform_factory(
-                self.axes.transAxes, mtransforms.IdentityTransform()))
-            self.label.set_verticalalignment('bottom')
+            trans = self.axes._vertical_baxis_transform
+            points = self._get_points(renderer=renderer)
+            points = trans.inverted().transform(points)
+            y = max(points[:, 1])
+            position = (x, y + pad)
 
+        self.label.set_position(position)
+        self.label.set_transform(trans)
         angle, va = self._get_label_rotation()
         self.label.set_verticalalignment(va)
         self.label.set_rotation(angle)
@@ -137,6 +131,26 @@ class RAxis(XAxis):
     def get_view_interval(self):
         'return the Interval instance for this axis view limits'
         return self.axes.get_rlim()
+
+    def _get_points(self, renderer):
+        points = []
+        baxis = self.axes.baxis
+        raxis = self.axes.raxis
+        laxis = self.axes.laxis
+        bbboxes, bbboxes2 = baxis._get_tick_boxes_siblings(renderer=renderer)
+        rbboxes, rbboxes2 = raxis._get_tick_boxes_siblings(renderer=renderer)
+        lbboxes, lbboxes2 = laxis._get_tick_boxes_siblings(renderer=renderer)
+        bboxes = bbboxes + bbboxes2 + rbboxes + rbboxes2 + lbboxes + lbboxes2
+        for bbox in bboxes:
+            points.extend([
+                [bbox.x0, bbox.y0],
+                [bbox.x0, bbox.y1],
+                [bbox.x1, bbox.y0],
+                [bbox.x1, bbox.y1],
+            ])
+        # In case bboxes do not exists, spines are used.
+        points.extend(self.axes.transAxes.transform(self.axes.corners))
+        return np.asarray(points)
 
     def _get_label_rotation(self):
         trans = self.axes._raxis_transform
@@ -158,12 +172,8 @@ class RAxis(XAxis):
         # For readability, the angle is adjusted to be in [-90, +90]
         label_rotation = (angle + 90.0) % 180.0 - 90.0
 
-        d0 = ps[1] - ps[0]
-        d1 = ps[2] - ps[1]
-        d = d0[0] * d1[1] - d1[0] * d0[1]
-        clockwise = (d < 0.0)  # For the triangle
         is_corner = self.label_position not in ['bottom', 'top']
-        if clockwise:
+        if self.axes.clockwise:
             if abs(angle) > 90.0:
                 if is_corner:
                     va = 'bottom'
