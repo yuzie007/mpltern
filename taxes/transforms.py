@@ -141,14 +141,16 @@ class TernaryDataTransform(Transform):
     output_dims = 2
     has_inverse = True
 
-    def __init__(self, scale, corners, *args, **kwargs):
+    def __init__(self, transLimits, scale, corners, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.transLimits = transLimits
         self.scale = scale
         self.corners = np.asarray(corners)
 
     def transform_non_affine(self, points):
-        c = np.roll(self.corners, shift=-1, axis=0)
-        return np.dot(points, c) / self.scale
+        tmp = np.roll(self.corners, shift=-1, axis=0)
+        tmp = np.dot(points, tmp) / self.scale
+        return self.transLimits.inverted().transform(tmp)
 
     def inverted(self):
         return InvertedTernaryDataTransform(self.corners)

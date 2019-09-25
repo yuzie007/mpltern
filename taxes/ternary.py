@@ -10,19 +10,11 @@ import matplotlib.patches as mpatches
 import matplotlib.transforms as mtransforms
 import matplotlib.axis as maxis
 from .spines import Spine
-from .transforms import TernaryTransform
+from .transforms import (
+    TernaryTransform, VerticalTernaryTransform, TernaryDataTransform)
 from .axis.baxis import BAxis
 from .axis.raxis import RAxis
 from .axis.laxis import LAxis
-
-
-def brl2xy(b, r, l):
-    b = np.asarray(b)
-    r = np.asarray(r)
-    l = np.asarray(l)
-    x = b + 0.5 * r
-    y = 0.5 * np.sqrt(3.0) * r
-    return x, y
 
 
 def xy2brl(x, y, s=1.0):
@@ -81,17 +73,26 @@ def _determine_anchor(angle0, angle1):
 
 
 class TernaryAxesBase(Axes):
-    def __init__(self, *args, scale=1.0, clockwise=False, points=None, **kwargs):
+    def __init__(self, *args, scale=1.0, points=None, **kwargs):
         if points is None:
-            self.corners = ((0.0, 0.0), (1.0, 0.0), (0.5, 1.0))
+            corners = ((0.0, 0.0), (1.0, 0.0), (0.5, 1.0))
         else:
-            self.corners = points
+            corners = points
 
-        self._scale = scale
+        self.corners = np.asarray(corners)
+
+        self.scale = scale
         super().__init__(*args, **kwargs)
         self.set_aspect('equal', adjustable='box', anchor='C')
         self.set_tlim(0.0, scale, 0.0, scale, 0.0, scale)
-        self.clockwise(clockwise)
+
+    @property
+    def clockwise(self):
+        corners = self.transAxes.transform(self.corners)
+        d0 = corners[1] - corners[0]
+        d1 = corners[2] - corners[1]
+        d = d0[0] * d1[1] - d1[0] * d0[1]
+        return d < 0.0
 
     def set_figure(self, fig):
         self.viewBLim = mtransforms.Bbox.unit()
@@ -132,6 +133,15 @@ class TernaryAxesBase(Axes):
         self._baxis_transform = transBLimits + baxis_transform + self.transAxes
         self._raxis_transform = transRLimits + raxis_transform + self.transAxes
         self._laxis_transform = transLLimits + laxis_transform + self.transAxes
+
+        # For axis labels
+        self._vertical_baxis_transform = VerticalTernaryTransform(self.transAxes, self.corners, 0)
+        self._vertical_raxis_transform = VerticalTernaryTransform(self.transAxes, self.corners, 1)
+        self._vertical_laxis_transform = VerticalTernaryTransform(self.transAxes, self.corners, 2)
+
+        # For data
+        self._ternary_data_transform = TernaryDataTransform(
+            self.transLimits, self.scale, self.corners)
 
     def get_baxis_transform(self, which='grid'):
         return self._baxis_transform
@@ -206,9 +216,9 @@ class TernaryAxesBase(Axes):
         return self.laxis
 
     def cla(self):
-        self.set_blim(0.0, self._scale)
-        self.set_rlim(0.0, self._scale)
-        self.set_llim(0.0, self._scale)
+        self.set_blim(0.0, self.scale)
+        self.set_rlim(0.0, self.scale)
+        self.set_llim(0.0, self.scale)
         super().cla()
 
     @docstring.dedent_interpd
@@ -259,7 +269,6 @@ class TernaryAxesBase(Axes):
             self.laxis.grid(b, which=which, **kwargs)
 
     def tick_params(self, axis='both', **kwargs):
-        super().tick_params(axis, **kwargs)
         cbook._check_in_list(['b', 'r', 'l', 'both'], axis=axis)
         if axis in ['b', 'both']:
             bkw = dict(kwargs)
@@ -294,7 +303,7 @@ class TernaryAxesBase(Axes):
         b = bmax + rmin + lmin
         r = bmin + rmax + lmin
         l = bmin + rmin + lmax
-        s = self._scale
+        s = self.scale
         tol = 1e-12
         if (abs(b - s) > tol) or (abs(r - s) > tol) or (abs(l - s) > tol):
             raise ValueError(b, r, l, s)
@@ -335,7 +344,7 @@ class TernaryAxesBase(Axes):
         self.stale = True
         return lmin, lmax
 
-    def clockwise(self, b=None):
+    def opposite_ticks(self, b=None):
         if b:
             self.baxis.set_label_position('top')
             self.raxis.set_label_position('top')
@@ -396,7 +405,8 @@ class TernaryAxes(TernaryAxesBase):
         return self.laxis.set_label_text(llabel, fontdict, **kwargs)
 
     def text(self, b, r, l, s, *args, **kwargs):
-        x, y = brl2xy(b, r, l)
+        brl = np.column_stack((b, r, l))
+        x, y = self._ternary_data_transform.transform(brl).T
         return super().text(x, y, s, *args, **kwargs)
 
     def text_xy(self, x, y, s, *args, **kwargs):
@@ -646,42 +656,52 @@ class TernaryAxes(TernaryAxesBase):
         return p
 
     def plot(self, b, r, l, *args, **kwargs):
-        x, y = brl2xy(b, r, l)
+        brl = np.column_stack((b, r, l))
+        x, y = self._ternary_data_transform.transform(brl).T
         return super().plot(x, y, *args, **kwargs)
 
     def scatter(self, b, r, l, *args, **kwargs):
-        x, y = brl2xy(b, r, l)
+        brl = np.column_stack((b, r, l))
+        x, y = self._ternary_data_transform.transform(brl).T
         return super().scatter(x, y, *args, **kwargs)
 
     def hexbin(self, b, r, l, *args, **kwargs):
-        x, y = brl2xy(b, r, l)
+        brl = np.column_stack((b, r, l))
+        x, y = self._ternary_data_transform.transform(brl).T
         return super().hexbin(x, y, *args, **kwargs)
 
     def quiver(self, b, r, l, db, dr, dl, *args, **kwargs):
-        x, y = brl2xy(b, r, l)
-        u, v = brl2xy(b + db, r + dr, l + dl)
+        brl = np.column_stack((b, r, l))
+        x, y = self._ternary_data_transform.transform(brl).T
+        brl = np.column_stack((b + db, r + dr, l + dl))
+        u, v = self._ternary_data_transform.transform(brl).T
         u -= x
         v -= y
         return super().quiver(x, y, u, v, *args, **kwargs)
 
     def fill(self, b, r, l, *args, **kwargs):
-        x, y = brl2xy(b, r, l)
+        brl = np.column_stack((b, r, l))
+        x, y = self._ternary_data_transform.transform(brl).T
         return super().fill(x, y, *args, **kwargs)
 
     def tricontour(self, b, r, l, *args, **kwargs):
-        x, y = brl2xy(b, r, l)
+        brl = np.column_stack((b, r, l))
+        x, y = self._ternary_data_transform.transform(brl).T
         return super().tricontour(x, y, *args, **kwargs)
 
     def tricontourf(self, b, r, l, *args, **kwargs):
-        x, y = brl2xy(b, r, l)
+        brl = np.column_stack((b, r, l))
+        x, y = self._ternary_data_transform.transform(brl).T
         return super().tricontourf(x, y, *args, **kwargs)
 
     def tripcolor(self, b, r, l, *args, **kwargs):
-        x, y = brl2xy(b, r, l)
+        brl = np.column_stack((b, r, l))
+        x, y = self._ternary_data_transform.transform(brl).T
         return super().tripcolor(x, y, *args, **kwargs)
 
     def triplot(self, b, r, l, *args, **kwargs):
-        x, y = brl2xy(b, r, l)
+        brl = np.column_stack((b, r, l))
+        x, y = self._ternary_data_transform.transform(brl).T
         tplot = self.plot
         self.plot = super().plot
         tmp = super().triplot(x, y, *args, **kwargs)
