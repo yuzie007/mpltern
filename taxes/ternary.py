@@ -84,7 +84,7 @@ class TernaryAxesBase(Axes):
         self.scale = scale
         super().__init__(*args, **kwargs)
         self.set_aspect('equal', adjustable='box', anchor='C')
-        self.set_tlim(0.0, scale, 0.0, scale, 0.0, scale)
+        self.set_ternary_lim(0.0, scale, 0.0, scale, 0.0, scale)
         self._axis2_list = []
 
     @property
@@ -293,7 +293,7 @@ class TernaryAxesBase(Axes):
             lkw.pop('labelright', None)
             self.laxis.set_tick_params(**lkw)
 
-    def set_tlim(self, bmin, bmax, rmin, rmax, lmin, lmax, *args, **kwargs):
+    def set_ternary_lim(self, bmin, bmax, rmin, rmax, lmin, lmax, *args, **kwargs):
         """
 
         Notes
@@ -320,6 +320,18 @@ class TernaryAxesBase(Axes):
         ymin = 0.5 * np.sqrt(3.0) * rmin
         ymax = 0.5 * np.sqrt(3.0) * rmax
         self.set_ylim(ymin, ymax, *args, **kwargs)
+
+    def set_ternary_min(self, bmin, rmin, lmin, *args, **kwargs):
+        bmax = self.scale - rmin - lmin
+        rmax = self.scale - lmin - bmin
+        lmax = self.scale - bmin - rmin
+        self.set_ternary_lim(bmin, bmax, rmin, rmax, lmin, lmax, *args, **kwargs)
+
+    def set_ternary_max(self, bmax, rmax, lmax, *args, **kwargs):
+        bmin = (self.scale + bmax - rmax - lmax) * 0.5
+        rmin = (self.scale + rmax - lmax - bmax) * 0.5
+        lmin = (self.scale + lmax - bmax - rmax) * 0.5
+        self.set_ternary_lim(bmin, bmax, rmin, rmax, lmin, lmax, *args, **kwargs)
 
     def get_blim(self):
         return tuple(self.viewBLim.intervalx)
