@@ -357,13 +357,23 @@ class TernaryAxesBase(Axes):
         self.stale = True
         return lmin, lmax
 
+    # Interactive manipulation
+
+    def can_zoom(self):
+        """
+        Return *True* if this axes supports the zoom box button functionality.
+
+        Ternary axes do not support zoom boxes.
+        """
+        return False
+
     def _set_view(self, view):
         super()._set_view(view)
         self._set_ternary_lim_from_xlim_and_ylim()
 
-    def _set_view_from_bbox(self, *args, **kwargs):
-        super()._set_view_from_bbox(*args, **kwargs)
-        self._set_ternary_lim_from_xlim_and_ylim()
+    # def _set_view_from_bbox(self, *args, **kwargs):
+    #     super()._set_view_from_bbox(*args, **kwargs)
+    #     self._set_ternary_lim_from_xlim_and_ylim()
 
     def drag_pan(self, *args, **kwargs):
         super().drag_pan(*args, **kwargs)
