@@ -357,6 +357,54 @@ class TernaryAxesBase(Axes):
         self.stale = True
         return lmin, lmax
 
+    def _set_view(self, view):
+        super()._set_view(view)
+        self._set_ternary_lim_from_xlim_and_ylim()
+
+    def _set_view_from_bbox(self, *args, **kwargs):
+        super()._set_view_from_bbox(*args, **kwargs)
+        self._set_ternary_lim_from_xlim_and_ylim()
+
+    def drag_pan(self, *args, **kwargs):
+        super().drag_pan(*args, **kwargs)
+        self._set_ternary_lim_from_xlim_and_ylim()
+
+    def _set_ternary_lim_from_xlim_and_ylim(self):
+        """Set ternary lim from xlim and ylim in the interactive mode.
+
+        This is called from
+        - _set_view (`Home`, `Forward`, `Backward`)
+        - _set_view_from_bbox (`Zoom-to-rectangle`)
+        - drag_pan (`Pan/Zoom`)
+        (https://matplotlib.org/users/navigation_toolbar.html)
+
+        (TODO: This is only for the default triangle.)
+        Now this assumes a certain rectangle.
+        If the rectangle is longer in the *x* direction,
+        ternary lim is determined first from `rmin` and `rmax` so as to
+        correspond to `ymin` and `ymax`, respectively, and then `bmin` is
+        determined so as to correspond to `xmin`.
+        if the rectangle is longer in the *y* direction,
+        ternary lim is determined first from `bmin` and `bmax` so as to
+        correspond to `xmin` and `xmax`, respectively, and then `rmin` is
+        determined so as to correspond to `ymin`.
+        Other ternary lim values are then determined consistently with the
+        above-determined ones.
+        """
+        xmin, xmax = self.get_xlim()
+        ymin, ymax = self.get_ylim()
+        if xmax - xmin > np.sqrt(3.0) * 0.5 * (ymax - ymin):
+            rmin = 2.0 / np.sqrt(3.0) * ymin
+            rmax = 2.0 / np.sqrt(3.0) * ymax
+            bmin = xmin - 0.5 * rmin
+            lmin = self.scale - rmax - bmin
+        else:
+            rmin = 2.0 / np.sqrt(3.0) * ymin
+            bmin = xmin - 0.5 * rmin
+            bmax = xmax - 0.5 * rmin
+            lmin = self.scale - bmax - rmin
+        self.set_ternary_min(bmin, rmin, lmin)
+
     def opposite_ticks(self, b=None):
         if b:
             self.baxis.set_label_position('top')
