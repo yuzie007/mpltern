@@ -151,6 +151,8 @@ class BarycentricTransform(Transform):
         self.corners = np.asarray(corners)
 
     def transform_non_affine(self, points):
+        points = np.asarray(points)
+        points /= np.sum(points, axis=1)[:, np.newaxis]
         tmp = np.roll(self.corners, shift=-1, axis=0)  # TODO
         return np.dot(points, tmp)
 
