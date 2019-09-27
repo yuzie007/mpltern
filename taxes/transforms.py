@@ -179,50 +179,6 @@ class InvertedBarycentricTransform(Transform):
         return BarycentricTransform(self.corners)
 
 
-class TernaryDataTransform(Transform):
-    """
-    This projects (*b*, *r*, *l*) to (*x*, *y*).
-    """
-    input_dims = 3
-    output_dims = 2
-    has_inverse = True
-
-    def __init__(self, scale, corners, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.scale = scale
-        self.corners = np.asarray(corners)
-
-    def transform_non_affine(self, points):
-        tmp = np.roll(self.corners, shift=-1, axis=0)  # TODO
-        return np.dot(points, tmp) / self.scale
-
-    def inverted(self):
-        return InvertedTernaryDataTransform(self.scale, self.corners)
-
-
-class InvertedTernaryDataTransform(Transform):
-    """
-    This projects (*x*, *y*) to (*b*, *r*, *l*).
-    """
-    input_dims = 2
-    output_dims = 3
-    has_inverse = True
-
-    def __init__(self, scale, corners, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.scale = scale
-        self.corners = np.asarray(corners)
-
-    def transform_non_affine(self, points):
-        xys = np.column_stack((points, np.ones(points.shape[0])))
-        v = np.roll(self.corners, shift=-1, axis=0)  # TODO
-        v = np.column_stack((v, np.ones(3)))
-        return np.dot(xys, np.linalg.inv(v)) * self.scale
-
-    def inverted(self):
-        return TernaryDataTransform(self.scale, self.corners)
-
-
 class TernaryScaleTransform(Transform):
     """
     viewTernaryScale : Bbox

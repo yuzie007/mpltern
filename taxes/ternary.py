@@ -11,7 +11,7 @@ import matplotlib.transforms as mtransforms
 import matplotlib.axis as maxis
 from .spines import Spine
 from .transforms import (
-    TernaryTransform, VerticalTernaryTransform, TernaryDataTransform,
+    TernaryTransform, VerticalTernaryTransform,
     BarycentricTransform, TernaryScaleTransform)
 from .axis.baxis import BAxis
 from .axis.raxis import RAxis
@@ -153,10 +153,6 @@ class TernaryAxesBase(Axes):
         # Transform from the barycentric coordinates to the original
         # Axes coordinates
         self._ternary_axes_transform = self._brl2xy_transform + self.transLimits
-
-        # TODO: Maybe later to be removed
-        tmp = BarycentricTransform(self.corners)
-        self._ternary_data_transform = tmp + self.transLimits
 
     def get_baxis_transform(self, which='grid'):
         return self._baxis_transform
