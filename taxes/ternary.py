@@ -542,7 +542,7 @@ class TernaryAxes(TernaryAxesBase):
 
     def text(self, b, r, l, s, *args, **kwargs):
         brl = np.column_stack((b, r, l))
-        x, y = self._ternary_data_transform.transform(brl).T
+        x, y = self._brl2xy_transform.transform(brl).T
         return super().text(x, y, s, *args, **kwargs)
 
     def text_xy(self, x, y, s, *args, **kwargs):
@@ -798,46 +798,46 @@ class TernaryAxes(TernaryAxesBase):
 
     def scatter(self, b, r, l, *args, **kwargs):
         brl = np.column_stack((b, r, l))
-        x, y = self._ternary_data_transform.transform(brl).T
+        x, y = self._brl2xy_transform.transform(brl).T
         return super().scatter(x, y, *args, **kwargs)
 
     def hexbin(self, b, r, l, *args, **kwargs):
         brl = np.column_stack((b, r, l))
-        x, y = self._ternary_data_transform.transform(brl).T
+        x, y = self._brl2xy_transform.transform(brl).T
         return super().hexbin(x, y, *args, **kwargs)
 
     def quiver(self, b, r, l, db, dr, dl, *args, **kwargs):
         brl = np.column_stack((b, r, l))
-        x, y = self._ternary_data_transform.transform(brl).T
+        x, y = self._brl2xy_transform.transform(brl).T
         brl = np.column_stack((b + db, r + dr, l + dl))
-        u, v = self._ternary_data_transform.transform(brl).T
+        u, v = self._brl2xy_transform.transform(brl).T
         u -= x
         v -= y
         return super().quiver(x, y, u, v, *args, **kwargs)
 
     def fill(self, b, r, l, *args, **kwargs):
         brl = np.column_stack((b, r, l))
-        x, y = self._ternary_data_transform.transform(brl).T
+        x, y = self._brl2xy_transform.transform(brl).T
         return super().fill(x, y, *args, **kwargs)
 
     def tricontour(self, b, r, l, *args, **kwargs):
         brl = np.column_stack((b, r, l))
-        x, y = self._ternary_data_transform.transform(brl).T
+        x, y = self._brl2xy_transform.transform(brl).T
         return super().tricontour(x, y, *args, **kwargs)
 
     def tricontourf(self, b, r, l, *args, **kwargs):
         brl = np.column_stack((b, r, l))
-        x, y = self._ternary_data_transform.transform(brl).T
+        x, y = self._brl2xy_transform.transform(brl).T
         return super().tricontourf(x, y, *args, **kwargs)
 
     def tripcolor(self, b, r, l, *args, **kwargs):
         brl = np.column_stack((b, r, l))
-        x, y = self._ternary_data_transform.transform(brl).T
+        x, y = self._brl2xy_transform.transform(brl).T
         return super().tripcolor(x, y, *args, **kwargs)
 
     def triplot(self, b, r, l, *args, **kwargs):
         brl = np.column_stack((b, r, l))
-        x, y = self._ternary_data_transform.transform(brl).T
+        x, y = self._brl2xy_transform.transform(brl).T
         tplot = self.plot
         self.plot = super().plot
         tmp = super().triplot(x, y, *args, **kwargs)
