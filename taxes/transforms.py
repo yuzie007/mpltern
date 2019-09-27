@@ -136,27 +136,29 @@ class InvertedVerticalTernaryTransform(Transform):
         return VerticalTernaryTransform(self.corners, self.index)
 
 
-class TernaryDataTransform(Transform):
+class BarycentricTransform(Transform):
+    """
+    This transforms the points in the barycentric coordinates to the original
+    ones. If `corners` are in the `Axes` coordinates, this returns the points
+    in the `Axes` coordinates.
+    """
     input_dims = 3
     output_dims = 2
     has_inverse = True
 
-    def __init__(self, transLimits, scale, corners, *args, **kwargs):
+    def __init__(self, corners, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.transLimits = transLimits
-        self.scale = scale
         self.corners = np.asarray(corners)
 
     def transform_non_affine(self, points):
-        tmp = np.roll(self.corners, shift=-1, axis=0)
-        tmp = np.dot(points, tmp) / self.scale
-        return self.transLimits.inverted().transform(tmp)
+        tmp = np.roll(self.corners, shift=-1, axis=0)  # TODO
+        return np.dot(points, tmp)
 
     def inverted(self):
-        return InvertedTernaryDataTransform(self.corners)
+        return InvertedBarycentricTransform(self.corners)
 
 
-class InvertedTernaryDataTransform(Transform):
+class InvertedBarycentricTransform(Transform):
     input_dims = 2
     output_dims = 3
     has_inverse = True
@@ -166,7 +168,89 @@ class InvertedTernaryDataTransform(Transform):
         self.corners = np.asarray(corners)
 
     def transform_non_affine(self, points):
-        raise NotImplementedError
+        xys = np.column_stack((points, np.ones(points.shape[0])))
+        v = np.roll(self.corners, shift=-1, axis=0)  # TODO
+        v = np.column_stack((v, np.ones(3)))
+        return np.dot(xys, np.linalg.inv(v))
 
     def inverted(self):
-        return TernaryDataTransform(self.corners)
+        return BarycentricTransform(self.corners)
+
+
+class TernaryDataTransform(Transform):
+    """
+    This projects (*b*, *r*, *l*) to (*x*, *y*).
+    """
+    input_dims = 3
+    output_dims = 2
+    has_inverse = True
+
+    def __init__(self, scale, corners, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.scale = scale
+        self.corners = np.asarray(corners)
+
+    def transform_non_affine(self, points):
+        tmp = np.roll(self.corners, shift=-1, axis=0)  # TODO
+        return np.dot(points, tmp) / self.scale
+
+    def inverted(self):
+        return InvertedTernaryDataTransform(self.scale, self.corners)
+
+
+class InvertedTernaryDataTransform(Transform):
+    """
+    This projects (*x*, *y*) to (*b*, *r*, *l*).
+    """
+    input_dims = 2
+    output_dims = 3
+    has_inverse = True
+
+    def __init__(self, scale, corners, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.scale = scale
+        self.corners = np.asarray(corners)
+
+    def transform_non_affine(self, points):
+        xys = np.column_stack((points, np.ones(points.shape[0])))
+        v = np.roll(self.corners, shift=-1, axis=0)  # TODO
+        v = np.column_stack((v, np.ones(3)))
+        return np.dot(xys, np.linalg.inv(v)) * self.scale
+
+    def inverted(self):
+        return TernaryDataTransform(self.scale, self.corners)
+
+
+class TernaryScaleTransform(Transform):
+    """
+    viewTernaryScale : Bbox
+    """
+    input_dims = 3
+    output_dims = 3
+    has_inverse = True
+
+    def __init__(self, ternary_scale, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.ternary_scale = ternary_scale
+
+    def transform_non_affine(self, values):
+        return np.asarray(values) / self.ternary_scale
+
+    def inverted(self):
+        return InvertedTernaryScaleTransform(self.ternary_scale)
+
+
+class InvertedTernaryScaleTransform(Transform):
+    input_dims = 3
+    output_dims = 3
+    has_inverse = True
+
+    def __init__(self, ternary_scale, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.ternary_scale = ternary_scale
+
+    def transform_non_affine(self, values):
+        return np.asarray(values) * self.ternary_scale
+
+    def inverted(self):
+        return TernaryScaleTransform(self.ternary_scale)

@@ -11,7 +11,8 @@ import matplotlib.transforms as mtransforms
 import matplotlib.axis as maxis
 from .spines import Spine
 from .transforms import (
-    TernaryTransform, VerticalTernaryTransform, TernaryDataTransform)
+    TernaryTransform, VerticalTernaryTransform, TernaryDataTransform,
+    BarycentricTransform, TernaryScaleTransform)
 from .axis.baxis import BAxis
 from .axis.raxis import RAxis
 from .axis.laxis import LAxis
@@ -73,18 +74,19 @@ def _determine_anchor(angle0, angle1):
 
 
 class TernaryAxesBase(Axes):
-    def __init__(self, *args, scale=1.0, points=None, **kwargs):
+    def __init__(self, *args, ternary_scale=1.0, points=None, **kwargs):
         if points is None:
-            corners = ((0.0, 0.0), (1.0, 0.0), (0.5, 1.0))
+            corners = ((0.0, 0.0), (1.0, 0.0), (0.5, 0.5 * np.sqrt(3.0)))
         else:
             corners = points
 
         self.corners = np.asarray(corners)
 
-        self.scale = scale
+        self.ternary_scale = ternary_scale
         super().__init__(*args, **kwargs)
         self.set_aspect('equal', adjustable='box', anchor='C')
-        self.set_ternary_lim(0.0, scale, 0.0, scale, 0.0, scale)
+        self.set_ternary_lim(
+            0.0, ternary_scale, 0.0, ternary_scale, 0.0, ternary_scale)
         self._axis2_list = []
 
     @property
@@ -120,6 +122,7 @@ class TernaryAxesBase(Axes):
 
     def _set_lim_and_transforms(self):
         super()._set_lim_and_transforms()
+        transTernaryScale = TernaryScaleTransform(self.ternary_scale)
         transBLimits = mtransforms.BboxTransformFrom(
             mtransforms.TransformedBbox(self.viewBLim, self.transScale))
         transRLimits = mtransforms.BboxTransformFrom(
@@ -141,8 +144,19 @@ class TernaryAxesBase(Axes):
         self._vertical_laxis_transform = VerticalTernaryTransform(self.transAxes, self.corners, 2)
 
         # For data
-        self._ternary_data_transform = TernaryDataTransform(
-            self.transLimits, self.scale, self.corners)
+
+        # This should be called only once at the first time to define the
+        # transformations between (b, r, l) and (x, y)
+        corners_xy = self.transLimits.transform(self.corners)
+        self._brl2xy_transform = transTernaryScale + BarycentricTransform(corners_xy)
+
+        # Transform from the barycentric coordinates to the original
+        # Axes coordinates
+        self._ternary_axes_transform = self._brl2xy_transform + self.transLimits
+
+        # TODO: Maybe later to be removed
+        tmp = BarycentricTransform(self.corners)
+        self._ternary_data_transform = tmp + self.transLimits
 
     def get_baxis_transform(self, which='grid'):
         return self._baxis_transform
@@ -217,9 +231,9 @@ class TernaryAxesBase(Axes):
         return self.laxis
 
     def cla(self):
-        self.set_blim(0.0, self.scale)
-        self.set_rlim(0.0, self.scale)
-        self.set_llim(0.0, self.scale)
+        self.set_blim(0.0, self.ternary_scale)
+        self.set_rlim(0.0, self.ternary_scale)
+        self.set_llim(0.0, self.ternary_scale)
         super().cla()
 
     @docstring.dedent_interpd
@@ -293,6 +307,16 @@ class TernaryAxesBase(Axes):
             lkw.pop('labelright', None)
             self.laxis.set_tick_params(**lkw)
 
+    def _create_bbox_from_ternary_lim(self):
+        bmin, bmax = self.get_blim()
+        rmin, rmax = self.get_rlim()
+        lmin, lmax = self.get_llim()
+        points = [[bmax, rmin, lmin], [bmin, rmax, lmin], [bmin, rmin, lmax]]
+        points = self._brl2xy_transform.transform(points)
+        bbox = mtransforms.Bbox.unit()
+        bbox.update_from_data_xy(points, ignore=True)
+        return bbox
+
     def set_ternary_lim(self, bmin, bmax, rmin, rmax, lmin, lmax, *args, **kwargs):
         """
 
@@ -304,33 +328,41 @@ class TernaryAxesBase(Axes):
         b = bmax + rmin + lmin
         r = bmin + rmax + lmin
         l = bmin + rmin + lmax
-        s = self.scale
+        s = self.ternary_scale
         tol = 1e-12
         if (abs(b - s) > tol) or (abs(r - s) > tol) or (abs(l - s) > tol):
             raise ValueError(b, r, l, s)
+
+        boxin = self._create_bbox_from_ternary_lim()
 
         self.set_blim(bmin, bmax)
         self.set_rlim(rmin, rmax)
         self.set_llim(lmin, lmax)
 
-        xmin = bmin + 0.5 * rmin
-        xmax = bmax + 0.5 * rmin
-        self.set_xlim(xmin, xmax, *args, **kwargs)
+        boxout = self._create_bbox_from_ternary_lim()
 
-        ymin = 0.5 * np.sqrt(3.0) * rmin
-        ymax = 0.5 * np.sqrt(3.0) * rmax
-        self.set_ylim(ymin, ymax, *args, **kwargs)
+        trans = mtransforms.BboxTransform(boxin, boxout)
+
+        xmin, xmax = self.get_xlim()
+        ymin, ymax = self.get_ylim()
+        points = [[xmin, ymin], [xmax, ymax]]
+        ((xmin, ymin), (xmax, ymax)) = trans.transform(points)
+
+        self.set_xlim(xmin, xmax)
+        self.set_ylim(ymin, ymax)
 
     def set_ternary_min(self, bmin, rmin, lmin, *args, **kwargs):
-        bmax = self.scale - rmin - lmin
-        rmax = self.scale - lmin - bmin
-        lmax = self.scale - bmin - rmin
+        s = self.ternary_scale
+        bmax = s - rmin - lmin
+        rmax = s - lmin - bmin
+        lmax = s - bmin - rmin
         self.set_ternary_lim(bmin, bmax, rmin, rmax, lmin, lmax, *args, **kwargs)
 
     def set_ternary_max(self, bmax, rmax, lmax, *args, **kwargs):
-        bmin = (self.scale + bmax - rmax - lmax) * 0.5
-        rmin = (self.scale + rmax - lmax - bmax) * 0.5
-        lmin = (self.scale + lmax - bmax - rmax) * 0.5
+        s = self.ternary_scale
+        bmin = (s + bmax - rmax - lmax) * 0.5
+        rmin = (s + rmax - lmax - bmax) * 0.5
+        lmin = (s + lmax - bmax - rmax) * 0.5
         self.set_ternary_lim(bmin, bmax, rmin, rmax, lmin, lmax, *args, **kwargs)
 
     def get_blim(self):
@@ -401,19 +433,19 @@ class TernaryAxesBase(Axes):
         Other ternary lim values are then determined consistently with the
         above-determined ones.
         """
-        xmin, xmax = self.get_xlim()
-        ymin, ymax = self.get_ylim()
-        if xmax - xmin > np.sqrt(3.0) * 0.5 * (ymax - ymin):
-            rmin = 2.0 / np.sqrt(3.0) * ymin
-            rmax = 2.0 / np.sqrt(3.0) * ymax
-            bmin = xmin - 0.5 * rmin
-            lmin = self.scale - rmax - bmin
-        else:
-            rmin = 2.0 / np.sqrt(3.0) * ymin
-            bmin = xmin - 0.5 * rmin
-            bmax = xmax - 0.5 * rmin
-            lmin = self.scale - bmax - rmin
-        self.set_ternary_min(bmin, rmin, lmin)
+        # points = self._brl2xy_transform.inverted().transform(self.corners)
+        points = self._ternary_axes_transform.inverted().transform(self.corners)
+
+        bmin = points[0, 0]
+        bmax = points[1, 0]
+        rmin = points[1, 1]
+        rmax = points[2, 1]
+        lmin = points[2, 2]
+        lmax = points[0, 2]
+
+        self.set_blim(bmin, bmax)
+        self.set_rlim(rmin, rmax)
+        self.set_llim(lmin, lmax)
 
     def opposite_ticks(self, b=None):
         if b:
@@ -761,7 +793,7 @@ class TernaryAxes(TernaryAxesBase):
 
     def plot(self, b, r, l, *args, **kwargs):
         brl = np.column_stack((b, r, l))
-        x, y = self._ternary_data_transform.transform(brl).T
+        x, y = self._brl2xy_transform.transform(brl).T
         return super().plot(x, y, *args, **kwargs)
 
     def scatter(self, b, r, l, *args, **kwargs):
