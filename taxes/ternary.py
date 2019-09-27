@@ -76,7 +76,17 @@ def _determine_anchor(angle0, angle1):
 class TernaryAxesBase(Axes):
     def __init__(self, *args, ternary_scale=1.0, points=None, **kwargs):
         if points is None:
-            corners = ((0.0, 0.0), (1.0, 0.0), (0.5, 0.5 * np.sqrt(3.0)))
+            # By default, regular upward triangle is created.
+            # The bottom and the top of the triangle have 0.0 and 1.0,
+            # respectively, as the *y* coordinate in the original `Axes`
+            # coordinates.
+            # The horizontal center of the triangle has 0.5 as the *x*
+            # coordinate in the original `Axes` coordinates.
+            # The other coordinates are given to make the regular triangle.
+            corners = (
+                (0.5 - 1.0 / np.sqrt(3.0), 0.0),
+                (0.5 + 1.0 / np.sqrt(3.0), 0.0),
+                (0.5, 1.0))
         else:
             corners = points
 
