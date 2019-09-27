@@ -84,6 +84,7 @@ class VerticalTernaryTransform(Transform):
 
     Output
     ------
+    Coordinates in pixels.
     """
     input_dims = 2
     output_dims = 2
