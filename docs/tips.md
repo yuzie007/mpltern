@@ -4,6 +4,45 @@
 
 - To use rcParams rather than hard-coded defaults
 
+## Convention in `taxes`
+
+The discussion
+[here](https://github.com/marcharper/python-ternary/issues/13)
+and
+[here](https://github.com/marcharper/python-ternary/issues/18)
+may be helpful to understand.
+
+So saying "clockwise" or "counterclockwise" may be not meaningful very much,
+because this is essentially just which side the ticks are given for each
+ternary axis.
+
+The "permutation" option is NOT planned, because this is what users can easily
+manipulate outside `taxes`.
+It is something like that you tell Matplotlib to make the option to permute
+`x` and `y` for, e.g., the `plot` method, which may not be necessary for most
+of the users.
+
+In the vertex-based perspective, existing codes for ternary plots give the
+following orders by default:
+
+|Code           |Order of vertices           |
+|---------------|----------------------------|
+|Plotly         |`T, L, R` (counterclockwise)|
+|python-ternary |`R, T, L` (counterclockwise)|
+|ggtern         |`L, R, T` (counterclockwise)|
+|Ternary        |`T, R, L` (clockwise)       |
+|d3-ternary     |`L, R, T` (counterclockwise)|
+|PGFPlots       |`T, L, R` (counterclockwise)|
+|Venus          |`R, L, T` (clockwise)       |
+|ternaryplot.com|`T, L, R` (counterclockwise)|
+|JMP            |`L, T, R` (clockwise)       |
+|Origin         |`R, T, L` (counterclockwise)|
+|Statgraphics   |`T, L, R` (counterclockwise)|
+
+As found, the conterclockwise progress starting from `T` is the most common
+for the order of triangle vertices.
+(Do not be confused with "conterclockwise" *for ticks* noted above.)
+Therefore, `taxes` also follows the most common convention.
 
 ## AxesSubplot
 
@@ -98,3 +137,18 @@ Corner labelsを導入する時に利用できるかもしれない．
 
 `fig.colorbar`において，colorbarの位置はylabelを考慮していない．
 fraction, padが位置を決める．
+
+## Interactive mode
+
+The buttons in the interactive mode call the following methods:
+- `Home` calls `_set_view`
+- `Pan/Zoom` calls `drag_pan`
+- `Zoom-to-rectangle` calls `_set_view_from_bbox`
+
+So, e.g., if you want to scale the axes for ternary plots according to the
+change of (`xmin`, `ymin`, `xmax`, `ymax`), you need to override these methods
+to additionally call the rescaling method for the axes for ternary
+plots (`_set_ternary_lim_from_xlim_and_ylim`).
+
+If you want to prohibit e.g. `Zoom-to-rectanble`, you need to override e.g.
+`can_zoom` to return `False`. (`PolarAxes` does this.)

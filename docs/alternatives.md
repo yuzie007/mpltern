@@ -52,7 +52,7 @@ If `taxes` does not satisfy your demands for ternary plots, think about the foll
             http://pgfplots.sourceforge.net/gallery.html
             -->
     - GUI
-        - [Veusz](https://veusz.github.io)
+        - [Veusz](https://veusz.github.io) (Python)
             <!-- Ternary plots are not documented very much. -->
     - Online
         - [ternaryplot.com](http://www.ternaryplot.com) (based on d3-ternary)
