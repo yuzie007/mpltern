@@ -457,16 +457,22 @@ class TernaryAxesBase(Axes):
 
     def opposite_ticks(self, b=None):
         if b:
-            self.baxis.set_label_position('top')
-            self.raxis.set_label_position('top')
-            self.laxis.set_label_position('top')
+            if self.baxis.get_label_position() != 'corner':
+                self.baxis.set_label_position('top')
+            if self.raxis.get_label_position() != 'corner':
+                self.raxis.set_label_position('top')
+            if self.laxis.get_label_position() != 'corner':
+                self.laxis.set_label_position('top')
             self.baxis.set_ticks_position('top')
             self.raxis.set_ticks_position('top')
             self.laxis.set_ticks_position('top')
         else:
-            self.baxis.set_label_position('bottom')
-            self.raxis.set_label_position('bottom')
-            self.laxis.set_label_position('bottom')
+            if self.baxis.get_label_position() != 'corner':
+                self.baxis.set_label_position('bottom')
+            if self.raxis.get_label_position() != 'corner':
+                self.raxis.set_label_position('bottom')
+            if self.laxis.get_label_position() != 'corner':
+                self.laxis.set_label_position('bottom')
             self.baxis.set_ticks_position('bottom')
             self.raxis.set_ticks_position('bottom')
             self.laxis.set_ticks_position('bottom')
