@@ -6,26 +6,57 @@
 
 ## Convention in `taxes`
 
+In a ternary plot, three variables which sum to a constant (`S`) 
+```t + l + r = S (= 1 in taxes by default)``` is projected onto a
+two-dimensional triangle.
+Each variable is associated with each corner of the triangle, and the scaled
+distance to the corner from its opposite side.
+
+There may be two kinds of perspectives to read a ternary plot; the
+"corner-based" and the "side-based" perspectives.
+The `taxes` code adopts the "corner-based" perspective.
+In this perspective, each of the three variables is associated with a corner of
+the triangle, and the position in the triangle is given as the scaled distance
+to the corner from its opposite side, as already written above.
+In `taxes`, the order of the variables is `T (top) → L (left) → R (right)`
+(counterclockwise).
+
+In `taxes`, by default, the ticks are shown to the left side of the triangle
+with seeing the corresponding corner upward.
+You can put the ticks to the opposite sides by `ax.opposite_ticks(True)`.
+Notice that, although the tick positions are changed, still a point in the
+triangle corresponds to the same composition.
+
+![](corner_based_1.svg)
+
+![](corner_based_2.svg)
+
+Some people read a ternary plot with the "side-based" perspective like the
+figure below. In this perspective, we must also specify if the ticks proceed
+in a clockwise or a counterclockwise manner.
+*Be careful that a point in the triangle corresponds to different compositions
+between the clockwise and the counterclockwise manners*, which could be
+confusing.
+This also means a position for a side does not immediately associated with the
+value of the corresponding variable in the "side-based" perspective.
+In `taxes`, therefore, the "corner-based" perspective is adopted.
+
+![](side_based_ccw.svg)
+
+![](side_based_cw.svg)
+
 The discussion
 [here](https://github.com/marcharper/python-ternary/issues/13)
 and
 [here](https://github.com/marcharper/python-ternary/issues/18)
-may be helpful to understand.
+may be also helpful to understand.
 
-So saying "clockwise" or "counterclockwise" may be not meaningful very much,
-because this is essentially just which side the ticks are given for each
-ternary axis.
+## Convention in other software
 
-The "permutation" option is NOT planned, because this is what users can easily
-manipulate outside `taxes`.
-It is something like that you tell Matplotlib to make the option to permute
-`x` and `y` for, e.g., the `plot` method, which may not be necessary for most
-of the users.
-
-In the vertex-based perspective, existing codes for ternary plots give the
+In the corner-based perspective, existing codes for ternary plots give the
 following orders by default:
 
-|Code           |Order of vertices           |
+|Code           |Order of triangle corners   |
 |---------------|----------------------------|
 |Plotly         |`T, L, R` (counterclockwise)|
 |python-ternary |`R, T, L` (counterclockwise)|
@@ -39,9 +70,9 @@ following orders by default:
 |Origin         |`R, T, L` (counterclockwise)|
 |Statgraphics   |`T, L, R` (counterclockwise)|
 
-As found, the conterclockwise progress starting from `T` is the most common
-for the order of triangle vertices.
-(Do not be confused with "conterclockwise" *for ticks* noted above.)
+As found, the counterclockwise progress starting from `T` is the most common
+for the order of triangle corners.
+(Do not be confused with "counterclockwise" *for ticks* noted above.)
 Therefore, `taxes` also follows the most common convention.
 
 ## AxesSubplot
