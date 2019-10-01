@@ -219,9 +219,12 @@ class TernaryAxesBase(Axes):
     _gen_axes_patch.__doc__ = Axes._gen_axes_patch.__doc__
 
     def _gen_axes_spines(self, locations=None, offset=0.0, units='inches'):
-        return OrderedDict((side, Spine.linear_spine(self, side))
-                           for side in ['left', 'right', 'bottom', 'top'])
-    _gen_axes_spines.__doc__ = Axes._gen_axes_spines.__doc__
+        # Use `Spine` in `taxes`
+        spines = OrderedDict((side, Spine.linear_spine(self, side))
+                             for side in ['left', 'right', 'bottom', 'top'])
+        # TODO: Modify When shifting to the 'TLR' order
+        spines['top'].set_visible(False)  # Not to make an unexpected dot
+        return spines
 
     def get_baxis(self):
         """Return the BAxis instance"""

@@ -20,13 +20,11 @@ class Spine(mspines.Spine):
                 v1[0, 1] = self.axes.corners[2][1]
                 v1[1, 0] = self.axes.corners[0][0]
                 v1[1, 1] = self.axes.corners[0][1]
-            elif self.spine_type in ['bottom']:
+            elif self.spine_type in ['top', 'bottom']:  # TODO
                 v1[0, 0] = self.axes.corners[0][0]
                 v1[0, 1] = self.axes.corners[0][1]
                 v1[1, 0] = self.axes.corners[1][0]
                 v1[1, 1] = self.axes.corners[1][1]
-            elif self.spine_type in ['top']:
-                pass
             else:
                 raise ValueError('unable to set bounds for spine "%s"' %
                                  self.spine_type)
