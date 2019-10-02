@@ -53,27 +53,29 @@ may be also helpful to understand.
 
 ## Convention in other software
 
-In the corner-based perspective, existing codes for ternary plots give the
-following orders by default:
+In the corner-based perspective, [existing codes](alternatives.md) for ternary
+plots give the following orders by default:
 
-|Code           |Order of triangle corners   |
-|---------------|----------------------------|
-|Plotly         |`T, L, R` (counterclockwise)|
-|python-ternary |`R, T, L` (counterclockwise)|
-|ggtern         |`L, R, T` (counterclockwise)|
-|Ternary        |`T, R, L` (clockwise)       |
-|d3-ternary     |`L, R, T` (counterclockwise)|
-|PGFPlots       |`T, L, R` (counterclockwise)|
-|Venus          |`R, L, T` (clockwise)       |
-|ternaryplot.com|`T, L, R` (counterclockwise)|
-|JMP            |`L, T, R` (clockwise)       |
-|Origin         |`R, T, L` (counterclockwise)|
-|Statgraphics   |`T, L, R` (counterclockwise)|
+|Code           |Order of triangle corners|Ticks    |
+|---------------|-------------------------|---------|
+|Plotly         |`T → L → R` (CCW)        |CW       |
+|python-ternary |`R → T → L` (CCW)        |CCW      |
+|ggtern         |`L → R → T` (CCW)        |CCW      |
+|Ternary (R)    |`T → R → L` (CW)         |CW       |
+|d3-ternary     |`L → R → T` (CCW)        |CW       |
+|PGFPlots       |`T → L → R` (CCW)        |CCW      |
+|Veusz          |`R → L → T` (CW)         |CCW      |
+|ternaryplot.com|`T → L → R` (CCW)        |CW       |
+|JMP            |`L → T → R` (CW)         |CW       |
+|Origin         |`R → T → L` (CCW)        |CCW      |
+|Statgraphics   |`T → L → R` (CCW)        |CCW      |
 
-As found, the counterclockwise progress starting from `T` is the most common
-for the order of triangle corners.
-(Do not be confused with "counterclockwise" *for ticks* noted above.)
-Therefore, `taxes` also follows the most common convention.
+As found, the majority is
+
+- `T → L → R` (CCW) for the order of triangle corners
+- CCW for the ticks progress
+
+The `taxes` code decides to follow this convention.
 
 ## AxesSubplot
 
