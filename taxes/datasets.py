@@ -17,6 +17,18 @@ def get_spiral(ternary_scale=1.0):
     return b * ternary_scale, r * ternary_scale, l * ternary_scale
 
 
+def get_scatter_points(n=201, seed=19680801):
+    np.random.seed(seed)
+    b = np.random.rand(n)
+    r = np.random.rand(n)
+    l = np.random.rand(n)
+    s = (b + r + l)
+    b /= s
+    r /= s
+    l /= s
+    return b, r, l
+
+
 def get_triangular_grid(n=11, prec=1e-6):
     t = np.linspace(0, 1, n)
     ps = []
