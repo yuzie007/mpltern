@@ -1,16 +1,16 @@
 # Tips for the Implementation
 
-## Aim of Taxes
+## Aim of `taxes`
 
 - To use rcParams rather than hard-coded defaults
 
 ## Convention in `taxes`
 
-In a ternary plot, three variables which sum to a constant (`S`) 
-```t + l + r = S (= 1 in taxes by default)``` is projected onto a
-two-dimensional triangle.
-Each variable is associated with each corner of the triangle, and the scaled
-distance to the corner from its opposite side.
+In a ternary plot, three variables which sum to a constant (`ternary_scale`) 
+`t` + `l` + `r` = `ternary_scale` (= 1 in taxes by default) are projected onto
+a two-dimensional triangle.
+Each variable is associated with each corner of the triangle, and the value is
+represented by the scaled distance to the corner from its opposite side.
 
 There may be two kinds of perspectives to read a ternary plot; the
 "corner-based" and the "side-based" perspectives.
@@ -21,7 +21,7 @@ to the corner from its opposite side, as already written above.
 In `taxes`, the order of the variables is `T (top) → L (left) → R (right)`
 (counterclockwise).
 
-In `taxes`, by default, the ticks are shown to the left side of the triangle
+In `taxes`, by default, the ticks are shown to the right side of the triangle
 with seeing the corresponding corner upward.
 You can put the ticks to the opposite sides by `ax.opposite_ticks(True)`.
 Notice that, although the tick positions are changed, still a point in the
@@ -77,57 +77,52 @@ As found, the majority is
 
 The `taxes` code decides to follow this convention.
 
+## Scaling
+
+In most plotting methods in `taxes`, the given three variables are
+automatically scaled by `ternary_scale`.
+By this convention, the three variables can be treated on an equal footing.
+The exceptions are the following span-plots:
+
+- `ax.axbline`
+- `ax.axrline`
+- `ax.axlline`
+- `ax.axbspan`
+- `ax.axrspan`
+- `ax.axlspan`
+
+Since in these methods only one of the variables is given, in principle it is
+not possible whether the given value is already scaled or not.
+**To avoid any confusions, it is strongly suggested that you scaled the three
+variables beforehand outside `taxes`.**
+
 ## AxesSubplot
 
-`AxesSubplot`などのclassは，静的に定義されているのではなく，
-`axes/_subplots.subplot_class_factory`で動的に生成されている．
+The `AxesSubplot` class is *dynamically* created by
+`axes/_subplots.subplot_class_factory`.
 
-In Taxes, I define `TernaryAxes` without the suffix `Subplot`.
-
-## Axis
-
-### Label Positions
-
-For the LAxis label, for instance, I would like to put its label at $y = 0.5$
-in the `axes` coorindates.
-To avoid the overlap with ticklabels, I applied the following way in
-`_update_label_position`.
-
-The label should be along the line of $x$ and $y$ with the slope $a$ of 2
-in the `axes` coordinates.
-The label line should also avoid the overlap with ticklabels, the line should
-avoid each `bbox` (x0, y1) of the ticks.
-
-$$
-y = a x + b
-$$
-
-$$
-\tilde{y} = a \tilde{x} + b
-$$
-
-Now the 'reference' $\tilde{y}$ is 0.5 (in the `axes` coordinates), while what we want to get is
-the corresponding $\tilde{x}$.
-By giving the `bbox` (x0, x1) of the ticks to the equation $y = ax + b$,
-we can obtain a candidate $\tilde{x}$ as
-
-$$
-\tilde{x} = x - \frac{y - \tilde{y}}{a}
-$$
-
-Then finally we take the leftmost `x0` and adopt it as the label position.
+In `taxes`, I define `TernaryAxes` without the suffix `Subplot`.
 
 ## Tick
 
 ### Markers
 
-matplotlibでは，ticksはTickオブジェクトのリストとして定義されている．ひとつのTickはひとつのtick pointに対応し，tickを示すためのmarkerをもつLines2D, その点に対応するlabel, そしてgridを持つ．
+In `matplotlib`, ticks is defined as the list of `Tick` instances.
+Each `Tick` corresponds to a value of the corresponding coordinate and has
+three `Line2D` instances to show a tick marker for each side and a grid and
+`Text` to show the tick-label.
 
-tickはmarkerで示される．傾きをもったtickを示すために，taxesではtupleを利用している．具体的には，in, outの場合は１つの頂点を持ったasteriskとして，inoutの場合は２つの頂点として定義している．
+A tick is shown by a marker.
+To make a tilted tick marker, `taxes` rotate/scale the default one in the
+`tilt` method.
+By default, the tick-maker in `matplotlib` is already scaled as
 
-ただし，tupleで作ったmarkerは自動的に大きさが0.5にscaleされてしまう．
-一方で，matplotlib defaultのmarkerは，in, outが1, inoutが0.5の大きさを持つ．
-`self._size`を保持しつつ`self._tickdir`に応じて適切にmarkersizeをscaleするため，`_get_tick1line`で`scale`を定義して対応している．
+- 1.0 for `self._tickdir in ['in', 'out']`
+- 0.5 for `self._tickdir in ['inout']`
+
+and is already rotated by 90 degrees for the `XTick`.
+When tilting the tick-marker, we must also re-apply the following
+rotation/scaling to it.
 
 ### Remove Round-off
 
@@ -135,23 +130,29 @@ We need to define `_get_pixel_distance_along_axis` in e.g. `BAxis`.
 
 ## TernaryTick
 
-- Tickから継承できるもの
+- To be simply inherited from `matplotlib.axis.Tick`
     - `get_tick_padding`
     - `get_children`
-- To be overridden
-    - `_get_tick1line`
-        - transformをdata coordinateにする必要がある
-    - `get_tick2line`
-    - `draw`
-        - `tick2line.draw`をoffにする
-    - `update_position`
-        - tickの傾きなどに応じて．．．
+- To be modified with inheritance
+    - `_get_tick1line`, `_get_tick2line`, `_get_gridline`
+        - `transform` of the line must be overridden by the one suitable for
+        the corresponding axis.
+    - `update_position`?
+        - So far, tick-angles are modified in this method with calling the
+        `tilt` method. This may be however not good when we want to modify the
+        tick-label rotations.
 
 ## TernaryAxis
 
-- To be ovrerridden
+- To be overridden
     - `update_label_position`
-        - Tickは_update_positionで位置を更新している．
+        - Note that the tick-positions are updated via `_update_ticks`.
+
+### `offsetText`
+
+When, for example, we have a large y-axis values, `matplotlib` shows the value
+as the difference from the reference value, with showing it at one end.
+The `offsetText` indicates the text showing this reference value.
 
 ## BAxis, RAxis, LAxis
 
@@ -160,16 +161,14 @@ We need to define `_get_pixel_distance_along_axis` in e.g. `BAxis`.
         - The default rotation as well as rotation_mode should be overridden
           depending on the axis type.
 
-## Offset Text
+## `fig.colorbar`
 
-例えばy軸の値が非常に大きい場合，matplotlibはある基準点を自動で求めて，そこからの変分をy軸として示すことがある．その時の基準点を示すtextのこと．
-
-Corner labelsを導入する時に利用できるかもしれない．
-
-## fig.colorbar
-
-`fig.colorbar`において，colorbarの位置はylabelを考慮していない．
-fraction, padが位置を決める．
+In `fig.colorbar` in `matplotlib`, the position of the colorbar does not care
+y-ticks at the right side.
+The keywords `fraction`, `pad` determine the position of the colorbar, which
+we specify by hand.
+Following to this behavior, `taxes` does NOT provide a function to
+automatically position the colorbar.
 
 ## Interactive mode
 
