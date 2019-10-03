@@ -16,9 +16,15 @@ class LAxis(TernaryAxis):
         return LTick(self.axes, 0, '', major=major, **tick_kw)
 
     def _get_label(self):
-        # x in axes coords, y in display coords (to be updated at draw
-        # time by _update_label_positions)
-        self.label_position = 'bottom'
+        """
+
+        Notes
+        -----
+        x : data coordinates in the axis direction
+        y : display (pixel) coordinates in the direction vertical to the
+            axis direction, updated when drawn in `_update_label_positions`
+        """
+        self.label_position = 'corner'
         rotation, va = self._get_label_rotation()
         label = mtext.Text(x=0.5, y=0.0,
                            fontproperties=font_manager.FontProperties(
