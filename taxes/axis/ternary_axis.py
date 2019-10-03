@@ -35,13 +35,13 @@ class TernaryAxis(XAxis):
 
     def _get_points(self, renderer):
         points = []
-        baxis = self.axes.baxis
-        raxis = self.axes.raxis
+        taxis = self.axes.taxis
         laxis = self.axes.laxis
-        bbboxes, bbboxes2 = baxis._get_tick_boxes_siblings(renderer=renderer)
-        rbboxes, rbboxes2 = raxis._get_tick_boxes_siblings(renderer=renderer)
+        raxis = self.axes.raxis
+        tbboxes, tbboxes2 = taxis._get_tick_boxes_siblings(renderer=renderer)
         lbboxes, lbboxes2 = laxis._get_tick_boxes_siblings(renderer=renderer)
-        bboxes = bbboxes + bbboxes2 + rbboxes + rbboxes2 + lbboxes + lbboxes2
+        rbboxes, rbboxes2 = raxis._get_tick_boxes_siblings(renderer=renderer)
+        bboxes = tbboxes + tbboxes2 + lbboxes + lbboxes2 + rbboxes + rbboxes2
         for bbox in bboxes:
             points.extend([
                 [bbox.x0, bbox.y0],

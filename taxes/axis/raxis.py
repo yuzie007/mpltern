@@ -51,13 +51,13 @@ class RAxis(TernaryAxis):
         pad = self.labelpad * self.figure.dpi / 72
 
         if self.label_position == 'bottom':
-            trans = self.axes._vertical_raxis_transform
+            trans = self.axes._vertical_taxis_transform
             lim = max if self.axes.clockwise else min
         elif self.label_position == 'top':
             trans = self.axes._vertical_laxis_transform
             lim = max if self.axes.clockwise else min
         else:  # "corner"
-            trans = self.axes._vertical_baxis_transform
+            trans = self.axes._vertical_raxis_transform
             lim = min if self.axes.clockwise else max
 
         scale = 1.0 if lim == max else -1.0
@@ -82,15 +82,15 @@ class RAxis(TernaryAxis):
         trans = self.axes._raxis_transform
         xmin, xmax = self.axes.get_rlim()
 
-        points = ((xmin, 0.0), (xmax, 0.0), (xmin, 1.0))
+        points = ((xmax, 0.0), (xmin, 1.0), (xmin, 0.0))
         ps = trans.transform(points)
 
         if self.label_position == 'bottom':
-            d0 = ps[1] - ps[0]
-        elif self.label_position == 'top':
-            d0 = ps[2] - ps[1]
-        else:
             d0 = ps[0] - ps[2]
+        elif self.label_position == 'top':
+            d0 = ps[1] - ps[0]
+        else:
+            d0 = ps[2] - ps[1]
 
         angle = np.arctan2(d0[1], d0[0])
         angle = np.rad2deg(angle)  # [-180, +180]

@@ -2,21 +2,7 @@ import numpy as np
 
 from matplotlib.testing.decorators import image_comparison
 import matplotlib.pyplot as plt
-import taxes
-import pytest
-
-
-def get_scatter_points():
-    np.random.seed(19680801)
-    n = 51
-    b = np.random.rand(n)
-    r = np.random.rand(n)
-    l = np.random.rand(n)
-    s = (b + r + l)
-    b /= s
-    r /= s
-    l /= s
-    return b, r, l
+from taxes.datasets import get_scatter_points
 
 
 class TestScatter:
@@ -25,7 +11,7 @@ class TestScatter:
         b, r, l = get_scatter_points()
         fig = plt.figure()
         ax = fig.add_subplot(projection='ternary')
-        ax.scatter(b, r, l, clip_on=False)
+        ax.scatter(b, r, l)
 
     @image_comparison(baseline_images=['scatter_color'], style='mpl20')
     def test_scatter_color(self):

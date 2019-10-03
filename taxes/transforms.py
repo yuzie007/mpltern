@@ -30,10 +30,10 @@ class TernaryTransform(Transform):
         c2 = self.corners[(self.index + 2) % 3]
         s = points[:, 0]
         p = points[:, 1]
-        v0 = (c1[0] - c0[0], c1[1] - c0[1])
-        v1 = (c2[0] - c0[0], c2[1] - c0[1])
-        x = c0[0] + s * v0[0] + (1.0 - s) * p * v1[0]
-        y = c0[1] + s * v0[1] + (1.0 - s) * p * v1[1]
+        v1 = c1 - c0
+        v2 = c2 - c0
+        x = c0[0] + (1.0 - s) * (p * v1[0] + (1.0 - p) * v2[0])
+        y = c0[1] + (1.0 - s) * (p * v1[1] + (1.0 - p) * v2[1])
         return np.column_stack((x, y)).astype(float)
 
     def inverted(self):
@@ -54,11 +54,7 @@ class InvertedTernaryTransform(Transform):
         c0 = self.corners[(self.index + 0) % 3]
         c1 = self.corners[(self.index + 1) % 3]
         c2 = self.corners[(self.index + 2) % 3]
-        v = [
-            [c1[0] - c0[0], c2[0] - c0[0]],
-            [c1[1] - c0[1], c2[1] - c0[1]],
-        ]
-        v = np.array(v)
+        v = np.column_stack((c1 - c0, c2 - c0))
         d = points - c0
         tmp = np.dot(np.linalg.inv(v), d.T)
         s = tmp[0]
@@ -98,8 +94,8 @@ class VerticalTernaryTransform(Transform):
 
     def transform_non_affine(self, points):
         corners = self.trans.transform(self.corners)
-        c0 = corners[(self.index + 0) % 3]
-        c1 = corners[(self.index + 1) % 3]
+        c0 = corners[(self.index + 1) % 3]
+        c1 = corners[(self.index - 1) % 3]
         v0 = c1 - c0
         v1 = [-v0[1], v0[0]]  # Vertical
         v1 /= np.linalg.norm(v1)
@@ -123,8 +119,8 @@ class InvertedVerticalTernaryTransform(Transform):
 
     def transform_non_affine(self, points):
         corners = self.trans.transform(self.corners)
-        c0 = corners[(self.index + 0) % 3]
-        c1 = corners[(self.index + 1) % 3]
+        c0 = corners[(self.index + 1) % 3]
+        c1 = corners[(self.index - 1) % 3]
         v0 = c1 - c0
         v1 = [-v0[1], v0[0]]
         v1 /= np.linalg.norm(v1)
@@ -154,8 +150,7 @@ class BarycentricTransform(Transform):
     def transform_non_affine(self, points):
         points = np.asarray(points)
         points /= np.sum(points, axis=1)[:, np.newaxis]
-        tmp = np.roll(self.corners, shift=-1, axis=0)  # TODO
-        return np.dot(points, tmp)
+        return np.dot(points, self.corners)
 
     def inverted(self):
         return InvertedBarycentricTransform(self.corners)
@@ -172,8 +167,7 @@ class InvertedBarycentricTransform(Transform):
 
     def transform_non_affine(self, points):
         xys = np.column_stack((points, np.ones(points.shape[0])))
-        v = np.roll(self.corners, shift=-1, axis=0)  # TODO
-        v = np.column_stack((v, np.ones(3)))
+        v = np.column_stack((self.corners, np.ones(3)))
         return np.dot(xys, np.linalg.inv(v))
 
     def inverted(self):

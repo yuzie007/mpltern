@@ -13,7 +13,7 @@ from .spines import Spine
 from .transforms import (
     TernaryTransform, VerticalTernaryTransform,
     BarycentricTransform, TernaryScaleTransform)
-from .axis.baxis import BAxis
+from .axis.taxis import TAxis
 from .axis.raxis import RAxis
 from .axis.laxis import LAxis
 
@@ -84,9 +84,10 @@ class TernaryAxesBase(Axes):
             # coordinate in the original `Axes` coordinates.
             # The other coordinates are given to make the regular triangle.
             corners = (
+                (0.5, 1.0),
                 (0.5 - 1.0 / np.sqrt(3.0), 0.0),
                 (0.5 + 1.0 / np.sqrt(3.0), 0.0),
-                (0.5, 1.0))
+            )
         else:
             corners = points
 
@@ -107,50 +108,50 @@ class TernaryAxesBase(Axes):
         return d < 0.0
 
     def set_figure(self, fig):
-        self.viewBLim = mtransforms.Bbox.unit()
-        self.viewRLim = mtransforms.Bbox.unit()
+        self.viewTLim = mtransforms.Bbox.unit()
         self.viewLLim = mtransforms.Bbox.unit()
+        self.viewRLim = mtransforms.Bbox.unit()
         super().set_figure(fig)
 
     def _get_axis_list(self):
-        return (self.baxis, self.raxis, self.laxis)
+        return (self.taxis, self.laxis, self.raxis)
 
     def _init_axis(self):
         self.xaxis = maxis.XAxis(self)
         self.yaxis = maxis.YAxis(self)
 
-        self.baxis = BAxis(self)
-        self.raxis = RAxis(self)
+        self.taxis = TAxis(self)
         self.laxis = LAxis(self)
+        self.raxis = RAxis(self)
 
-        self.spines['bottom'].register_axis(self.baxis)
-        self.spines['right'].register_axis(self.raxis)
-        self.spines['left'].register_axis(self.laxis)
+        self.spines['bottom'].register_axis(self.taxis)
+        self.spines['right' ].register_axis(self.laxis)
+        self.spines['left'  ].register_axis(self.raxis)
 
         self._update_transScale()
 
     def _set_lim_and_transforms(self):
         super()._set_lim_and_transforms()
         transTernaryScale = TernaryScaleTransform(self.ternary_scale)
-        transBLimits = mtransforms.BboxTransformFrom(
-            mtransforms.TransformedBbox(self.viewBLim, self.transScale))
-        transRLimits = mtransforms.BboxTransformFrom(
-            mtransforms.TransformedBbox(self.viewRLim, self.transScale))
+        transTLimits = mtransforms.BboxTransformFrom(
+            mtransforms.TransformedBbox(self.viewTLim, self.transScale))
         transLLimits = mtransforms.BboxTransformFrom(
             mtransforms.TransformedBbox(self.viewLLim, self.transScale))
+        transRLimits = mtransforms.BboxTransformFrom(
+            mtransforms.TransformedBbox(self.viewRLim, self.transScale))
 
-        baxis_transform = TernaryTransform(self.corners, 0)
-        raxis_transform = TernaryTransform(self.corners, 1)
-        laxis_transform = TernaryTransform(self.corners, 2)
+        taxis_transform = TernaryTransform(self.corners, 0)
+        laxis_transform = TernaryTransform(self.corners, 1)
+        raxis_transform = TernaryTransform(self.corners, 2)
 
-        self._baxis_transform = transBLimits + baxis_transform + self.transAxes
-        self._raxis_transform = transRLimits + raxis_transform + self.transAxes
+        self._taxis_transform = transTLimits + taxis_transform + self.transAxes
         self._laxis_transform = transLLimits + laxis_transform + self.transAxes
+        self._raxis_transform = transRLimits + raxis_transform + self.transAxes
 
         # For axis labels
-        self._vertical_baxis_transform = VerticalTernaryTransform(self.transAxes, self.corners, 0)
-        self._vertical_raxis_transform = VerticalTernaryTransform(self.transAxes, self.corners, 1)
-        self._vertical_laxis_transform = VerticalTernaryTransform(self.transAxes, self.corners, 2)
+        self._vertical_taxis_transform = VerticalTernaryTransform(self.transAxes, self.corners, 0)
+        self._vertical_laxis_transform = VerticalTernaryTransform(self.transAxes, self.corners, 1)
+        self._vertical_raxis_transform = VerticalTernaryTransform(self.transAxes, self.corners, 2)
 
         # For data
 
@@ -163,14 +164,14 @@ class TernaryAxesBase(Axes):
         # Axes coordinates
         self._ternary_axes_transform = self._brl2xy_transform + self.transLimits
 
-    def get_baxis_transform(self, which='grid'):
-        return self._baxis_transform
-
-    def get_raxis_transform(self, which='grid'):
-        return self._raxis_transform
+    def get_taxis_transform(self, which='grid'):
+        return self._taxis_transform
 
     def get_laxis_transform(self, which='grid'):
         return self._laxis_transform
+
+    def get_raxis_transform(self, which='grid'):
+        return self._raxis_transform
 
     def _get_axis_text_transform(self, pad_points, trans, which):
         if which == 'tick1':
@@ -190,20 +191,12 @@ class TernaryAxesBase(Axes):
                                               self.figure.dpi_scale_trans),
                 va, ha)
 
-    def get_baxis_text1_transform(self, pad_points):
-        trans = self.get_baxis_transform(which='tick1')
+    def get_taxis_text1_transform(self, pad_points):
+        trans = self.get_taxis_transform(which='tick1')
         return self._get_axis_text_transform(pad_points, trans, 'tick1')
 
-    def get_baxis_text2_transform(self, pad_points):
-        trans = self.get_baxis_transform(which='tick2')
-        return self._get_axis_text_transform(pad_points, trans, 'tick2')
-
-    def get_raxis_text1_transform(self, pad_points):
-        trans = self.get_raxis_transform(which='tick1')
-        return self._get_axis_text_transform(pad_points, trans, 'tick1')
-
-    def get_raxis_text2_transform(self, pad_points):
-        trans = self.get_raxis_transform(which='tick2')
+    def get_taxis_text2_transform(self, pad_points):
+        trans = self.get_taxis_transform(which='tick2')
         return self._get_axis_text_transform(pad_points, trans, 'tick2')
 
     def get_laxis_text1_transform(self, pad_points):
@@ -214,34 +207,40 @@ class TernaryAxesBase(Axes):
         trans = self.get_laxis_transform(which='tick2')
         return self._get_axis_text_transform(pad_points, trans, 'tick2')
 
+    def get_raxis_text1_transform(self, pad_points):
+        trans = self.get_raxis_transform(which='tick1')
+        return self._get_axis_text_transform(pad_points, trans, 'tick1')
+
+    def get_raxis_text2_transform(self, pad_points):
+        trans = self.get_raxis_transform(which='tick2')
+        return self._get_axis_text_transform(pad_points, trans, 'tick2')
+
     def _gen_axes_patch(self):
         return mpatches.Polygon(self.corners)
-    _gen_axes_patch.__doc__ = Axes._gen_axes_patch.__doc__
 
     def _gen_axes_spines(self, locations=None, offset=0.0, units='inches'):
         # Use `Spine` in `taxes`
         spines = OrderedDict((side, Spine.linear_spine(self, side))
                              for side in ['left', 'right', 'bottom', 'top'])
-        # TODO: Modify When shifting to the 'TLR' order
         spines['top'].set_visible(False)  # Not to make an unexpected dot
         return spines
 
-    def get_baxis(self):
-        """Return the BAxis instance"""
-        return self.baxis
-
-    def get_raxis(self):
-        """Return the RAxis instance"""
-        return self.raxis
+    def get_taxis(self):
+        """Return the TAxis instance"""
+        return self.taxis
 
     def get_laxis(self):
         """Return the LAxis instance"""
         return self.laxis
 
+    def get_raxis(self):
+        """Return the RAxis instance"""
+        return self.raxis
+
     def cla(self):
-        self.set_blim(0.0, self.ternary_scale)
-        self.set_rlim(0.0, self.ternary_scale)
+        self.set_tlim(0.0, self.ternary_scale)
         self.set_llim(0.0, self.ternary_scale)
+        self.set_rlim(0.0, self.ternary_scale)
         super().cla()
 
     @docstring.dedent_interpd
@@ -261,7 +260,7 @@ class TernaryAxesBase(Axes):
         which : {'major', 'minor', 'both'}, optional
             The grid lines to apply the changes on.
 
-        axis : {'both', 'b', 'r', 'l'}, optional
+        axis : {'both', 't', 'l', 'r'}, optional
             The axis to apply the changes on.
 
         **kwargs : `.Line2D` properties
@@ -283,49 +282,49 @@ class TernaryAxesBase(Axes):
         """
         if len(kwargs):
             b = True
-        cbook._check_in_list(['b', 'r', 'l', 'both'], axis=axis)
-        if axis in ['b', 'both']:
-            self.baxis.grid(b, which=which, **kwargs)
-        if axis in ['r', 'both']:
-            self.raxis.grid(b, which=which, **kwargs)
+        cbook._check_in_list(['t', 'l', 'r', 'both'], axis=axis)
+        if axis in ['t', 'both']:
+            self.taxis.grid(b, which=which, **kwargs)
         if axis in ['l', 'both']:
             self.laxis.grid(b, which=which, **kwargs)
+        if axis in ['r', 'both']:
+            self.raxis.grid(b, which=which, **kwargs)
 
     def tick_params(self, axis='both', **kwargs):
-        cbook._check_in_list(['b', 'r', 'l', 'both'], axis=axis)
-        if axis in ['b', 'both']:
+        cbook._check_in_list(['t', 'l', 'r', 'both'], axis=axis)
+        if axis in ['t', 'both']:
             bkw = dict(kwargs)
             bkw.pop('left', None)
             bkw.pop('right', None)
             bkw.pop('labelleft', None)
             bkw.pop('labelright', None)
-            self.baxis.set_tick_params(**bkw)
-        if axis in ['r', 'both']:
+            self.taxis.set_tick_params(**bkw)
+        if axis in ['l', 'both']:
             rkw = dict(kwargs)
             rkw.pop('left', None)
             rkw.pop('right', None)
             rkw.pop('labelleft', None)
             rkw.pop('labelright', None)
-            self.raxis.set_tick_params(**rkw)
-        if axis in ['l', 'both']:
+            self.laxis.set_tick_params(**rkw)
+        if axis in ['r', 'both']:
             lkw = dict(kwargs)
             lkw.pop('left', None)
             lkw.pop('right', None)
             lkw.pop('labelleft', None)
             lkw.pop('labelright', None)
-            self.laxis.set_tick_params(**lkw)
+            self.raxis.set_tick_params(**lkw)
 
     def _create_bbox_from_ternary_lim(self):
-        bmin, bmax = self.get_blim()
-        rmin, rmax = self.get_rlim()
+        tmin, tmax = self.get_tlim()
         lmin, lmax = self.get_llim()
-        points = [[bmax, rmin, lmin], [bmin, rmax, lmin], [bmin, rmin, lmax]]
+        rmin, rmax = self.get_rlim()
+        points = [[tmax, lmin, rmin], [tmin, lmax, rmin], [tmin, lmin, rmax]]
         points = self._brl2xy_transform.transform(points)
         bbox = mtransforms.Bbox.unit()
         bbox.update_from_data_xy(points, ignore=True)
         return bbox
 
-    def set_ternary_lim(self, bmin, bmax, rmin, rmax, lmin, lmax, *args, **kwargs):
+    def set_ternary_lim(self, tmin, tmax, lmin, lmax, rmin, rmax, *args, **kwargs):
         """
 
         Notes
@@ -333,19 +332,19 @@ class TernaryAxesBase(Axes):
         xmin, xmax : holizontal limits of the triangle
         ymin, ymax : bottom and top of the triangle
         """
-        b = bmax + rmin + lmin
-        r = bmin + rmax + lmin
-        l = bmin + rmin + lmax
+        t = tmax + lmin + rmin
+        l = tmin + lmax + rmin
+        r = tmin + lmin + rmax
         s = self.ternary_scale
         tol = 1e-12
-        if (abs(b - s) > tol) or (abs(r - s) > tol) or (abs(l - s) > tol):
-            raise ValueError(b, r, l, s)
+        if (abs(t - s) > tol) or (abs(l - s) > tol) or (abs(r - s) > tol):
+            raise ValueError(t, l, r, s)
 
         boxin = self._create_bbox_from_ternary_lim()
 
-        self.set_blim(bmin, bmax)
-        self.set_rlim(rmin, rmax)
+        self.set_tlim(tmin, tmax)
         self.set_llim(lmin, lmax)
+        self.set_rlim(rmin, rmax)
 
         boxout = self._create_bbox_from_ternary_lim()
 
@@ -359,43 +358,43 @@ class TernaryAxesBase(Axes):
         self.set_xlim(xmin, xmax)
         self.set_ylim(ymin, ymax)
 
-    def set_ternary_min(self, bmin, rmin, lmin, *args, **kwargs):
+    def set_ternary_min(self, tmin, lmin, rmin, *args, **kwargs):
         s = self.ternary_scale
-        bmax = s - rmin - lmin
-        rmax = s - lmin - bmin
-        lmax = s - bmin - rmin
-        self.set_ternary_lim(bmin, bmax, rmin, rmax, lmin, lmax, *args, **kwargs)
+        tmax = s - lmin - rmin
+        lmax = s - rmin - tmin
+        rmax = s - tmin - lmin
+        self.set_ternary_lim(tmin, tmax, lmin, lmax, rmin, rmax, *args, **kwargs)
 
-    def set_ternary_max(self, bmax, rmax, lmax, *args, **kwargs):
+    def set_ternary_max(self, tmax, lmax, rmax, *args, **kwargs):
         s = self.ternary_scale
-        bmin = (s + bmax - rmax - lmax) * 0.5
-        rmin = (s + rmax - lmax - bmax) * 0.5
-        lmin = (s + lmax - bmax - rmax) * 0.5
-        self.set_ternary_lim(bmin, bmax, rmin, rmax, lmin, lmax, *args, **kwargs)
+        tmin = (s + tmax - lmax - rmax) * 0.5
+        lmin = (s + lmax - rmax - tmax) * 0.5
+        rmin = (s + rmax - tmax - lmax) * 0.5
+        self.set_ternary_lim(tmin, tmax, lmin, lmax, rmin, rmax, *args, **kwargs)
 
-    def get_blim(self):
-        return tuple(self.viewBLim.intervalx)
-
-    def get_rlim(self):
-        return tuple(self.viewRLim.intervalx)
+    def get_tlim(self):
+        return tuple(self.viewTLim.intervalx)
 
     def get_llim(self):
         return tuple(self.viewLLim.intervalx)
 
-    def set_blim(self, bmin, bmax):
-        self.viewBLim.intervalx = (bmin, bmax)
-        self.stale = True
-        return bmin, bmax
+    def get_rlim(self):
+        return tuple(self.viewRLim.intervalx)
 
-    def set_rlim(self, rmin, rmax):
-        self.viewRLim.intervalx = (rmin, rmax)
+    def set_tlim(self, tmin, tmax):
+        self.viewTLim.intervalx = (tmin, tmax)
         self.stale = True
-        return rmin, rmax
+        return tmin, tmax
 
     def set_llim(self, lmin, lmax):
         self.viewLLim.intervalx = (lmin, lmax)
         self.stale = True
         return lmin, lmax
+
+    def set_rlim(self, rmin, rmax):
+        self.viewRLim.intervalx = (rmin, rmax)
+        self.stale = True
+        return rmin, rmax
 
     # Interactive manipulation
 
@@ -427,87 +426,62 @@ class TernaryAxesBase(Axes):
         - _set_view_from_bbox (`Zoom-to-rectangle`)
         - drag_pan (`Pan/Zoom`)
         (https://matplotlib.org/users/navigation_toolbar.html)
-
-        (TODO: This is only for the default triangle.)
-        Now this assumes a certain rectangle.
-        If the rectangle is longer in the *x* direction,
-        ternary lim is determined first from `rmin` and `rmax` so as to
-        correspond to `ymin` and `ymax`, respectively, and then `bmin` is
-        determined so as to correspond to `xmin`.
-        if the rectangle is longer in the *y* direction,
-        ternary lim is determined first from `bmin` and `bmax` so as to
-        correspond to `xmin` and `xmax`, respectively, and then `rmin` is
-        determined so as to correspond to `ymin`.
-        Other ternary lim values are then determined consistently with the
-        above-determined ones.
         """
         # points = self._brl2xy_transform.inverted().transform(self.corners)
         points = self._ternary_axes_transform.inverted().transform(self.corners)
 
-        bmin = points[0, 0]
-        bmax = points[1, 0]
-        rmin = points[1, 1]
-        rmax = points[2, 1]
-        lmin = points[2, 2]
-        lmax = points[0, 2]
+        tmax = points[0, 0]
+        tmin = points[1, 0]
+        lmax = points[1, 1]
+        lmin = points[2, 1]
+        rmax = points[2, 2]
+        rmin = points[0, 2]
 
-        self.set_blim(bmin, bmax)
-        self.set_rlim(rmin, rmax)
+        self.set_tlim(tmin, tmax)
         self.set_llim(lmin, lmax)
+        self.set_rlim(rmin, rmax)
 
     def opposite_ticks(self, b=None):
         if b:
-            if self.baxis.get_label_position() != 'corner':
-                self.baxis.set_label_position('top')
-            if self.raxis.get_label_position() != 'corner':
-                self.raxis.set_label_position('top')
+            if self.taxis.get_label_position() != 'corner':
+                self.taxis.set_label_position('top')
             if self.laxis.get_label_position() != 'corner':
                 self.laxis.set_label_position('top')
-            self.baxis.set_ticks_position('top')
-            self.raxis.set_ticks_position('top')
-            self.laxis.set_ticks_position('top')
-        else:
-            if self.baxis.get_label_position() != 'corner':
-                self.baxis.set_label_position('bottom')
             if self.raxis.get_label_position() != 'corner':
-                self.raxis.set_label_position('bottom')
+                self.raxis.set_label_position('top')
+            self.taxis.set_ticks_position('top')
+            self.laxis.set_ticks_position('top')
+            self.raxis.set_ticks_position('top')
+        else:
+            if self.taxis.get_label_position() != 'corner':
+                self.taxis.set_label_position('bottom')
             if self.laxis.get_label_position() != 'corner':
                 self.laxis.set_label_position('bottom')
-            self.baxis.set_ticks_position('bottom')
-            self.raxis.set_ticks_position('bottom')
+            if self.raxis.get_label_position() != 'corner':
+                self.raxis.set_label_position('bottom')
+            self.taxis.set_ticks_position('bottom')
             self.laxis.set_ticks_position('bottom')
+            self.raxis.set_ticks_position('bottom')
 
 
 class TernaryAxes(TernaryAxesBase):
     """
-    A ternary graph projection, where the input dimensions are *b*, *r*, *l*.
+    A ternary graph projection, where the input dimensions are *t*, *l*, *r*.
     The plot starts from the bottom and goes anti-clockwise.
     """
     name = 'ternary'
 
-    def get_blabel(self):
+    def get_tlabel(self):
         """
-        Get the blabel text string.
+        Get the tlabel text string.
         """
-        label = self.baxis.get_label()
+        label = self.taxis.get_label()
         return label.get_text()
 
-    def set_blabel(self, blabel, fontdict=None, labelpad=None, **kwargs):
+    def set_tlabel(self, tlabel, fontdict=None, labelpad=None, **kwargs):
         if labelpad is not None:
-            self.baxis.labelpad = labelpad
-        return self.baxis.set_label_text(blabel, fontdict, **kwargs)
-
-    def get_rlabel(self):
-        """
-        Get the rlabel text string.
-        """
-        label = self.raxis.get_label()
-        return label.get_text()
-
-    def set_rlabel(self, rlabel, fontdict=None, labelpad=None, **kwargs):
-        if labelpad is not None:
-            self.raxis.labelpad = labelpad
-        return self.raxis.set_label_text(rlabel, fontdict, **kwargs)
+            self.taxis.labelpad = labelpad
+        return self.taxis.set_label_text(tlabel, fontdict, **kwargs)
 
     def get_llabel(self):
         """
@@ -521,22 +495,34 @@ class TernaryAxes(TernaryAxesBase):
             self.laxis.labelpad = labelpad
         return self.laxis.set_label_text(llabel, fontdict, **kwargs)
 
-    def text(self, b, r, l, s, *args, **kwargs):
-        brl = np.column_stack((b, r, l))
-        x, y = self._brl2xy_transform.transform(brl).T
+    def get_rlabel(self):
+        """
+        Get the rlabel text string.
+        """
+        label = self.raxis.get_label()
+        return label.get_text()
+
+    def set_rlabel(self, rlabel, fontdict=None, labelpad=None, **kwargs):
+        if labelpad is not None:
+            self.raxis.labelpad = labelpad
+        return self.raxis.set_label_text(rlabel, fontdict, **kwargs)
+
+    def text(self, t, l, r, s, *args, **kwargs):
+        tlr = np.column_stack((t, l, r))
+        x, y = self._brl2xy_transform.transform(tlr).T
         return super().text(x, y, s, *args, **kwargs)
 
     def text_xy(self, x, y, s, *args, **kwargs):
         return super().text(x, y, s, *args, **kwargs)
 
-    def axbline(self, x=0, ymin=0, ymax=1, **kwargs):
+    def axtline(self, x=0, ymin=0, ymax=1, **kwargs):
         """
-        Add a equi-b line across the axes.
+        Add a equi-t line across the axes.
 
         Parameters
         ----------
         x : scalar, optional, default: 0
-            x position in data coordinates of the equi-b line.
+            x position in data coordinates of the equi-t line.
 
         ymin : scalar, optional, default: 0
             Should be between 0 and 1, 0 being one end of the plot, 1 the
@@ -560,55 +546,13 @@ class TernaryAxes(TernaryAxesBase):
 
         See also
         --------
-        axbspan : Add a equi-b span across the axis.
+        axtspan : Add a equi-t span across the axis.
         """
         if "transform" in kwargs:
             raise ValueError(
                 "'transform' is not allowed as a kwarg;"
-                + "axbline generates its own transform.")
-        trans = self.get_baxis_transform(which='grid')
-        l = mlines.Line2D([x, x], [ymin, ymax], transform=trans, **kwargs)
-        self.add_line(l)
-        return l
-
-    def axrline(self, x=0, ymin=0, ymax=1, **kwargs):
-        """
-        Add a equi-r line across the axes.
-
-        Parameters
-        ----------
-        x : scalar, optional, default: 0
-            x position in data coordinates of the equi-r line.
-
-        ymin : scalar, optional, default: 0
-            Should be between 0 and 1, 0 being one end of the plot, 1 the
-            other of the plot.
-
-        ymax : scalar, optional, default: 1
-            Should be between 0 and 1, 0 being one end of the plot, 1 the
-            other of the plot.
-
-        Returns
-        -------
-        line : :class:`~matplotlib.lines.Line2D`
-
-        Other Parameters
-        ----------------
-        **kwargs
-            Valid kwargs are :class:`~matplotlib.lines.Line2D` properties,
-            with the exception of 'transform':
-
-        %(_Line2D_docstr)s
-
-        See also
-        --------
-        axrspan : Add a equi-r span across the axis.
-        """
-        if "transform" in kwargs:
-            raise ValueError(
-                "'transform' is not allowed as a kwarg;"
-                + "axrline generates its own transform.")
-        trans = self.get_raxis_transform(which='grid')
+                + "axtline generates its own transform.")
+        trans = self.get_taxis_transform(which='grid')
         l = mlines.Line2D([x, x], [ymin, ymax], transform=trans, **kwargs)
         self.add_line(l)
         return l
@@ -655,16 +599,58 @@ class TernaryAxes(TernaryAxesBase):
         self.add_line(l)
         return l
 
-    def axbspan(self, xmin, xmax, ymin=0, ymax=1, **kwargs):
+    def axrline(self, x=0, ymin=0, ymax=1, **kwargs):
+        """
+        Add a equi-r line across the axes.
+
+        Parameters
+        ----------
+        x : scalar, optional, default: 0
+            x position in data coordinates of the equi-r line.
+
+        ymin : scalar, optional, default: 0
+            Should be between 0 and 1, 0 being one end of the plot, 1 the
+            other of the plot.
+
+        ymax : scalar, optional, default: 1
+            Should be between 0 and 1, 0 being one end of the plot, 1 the
+            other of the plot.
+
+        Returns
+        -------
+        line : :class:`~matplotlib.lines.Line2D`
+
+        Other Parameters
+        ----------------
+        **kwargs
+            Valid kwargs are :class:`~matplotlib.lines.Line2D` properties,
+            with the exception of 'transform':
+
+        %(_Line2D_docstr)s
+
+        See also
+        --------
+        axrspan : Add a equi-r span across the axis.
+        """
+        if "transform" in kwargs:
+            raise ValueError(
+                "'transform' is not allowed as a kwarg;"
+                + "axrline generates its own transform.")
+        trans = self.get_raxis_transform(which='grid')
+        l = mlines.Line2D([x, x], [ymin, ymax], transform=trans, **kwargs)
+        self.add_line(l)
+        return l
+
+    def axtspan(self, xmin, xmax, ymin=0, ymax=1, **kwargs):
         """
         Add a span for the bottom coordinate.
 
         Parameters
         ----------
         xmin : float
-               Lower limit of the bottom span in data units.
+               Lower limit of the top span in data units.
         xmax : float
-               Upper limit of the bottom span in data units.
+               Upper limit of the top span in data units.
         ymin : float, optional, default: 0
                Lower limit of the span from end to end in relative
                (0-1) units.
@@ -684,49 +670,10 @@ class TernaryAxes(TernaryAxesBase):
 
         See Also
         --------
+        axlspan : Add a span for the left coordinate.
         axrspan : Add a span for the right coordinate.
-        axlspan : Add a span for the left coordinate.
         """
-        trans = self.get_baxis_transform(which='grid')
-        verts = (xmin, ymin), (xmin, ymax), (xmax, ymax), (xmax, ymin)
-        p = mpatches.Polygon(verts, **kwargs)
-        p.set_transform(trans)
-        self.add_patch(p)
-        return p
-
-    def axrspan(self, xmin, xmax, ymin=0, ymax=1, **kwargs):
-        """
-        Add a span for the right coordinate.
-
-        Parameters
-        ----------
-        xmin : float
-               Lower limit of the right span in data units.
-        xmax : float
-               Upper limit of the right span in data units.
-        ymin : float, optional, default: 0
-               Lower limit of the span from end to end in relative
-               (0-1) units.
-        ymax : float, optional, default: 1
-               Upper limit of the span from end to end in relative
-               (0-1) units.
-
-        Returns
-        -------
-        Polygon : `~matplotlib.patches.Polygon`
-
-        Other Parameters
-        ----------------
-        **kwargs : `~matplotlib.patches.Polygon` properties.
-
-        %(Polygon)s
-
-        See Also
-        --------
-        axbspan : Add a span for the bottom coordinate.
-        axlspan : Add a span for the left coordinate.
-        """
-        trans = self.get_raxis_transform(which='grid')
+        trans = self.get_taxis_transform(which='grid')
         verts = (xmin, ymin), (xmin, ymax), (xmax, ymax), (xmax, ymin)
         p = mpatches.Polygon(verts, **kwargs)
         p.set_transform(trans)
@@ -772,53 +719,92 @@ class TernaryAxes(TernaryAxesBase):
         self.add_patch(p)
         return p
 
-    def plot(self, b, r, l, *args, **kwargs):
-        brl = np.column_stack((b, r, l))
-        x, y = self._brl2xy_transform.transform(brl).T
+    def axrspan(self, xmin, xmax, ymin=0, ymax=1, **kwargs):
+        """
+        Add a span for the right coordinate.
+
+        Parameters
+        ----------
+        xmin : float
+               Lower limit of the right span in data units.
+        xmax : float
+               Upper limit of the right span in data units.
+        ymin : float, optional, default: 0
+               Lower limit of the span from end to end in relative
+               (0-1) units.
+        ymax : float, optional, default: 1
+               Upper limit of the span from end to end in relative
+               (0-1) units.
+
+        Returns
+        -------
+        Polygon : `~matplotlib.patches.Polygon`
+
+        Other Parameters
+        ----------------
+        **kwargs : `~matplotlib.patches.Polygon` properties.
+
+        %(Polygon)s
+
+        See Also
+        --------
+        axbspan : Add a span for the bottom coordinate.
+        axlspan : Add a span for the left coordinate.
+        """
+        trans = self.get_raxis_transform(which='grid')
+        verts = (xmin, ymin), (xmin, ymax), (xmax, ymax), (xmax, ymin)
+        p = mpatches.Polygon(verts, **kwargs)
+        p.set_transform(trans)
+        self.add_patch(p)
+        return p
+
+    def plot(self, t, l, r, *args, **kwargs):
+        tlr = np.column_stack((t, l, r))
+        x, y = self._brl2xy_transform.transform(tlr).T
         return super().plot(x, y, *args, **kwargs)
 
-    def scatter(self, b, r, l, *args, **kwargs):
-        brl = np.column_stack((b, r, l))
-        x, y = self._brl2xy_transform.transform(brl).T
+    def scatter(self, t, l, r, *args, **kwargs):
+        tlr = np.column_stack((t, l, r))
+        x, y = self._brl2xy_transform.transform(tlr).T
         return super().scatter(x, y, *args, **kwargs)
 
-    def hexbin(self, b, r, l, *args, **kwargs):
-        brl = np.column_stack((b, r, l))
-        x, y = self._brl2xy_transform.transform(brl).T
+    def hexbin(self, t, l, r, *args, **kwargs):
+        tlr = np.column_stack((t, l, r))
+        x, y = self._brl2xy_transform.transform(tlr).T
         return super().hexbin(x, y, *args, **kwargs)
 
-    def quiver(self, b, r, l, db, dr, dl, *args, **kwargs):
-        brl = np.column_stack((b, r, l))
-        x, y = self._brl2xy_transform.transform(brl).T
-        brl = np.column_stack((b + db, r + dr, l + dl))
-        u, v = self._brl2xy_transform.transform(brl).T
+    def quiver(self, t, l, r, dt, dl, dr, *args, **kwargs):
+        tlr = np.column_stack((t, l, r))
+        x, y = self._brl2xy_transform.transform(tlr).T
+        tlr = np.column_stack((t + dt, l + dl, r + dr))
+        u, v = self._brl2xy_transform.transform(tlr).T
         u -= x
         v -= y
         return super().quiver(x, y, u, v, *args, **kwargs)
 
-    def fill(self, b, r, l, *args, **kwargs):
-        brl = np.column_stack((b, r, l))
-        x, y = self._brl2xy_transform.transform(brl).T
+    def fill(self, t, l, r, *args, **kwargs):
+        tlr = np.column_stack((t, l, r))
+        x, y = self._brl2xy_transform.transform(tlr).T
         return super().fill(x, y, *args, **kwargs)
 
-    def tricontour(self, b, r, l, *args, **kwargs):
-        brl = np.column_stack((b, r, l))
-        x, y = self._brl2xy_transform.transform(brl).T
+    def tricontour(self, t, l, r, *args, **kwargs):
+        tlr = np.column_stack((t, l, r))
+        x, y = self._brl2xy_transform.transform(tlr).T
         return super().tricontour(x, y, *args, **kwargs)
 
-    def tricontourf(self, b, r, l, *args, **kwargs):
-        brl = np.column_stack((b, r, l))
-        x, y = self._brl2xy_transform.transform(brl).T
+    def tricontourf(self, t, l, r, *args, **kwargs):
+        tlr = np.column_stack((t, l, r))
+        x, y = self._brl2xy_transform.transform(tlr).T
         return super().tricontourf(x, y, *args, **kwargs)
 
-    def tripcolor(self, b, r, l, *args, **kwargs):
-        brl = np.column_stack((b, r, l))
-        x, y = self._brl2xy_transform.transform(brl).T
+    def tripcolor(self, t, l, r, *args, **kwargs):
+        tlr = np.column_stack((t, l, r))
+        x, y = self._brl2xy_transform.transform(tlr).T
         return super().tripcolor(x, y, *args, **kwargs)
 
-    def triplot(self, b, r, l, *args, **kwargs):
-        brl = np.column_stack((b, r, l))
-        x, y = self._brl2xy_transform.transform(brl).T
+    def triplot(self, t, l, r, *args, **kwargs):
+        tlr = np.column_stack((t, l, r))
+        x, y = self._brl2xy_transform.transform(tlr).T
         tplot = self.plot
         self.plot = super().plot
         tmp = super().triplot(x, y, *args, **kwargs)

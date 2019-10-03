@@ -4,16 +4,16 @@ from matplotlib import rcParams
 import matplotlib.font_manager as font_manager
 import matplotlib.text as mtext
 from .ternary_axis import TernaryAxis
-from .btick import BTick
+from .ttick import TTick
 
 
-class BAxis(TernaryAxis):
+class TAxis(TernaryAxis):
     def _get_tick(self, major):
         if major:
             tick_kw = self._major_tick_kw
         else:
             tick_kw = self._minor_tick_kw
-        return BTick(self.axes, 0, '', major=major, **tick_kw)
+        return TTick(self.axes, 0, '', major=major, **tick_kw)
 
     def _get_label(self):
         """
@@ -35,7 +35,7 @@ class BAxis(TernaryAxis):
                            horizontalalignment='center',
                            rotation=rotation,
                            rotation_mode='anchor')
-        label.set_transform(self.axes._vertical_baxis_transform)
+        label.set_transform(self.axes._vertical_taxis_transform)
 
         self._set_artist_props(label)
         return label
@@ -51,13 +51,13 @@ class BAxis(TernaryAxis):
         pad = self.labelpad * self.figure.dpi / 72
 
         if self.label_position == 'bottom':
-            trans = self.axes._vertical_baxis_transform
+            trans = self.axes._vertical_laxis_transform
             lim = max if self.axes.clockwise else min
         elif self.label_position == 'top':
             trans = self.axes._vertical_raxis_transform
             lim = max if self.axes.clockwise else min
         else:  # "corner"
-            trans = self.axes._vertical_laxis_transform
+            trans = self.axes._vertical_taxis_transform
             lim = min if self.axes.clockwise else max
 
         scale = 1.0 if lim == max else -1.0
@@ -76,21 +76,21 @@ class BAxis(TernaryAxis):
 
     def get_view_interval(self):
         'return the Interval instance for this axis view limits'
-        return self.axes.get_blim()
+        return self.axes.get_tlim()
 
     def _get_label_rotation(self):
-        trans = self.axes._baxis_transform
-        xmin, xmax = self.axes.get_blim()
+        trans = self.axes._taxis_transform
+        xmin, xmax = self.axes.get_tlim()
 
-        points = ((xmin, 0.0), (xmax, 0.0), (xmin, 1.0))
+        points = ((xmax, 0.0), (xmin, 1.0), (xmin, 0.0))
         ps = trans.transform(points)
 
         if self.label_position == 'bottom':
-            d0 = ps[1] - ps[0]
-        elif self.label_position == 'top':
-            d0 = ps[2] - ps[1]
-        else:
             d0 = ps[0] - ps[2]
+        elif self.label_position == 'top':
+            d0 = ps[1] - ps[0]
+        else:
+            d0 = ps[2] - ps[1]
 
         angle = np.arctan2(d0[1], d0[0])
         angle = np.rad2deg(angle)  # [-180, +180]

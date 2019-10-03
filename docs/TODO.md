@@ -27,3 +27,4 @@
 - Triangular and hexagonal binning with values (like `ggtern`)
 - Tie lines
 - Log scale
+- Scatter Hist (ternary-plot version of [this](https://matplotlib.org/gallery/axes_grid1/scatter_hist_locatable_axes.html))
