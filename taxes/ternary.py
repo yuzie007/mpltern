@@ -13,9 +13,7 @@ from .spines import Spine
 from .transforms import (
     TernaryTransform, VerticalTernaryTransform,
     BarycentricTransform, TernaryScaleTransform)
-from .axis.taxis import TAxis
-from .axis.raxis import RAxis
-from .axis.laxis import LAxis
+from taxes.ternary_axis import TAxis, LAxis, RAxis
 
 
 def xy2brl(x, y, s=1.0):
