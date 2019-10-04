@@ -16,16 +16,6 @@ from .transforms import (
 from taxes.ternary_axis import TAxis, LAxis, RAxis
 
 
-def xy2brl(x, y, s=1.0):
-    x = np.asarray(x)
-    y = np.asarray(y)
-    s = np.asarray(s)
-    b = s * (x - y / np.sqrt(3.0))
-    r = s * (y / np.sqrt(3.0) * 2.0)
-    l = s * (1.0 - x - y / np.sqrt(3.0))
-    return b, r, l
-
-
 def _determine_anchor(angle0, angle1):
     """Determine the tick-label alignments from the spine and the tick angles.
 
