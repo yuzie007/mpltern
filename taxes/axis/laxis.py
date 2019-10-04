@@ -53,11 +53,19 @@ class LAxis(TernaryAxis):
         if self.label_position == 'bottom':
             trans = self.axes._vertical_raxis_transform
             lim = max if self.axes.clockwise else min
+            x = 0.5
         elif self.label_position == 'top':
             trans = self.axes._vertical_taxis_transform
             lim = max if self.axes.clockwise else min
+            x = 0.5
         else:  # "corner"
             trans = self.axes._vertical_laxis_transform
+
+            # Get the corner in the display coordinates, and then get
+            # the *x* coordinates in the `trans` coordinates
+            corner = self.axes.transAxes.transform(self.axes.corners)[1]
+            x = trans.inverted().transform(corner)[0]
+
             lim = min if self.axes.clockwise else max
 
         scale = 1.0 if lim == max else -1.0
@@ -65,7 +73,7 @@ class LAxis(TernaryAxis):
         points = self._get_points(renderer=renderer)
         points = trans.inverted().transform(points)
         y = lim(points[:, 1])
-        position = (0.5, y + scale * pad)
+        position = (x, y + scale * pad)
 
         self.label.set_position(position)
         self.label.set_transform(trans)
