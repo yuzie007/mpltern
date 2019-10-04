@@ -4,7 +4,7 @@ from matplotlib import rcParams
 import matplotlib.font_manager as font_manager
 import matplotlib.text as mtext
 from .ternary_axis import TernaryAxis
-from .ltick import LTick
+from taxes.ternary_tick import LTick
 
 
 class LAxis(TernaryAxis):

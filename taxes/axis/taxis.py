@@ -4,7 +4,7 @@ from matplotlib import rcParams
 import matplotlib.font_manager as font_manager
 import matplotlib.text as mtext
 from .ternary_axis import TernaryAxis
-from .ttick import TTick
+from taxes.ternary_tick import TTick
 
 
 class TAxis(TernaryAxis):
