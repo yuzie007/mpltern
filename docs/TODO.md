@@ -2,23 +2,23 @@
 
 ## High
 
-- Refactoring/renaming of classes/variables (with surveying existing ternary plotting codes)
-
-## Medium
-
-- Rotation of the triangle
 - Rotation of tick-labels
     - along the figure bottom
     - along the axis
     - along the tick markers
+- Rotation of the triangle
 - Rotation of axis-labels
     - along the figure bottom
     - along the axis
+- Arrows along the axes
 - Tick-labels inside the triangle
+- Refactoring of `ternary_axes.py` and `ternary_tick.py`
+
+## Medium
+
 - Errorbars
 - Crosshairs
 - Isoproportion lines
-- Arrows along the axes
 
 ## Low
 
