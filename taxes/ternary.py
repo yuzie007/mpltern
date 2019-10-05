@@ -16,14 +16,14 @@ from .transforms import (
 from taxes.ternary_axis import TAxis, LAxis, RAxis
 
 
-def _determine_anchor(angle0, angle1):
+def _determine_anchor(angle0, tick_angle):
     """Determine the tick-label alignments from the spine and the tick angles.
 
     Parameters
     ----------
     angle0 : float
         Spine angle in radian.
-    angle1 : float
+    tick_angle : float
         Tick angle in radian.
 
     Returns
@@ -39,23 +39,23 @@ def _determine_anchor(angle0, angle1):
         a0 = angle0
 
     if a0 < 30.0:
-        if angle1 < a0:
+        if tick_angle < a0:
             return 'center', 'top'
         else:
             return 'center', 'bottom'
     elif 30.0 <= a0 < 150.0:
-        if angle1 < a0 - 180.0:
+        if tick_angle < a0 - 180.0:
             return 'right', 'center_baseline'
-        elif a0 - 180.0 <= angle1 < 30.0:
+        elif a0 - 180.0 <= tick_angle < 30.0:
             return 'left', 'center_baseline'
-        elif 30.0 <= angle1 < a0:
+        elif 30.0 <= tick_angle < a0:
             return 'left', 'baseline'
-        elif a0 <= angle1 < 150.0:
+        elif a0 <= tick_angle < 150.0:
             return 'right', 'baseline'
         else:
             return 'right', 'center_baseline'
     elif 150.0 <= a0:
-        if angle1 < a0 - 180.0 or a0 <= angle1:
+        if tick_angle < a0 - 180.0 or a0 <= tick_angle:
             return 'center', 'top'
         else:
             return 'center', 'bottom'
