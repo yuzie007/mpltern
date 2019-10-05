@@ -61,26 +61,41 @@ def _determine_anchor(angle0, tick_angle):
             return 'center', 'bottom'
 
 
+def _create_corners(corners=None, rotation=None):
+    from scipy.special import sindg, cosdg
+    if corners is None:
+        # By default, regular upward triangle is created.
+        # The bottom and the top of the triangle have 0.0 and 1.0,
+        # respectively, as the *y* coordinate in the original `Axes`
+        # coordinates.
+        # The horizontal center of the triangle has 0.5 as the *x*
+        # coordinate in the original `Axes` coordinates.
+        # The other coordinates are given to make the regular triangle.
+        corners = (
+            (0.5, 1.0),
+            (0.5 - 1.0 / np.sqrt(3.0), 0.0),
+            (0.5 + 1.0 / np.sqrt(3.0), 0.0),
+        )
+    corners = np.asarray(corners)
+    if rotation is not None:
+        # The rotation is done around the centroid of the given triangle.
+        center = np.average(corners, axis=0)
+        rotation_matrix = [
+            [cosdg(rotation), -sindg(rotation)],
+            [sindg(rotation), cosdg(rotation)],
+        ]
+        corners = np.dot(rotation_matrix, (corners - center).T).T + center
+        # The following shift places the triangle inside the original
+        # square `Axes` as much as possible.
+        tmp = (np.min(corners, axis=0) + np.max(corners, axis=0)) * 0.5
+        corners += (np.array([0.5, 0.5]) - tmp)
+    return corners
+
+
 class TernaryAxesBase(Axes):
-    def __init__(self, *args, ternary_scale=1.0, points=None, **kwargs):
-        if points is None:
-            # By default, regular upward triangle is created.
-            # The bottom and the top of the triangle have 0.0 and 1.0,
-            # respectively, as the *y* coordinate in the original `Axes`
-            # coordinates.
-            # The horizontal center of the triangle has 0.5 as the *x*
-            # coordinate in the original `Axes` coordinates.
-            # The other coordinates are given to make the regular triangle.
-            corners = (
-                (0.5, 1.0),
-                (0.5 - 1.0 / np.sqrt(3.0), 0.0),
-                (0.5 + 1.0 / np.sqrt(3.0), 0.0),
-            )
-        else:
-            corners = points
-
-        self.corners = np.asarray(corners)
-
+    def __init__(self, *args, ternary_scale=1.0, corners=None, rotation=None,
+                 **kwargs):
+        self.corners = _create_corners(corners, rotation)
         self.ternary_scale = ternary_scale
         super().__init__(*args, **kwargs)
         self.set_aspect('equal', adjustable='box', anchor='C')
