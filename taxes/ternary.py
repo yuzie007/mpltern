@@ -16,51 +16,6 @@ from .transforms import (
 from taxes.ternary_axis import TAxis, LAxis, RAxis
 
 
-def _determine_anchor(angle0, tick_angle):
-    """Determine the tick-label alignments from the spine and the tick angles.
-
-    Parameters
-    ----------
-    angle0 : float
-        Spine angle in radian.
-    tick_angle : float
-        Tick angle in radian.
-
-    Returns
-    -------
-    ha : str
-        Horizontal alignment.
-    va : str
-        Vertical alignment.
-    """
-    if angle0 < 0.0:
-        a0 = angle0 + 180.0
-    else:
-        a0 = angle0
-
-    if a0 < 30.0:
-        if tick_angle < a0:
-            return 'center', 'top'
-        else:
-            return 'center', 'bottom'
-    elif 30.0 <= a0 < 150.0:
-        if tick_angle < a0 - 180.0:
-            return 'right', 'center_baseline'
-        elif a0 - 180.0 <= tick_angle < 30.0:
-            return 'left', 'center_baseline'
-        elif 30.0 <= tick_angle < a0:
-            return 'left', 'baseline'
-        elif a0 <= tick_angle < 150.0:
-            return 'right', 'baseline'
-        else:
-            return 'right', 'center_baseline'
-    elif 150.0 <= a0:
-        if tick_angle < a0 - 180.0 or a0 <= tick_angle:
-            return 'center', 'top'
-        else:
-            return 'center', 'bottom'
-
-
 def _create_corners(corners=None, rotation=None):
     from scipy.special import sindg, cosdg
     if corners is None:
@@ -178,21 +133,15 @@ class TernaryAxesBase(Axes):
 
     def _get_axis_text_transform(self, pad_points, trans, which):
         if which == 'tick1':
-            ps0 = trans.transform([[0.0, 0.0], [1.0, 0.0]])
             ps1 = trans.transform([[0.0, 0.0], [0.0, 1.0]])
         else:
-            ps0 = trans.transform([[0.0, 1.0], [1.0, 1.0]])
             ps1 = trans.transform([[0.0, 1.0], [0.0, 0.0]])
-        d0 = ps0[0] - ps0[1]
-        d1 = ps1[0] - ps1[1]
-        angle0 = np.rad2deg(np.arctan2(d0[1], d0[0]))
-        angle1 = np.rad2deg(np.arctan2(d1[1], d1[0]))
-        ha, va = _determine_anchor(angle0, angle1)
+        d1 = ps1[0] - ps1[1]  # outward against the triangle
         x, y = d1 / np.linalg.norm(d1) * pad_points / 72.0
         return (trans +
                 mtransforms.ScaledTranslation(x, y,
                                               self.figure.dpi_scale_trans),
-                va, ha)
+                'top', 'center')  # `va` and `ha` are modified in `TernaryTick`
 
     def get_taxis_text1_transform(self, pad_points):
         trans = self.get_taxis_transform(which='tick1')
