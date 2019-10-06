@@ -163,26 +163,17 @@ class TernaryAxis(XAxis):
         return np.asarray(points)
 
     def _get_label_rotation(self):
-        trans = {
-            't': self.axes._taxis_transform,
-            'l': self.axes._laxis_transform,
-            'r': self.axes._raxis_transform,
-        }[self.axis_name]
-        xmin, xmax = {
-            't': self.axes.get_tlim,
-            'l': self.axes.get_llim,
-            'r': self.axes.get_rlim,
-        }[self.axis_name]()
-
-        points = ((xmax, 0.0), (xmin, 1.0), (xmin, 0.0))
-        ps = trans.transform(points)
+        # Index of the corner
+        index = {'t': 0, 'l': 1, 'r': 2}[self.axis_name]
+        # Corners in the pixel coordinates
+        corners = self.axes.transAxes.transform(self.axes.corners)
 
         if self.label_position == 'bottom':
-            d0 = ps[0] - ps[2]
+            d0 = corners[(index + 0) % 3] - corners[(index + 2) % 3]
         elif self.label_position == 'top':
-            d0 = ps[1] - ps[0]
-        else:
-            d0 = ps[2] - ps[1]
+            d0 = corners[(index + 1) % 3] - corners[(index + 0) % 3]
+        else:  # elif self.label_position == 'corner':
+            d0 = corners[(index + 2) % 3] - corners[(index + 1) % 3]
 
         angle = np.arctan2(d0[1], d0[0])
         angle = np.rad2deg(angle)  # [-180, +180]
