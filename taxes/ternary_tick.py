@@ -78,6 +78,8 @@ class TernaryTick(XTick):
         va : str
             Vertical alignment.
         """
+        tick_angle = (tick_angle + 180.0) % 360.0 - 180.0  # [-180, 180]
+        axis_angle = (axis_angle + 180.0) % 360.0 - 180.0  # [-180, 180]
         tol = 1e-6
         if mode == 'tick':
             if abs(tick_angle) < 90.0 + tol:
@@ -90,30 +92,43 @@ class TernaryTick(XTick):
             else:
                 return 'center', 'bottom'
 
-        a0 = axis_angle % 180.0  # a0 is within [0, 180]
-        tick_angle = (tick_angle + 180.0) % 360.0 - 180.0
+        # Correct when the triangle is counterclockwise
+        is_tick1 = (tick_angle - axis_angle) % 360.0 - 180.0 < 0.0
+        is_baseline = (-150.0 + tol < tick_angle < -30.0 - tol)
 
-        if a0 < 30.0 + tol:
-            if (tick_angle - a0) % 360.0 - 180.0 < 0.0:
-                return 'center', 'top'
-            else:
-                return 'center', 'bottom'
-        elif a0 < 150.0 - tol:
-            # Here `tol` is not needed since it is very unlikely that
-            # `tick_angle` and `axis_angle` become the same.
-            if (tick_angle - a0) % 360.0 - 180.0 < 0.0:
-                ha = 'left'
-            else:
+        # The following part is tuned for regular triangles.
+        if is_tick1:
+            if axis_angle < -135.0 + tol:
+                ha = 'center'
+                va = 'bottom'
+            elif axis_angle < -15.0 - tol:
                 ha = 'right'
-            if -150.0 - tol < tick_angle < -30.0 + tol:
-                va = 'baseline'
+                va = 'baseline' if is_baseline else 'center_baseline'
+            elif axis_angle < 45.0 + tol:
+                ha = 'center'
+                va = 'top'
+            elif axis_angle < 165.0 - tol:
+                ha = 'left'
+                va = 'baseline' if is_baseline else 'center_baseline'
             else:
-                va = 'center_baseline'
+                ha = 'center'
+                va = 'bottom'
         else:
-            if (tick_angle - a0) % 360.0 - 180.0 < 0.0:
-                return 'center', 'bottom'
+            if axis_angle < -165.0 + tol:
+                ha = 'center'
+                va = 'top'
+            elif axis_angle < -45.0 - tol:
+                ha = 'left'
+                va = 'baseline' if is_baseline else 'center_baseline'
+            elif axis_angle < 15.0 + tol:
+                ha = 'center'
+                va = 'bottom'
+            elif axis_angle < 135.0 - tol:
+                ha = 'right'
+                va = 'baseline' if is_baseline else 'center_baseline'
             else:
-                return 'center', 'top'
+                ha = 'center'
+                va = 'top'
         return ha, va
 
     def update_position(self, loc):
