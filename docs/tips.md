@@ -142,11 +142,7 @@ We need to define `_get_pixel_distance_along_axis` in e.g. `BAxis`.
         `tilt` method. This may be however not good when we want to modify the
         tick-label rotations.
 
-## TernaryAxis
-
-- To be overridden
-    - `update_label_position`
-        - Note that the tick-positions are updated via `_update_ticks`.
+## Axis
 
 ### `offsetText`
 
@@ -154,12 +150,21 @@ When, for example, we have a large y-axis values, `matplotlib` shows the value
 as the difference from the reference value, with showing it at one end.
 The `offsetText` indicates the text showing this reference value.
 
-## BAxis, RAxis, LAxis
+## TernaryAxis
 
 - To be overridden
-    - `_get_label`
-        - The default rotation as well as rotation_mode should be overridden
-          depending on the axis type.
+    - `update_label_position`
+        - Note that the tick-positions are updated via `_update_ticks`.
+
+The default `verticalaligment` of
+`XAxis.label` with `XAxis.label_position == 'top'` (`baseline`) and
+`YAxis.label` with `YAxis.label_position == 'left'` (`bottom`) in Matplotlib
+are inconsistent in the sense that they gives different spacings from their
+tick labels.
+In Taxes, `bottom` is used by default when the tick labels come below the axis
+label.
+This is because `baseline` and `top` look to give different spacings from their
+tick labels.
 
 ## `fig.colorbar`
 
