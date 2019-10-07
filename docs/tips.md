@@ -126,9 +126,23 @@ rotation/scaling to it.
 
 ### Remove Round-off
 
-We need to define `_get_pixel_distance_along_axis` in e.g. `BAxis`.
+Before Matplotlib 3.1.0, we needed to define `_get_pixel_distance_along_axis`
+in `TernaryAxis`.
+In Matplotlib 3.1.0, this becomes not necessary thanks to the simplification
+and the improvement of consistency
+in https://github.com/matplotlib/matplotlib/pull/12158.
 
-## TernaryTick
+## `PolarAxes`
+
+### `RadialTick`
+
+When a circular sector is drawn, we cannot modify the horizontal and the
+vertical alignments of tick labels from outside.
+Following to this behavior, `taxes` does NOT provide a method to control the
+horizontal and the vertical alignments of tick labels, also because I cannot
+find a good solution to do that.
+
+## `TernaryTick`
 
 - To be simply inherited from `matplotlib.axis.Tick`
     - `get_tick_padding`
@@ -142,7 +156,7 @@ We need to define `_get_pixel_distance_along_axis` in e.g. `BAxis`.
         `tilt` method. This may be however not good when we want to modify the
         tick-label rotations.
 
-## Axis
+## `Axis`
 
 ### `offsetText`
 
@@ -150,7 +164,7 @@ When, for example, we have a large y-axis values, `matplotlib` shows the value
 as the difference from the reference value, with showing it at one end.
 The `offsetText` indicates the text showing this reference value.
 
-## TernaryAxis
+## `TernaryAxis`
 
 - To be overridden
     - `update_label_position`
