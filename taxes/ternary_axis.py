@@ -81,6 +81,8 @@ class TernaryAxis(XAxis):
         """
         Update the label position based on the bounding box enclosing
         all the ticklabels and axis spine
+
+        Called from `get_tightbbox` and `draw`.
         """
         if not self._autolabelpos:
             return
@@ -142,6 +144,7 @@ class TernaryAxis(XAxis):
         }[self.axis_name]()
 
     def _get_points(self, renderer):
+        """Get the points of all tick labels in the pixel coordinates."""
         points = []
         taxis = self.axes.taxis
         laxis = self.axes.laxis
