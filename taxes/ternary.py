@@ -725,6 +725,15 @@ class TernaryAxes(TernaryAxesBase):
         x, y = self._brl2xy_transform.transform(tlr).T
         return super().hexbin(x, y, *args, **kwargs)
 
+    def arrow(self, t, l, r, dt, dl, dr, *args, **kwargs):
+        tlr = np.column_stack((t, l, r))
+        x, y = self._brl2xy_transform.transform(tlr)[0]
+        tlr = np.column_stack((t + dt, l + dl, r + dr))
+        dx, dy = self._brl2xy_transform.transform(tlr)[0]
+        dx -= x
+        dy -= y
+        return super().arrow(x, y, dx, dy, *args, **kwargs)
+
     def quiver(self, t, l, r, dt, dl, dr, *args, **kwargs):
         tlr = np.column_stack((t, l, r))
         x, y = self._brl2xy_transform.transform(tlr).T
