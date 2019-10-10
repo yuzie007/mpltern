@@ -2,6 +2,7 @@ import numpy as np
 
 from matplotlib.axis import XAxis
 from matplotlib import rcParams
+import matplotlib.cbook as cbook
 import matplotlib.font_manager as font_manager
 import matplotlib.text as mtext
 from taxes.ternary_tick import TTick, LTick, RTick
@@ -50,12 +51,13 @@ class TernaryAxis(XAxis):
 
     def set_label_position(self, position):
         """
-        Set the label position (edge or corner)
+        Set the label position (corner, tick1, or tick2)
 
         Parameters
         ----------
-        position : {'edge', 'corner'}
+        position : {'corner', 'tick1', 'tick2'}
         """
+        cbook._check_in_list(['corner', 'tick1', 'tick2'], position=position)
         self.label_position = position
         self.stale = True
 
@@ -89,7 +91,7 @@ class TernaryAxis(XAxis):
 
         pad = self.labelpad * self.figure.dpi / 72
 
-        if self.label_position == 'bottom':
+        if self.label_position == 'tick1':
             trans = {
                 't': self.axes._vertical_laxis_transform,
                 'l': self.axes._vertical_raxis_transform,
@@ -97,7 +99,7 @@ class TernaryAxis(XAxis):
             }[self.axis_name]
             lim = max if self.axes.clockwise else min
             x = 0.5
-        elif self.label_position == 'top':
+        elif self.label_position == 'tick2':
             trans = {
                 't': self.axes._vertical_raxis_transform,
                 'l': self.axes._vertical_taxis_transform,
@@ -105,7 +107,7 @@ class TernaryAxis(XAxis):
             }[self.axis_name]
             lim = max if self.axes.clockwise else min
             x = 0.5
-        else:  # "corner"
+        else:  # self.label_position == 'corner'
             trans = {
                 't': self.axes._vertical_taxis_transform,
                 'l': self.axes._vertical_laxis_transform,
@@ -134,6 +136,34 @@ class TernaryAxis(XAxis):
         self.label.set_verticalalignment(va)
         self.label.set_rotation(angle)
         self.label.set_rotation_mode('anchor')
+
+    def set_ticks_position(self, position):
+        """
+        Set the ticks position (tick1, tick2, both, default or none)
+        'both' sets the ticks to appear on both positions, but does not
+        change the tick labels.
+        'none' can be used if you don't want any ticks.
+        'none' and 'both' affect only the ticks, not the labels.
+
+        Parameters
+        ----------
+        position : {'tick1', 'tick2', 'both', 'default', 'none'}
+        """
+        if position in ['tick1', 'default']:
+            self.set_tick_params(which='both', tick1On=True, label1On=True,
+                                 tich2On=False, label2On=False)
+        elif position == 'tick2':
+            self.set_tick_params(which='both', tick1On=False, label1On=False,
+                                 tick2On=True, label2On=True)
+        elif position == 'both':
+            self.set_tick_params(which='both', tick1On=True,
+                                 tick2On=True)
+        elif position == 'none':
+            self.set_tick_params(which='both', tick1On=False,
+                                 tick2On=False)
+        else:
+            raise ValueError("invalid position: %s" % position)
+        self.stale = True
 
     def get_view_interval(self):
         'return the Interval instance for this axis view limits'
@@ -179,18 +209,18 @@ class TernaryAxis(XAxis):
 
         # Index of the corner
         index = {'t': 0, 'l': 1, 'r': 2}[self.axis_name]
-        if self.label_position == 'bottom':
+        if self.label_position == 'tick1':
             c0, c1, c2 = np.roll(corners,  1 - index, axis=0)
-        elif self.label_position == 'top':
+        elif self.label_position == 'tick2':
             c0, c1, c2 = np.roll(corners,  0 - index, axis=0)
-        else:  # elif self.xy == 'corner':
+        else:  # self.label_position == 'corner':
             c0, c1, c2 = np.roll(corners, -1 - index, axis=0)
 
         d01 = c1 - c0
         d12 = c2 - c1
         axis_angle = np.rad2deg(np.arctan2(d01[1], d01[0]))  # [-180, +180]
         clockwise = ((d01[0] * d12[1] - d01[1] * d12[0]) < 0.0)
-        is_corner = (self.label_position not in ['bottom', 'top'])
+        is_corner = (self.label_position not in ['tick1', 'tick2'])
 
         tol = 1e-6
         if abs(abs(axis_angle) - 90.0) < tol:  # axis_angle is -90 or 90.

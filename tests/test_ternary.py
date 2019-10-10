@@ -14,9 +14,9 @@ def test_axis_and_tick():
     ax.set_llabel('Left')
     ax.set_rlabel('Right')
 
-    ax.taxis.set_label_position('bottom')
-    ax.laxis.set_label_position('bottom')
-    ax.raxis.set_label_position('bottom')
+    ax.taxis.set_label_position('tick1')
+    ax.laxis.set_label_position('tick1')
+    ax.raxis.set_label_position('tick1')
 
     # Or, you can do
     # ax.taxis.set_label_text('Top')
