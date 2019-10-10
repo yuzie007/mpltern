@@ -130,7 +130,7 @@ class TernaryAxis(XAxis):
 
         self.label.set_position(position)
         self.label.set_transform(trans)
-        angle, va = self._get_label_rotation(trans.transform(position))
+        angle, va = self._get_label_rotation()
         self.label.set_verticalalignment(va)
         self.label.set_rotation(angle)
         self.label.set_rotation_mode('anchor')
@@ -164,13 +164,8 @@ class TernaryAxis(XAxis):
         points.extend(self.axes.transAxes.transform(self.axes.corners))
         return np.asarray(points)
 
-    def _get_label_rotation(self, xy):
+    def _get_label_rotation(self):
         """Determine the axis-label rotation and alignment.
-
-        Parameters
-        ----------
-        xy : (float, float)
-            Label position in the pixel coordinates.
 
         Returns
         -------
@@ -185,29 +180,38 @@ class TernaryAxis(XAxis):
         # Index of the corner
         index = {'t': 0, 'l': 1, 'r': 2}[self.axis_name]
         if self.label_position == 'bottom':
-            c0, c1 = corners[(index + 2) % 3], corners[(index + 0) % 3]
+            c0, c1, c2 = np.roll(corners,  1 - index, axis=0)
         elif self.label_position == 'top':
-            c0, c1 = corners[(index + 0) % 3], corners[(index + 1) % 3]
+            c0, c1, c2 = np.roll(corners,  0 - index, axis=0)
         else:  # elif self.xy == 'corner':
-            c0, c1 = corners[(index + 1) % 3], corners[(index + 2) % 3]
+            c0, c1, c2 = np.roll(corners, -1 - index, axis=0)
 
         d = c1 - c0
         axis_angle = np.rad2deg(np.arctan2(d[1], d[0]))  # [-180, +180]
 
-        # `ha` and `va` are determined for the given `xy` by comparing its
-        # coordinates with the midpoint of the corresponding axis.
+        is_corner_label = (self.label_position not in ['bottom', 'top'])
+
+        # `label_rotation` and `va` are determined by comparing the coordinates
+        # of the midpoint of the axis with those of the other corner point.
         midpoint = (c0 + c1) * 0.5
         tol = 1e-6
-        if abs(xy[1] - midpoint[1]) < tol:  # same *y* coordinate
-            label_rotation = 90.0 if xy[0] < midpoint[0] else 270.0
-            va = 'bottom'  # As the label may be rotated by 90 deg.
+        if abs(abs(axis_angle) - 90.0) < tol:  # axis_angle is -90 or 90.
+            # (the other corner is on the right side) xor
+            # (the label is at the other corner)
+            if (c2[0] > midpoint[0]) ^ is_corner_label:
+                label_rotation = 90.0
+            else:
+                label_rotation = -90.0
+            va = 'bottom'  # Because the label faces to the axis.
         else:
             # For readability, the angle is adjusted to be in [-90, +90]
             label_rotation = (axis_angle + 90.0) % 180.0 - 90.0
-            if xy[1] < midpoint[1]:  # lower of the axis
-                va = 'top'
-            else:
+            # (the other corner is below the axis) xor
+            # (the label is at the other corner)
+            if (c2[1] < midpoint[1]) ^ is_corner_label:
                 va = 'bottom'
+            else:
+                va = 'top'
 
         return label_rotation, va
 
