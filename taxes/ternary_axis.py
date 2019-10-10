@@ -186,19 +186,20 @@ class TernaryAxis(XAxis):
         else:  # elif self.xy == 'corner':
             c0, c1, c2 = np.roll(corners, -1 - index, axis=0)
 
-        d = c1 - c0
-        axis_angle = np.rad2deg(np.arctan2(d[1], d[0]))  # [-180, +180]
+        d01 = c1 - c0
+        d12 = c2 - c1
+        axis_angle = np.rad2deg(np.arctan2(d01[1], d01[0]))  # [-180, +180]
+        clockwise = ((d01[0] * d12[1] - d01[1] * d12[0]) < 0.0)
+        is_corner = (self.label_position not in ['bottom', 'top'])
 
-        is_corner_label = (self.label_position not in ['bottom', 'top'])
-
-        # `label_rotation` and `va` are determined by comparing the coordinates
-        # of the midpoint of the axis with those of the other corner point.
-        midpoint = (c0 + c1) * 0.5
         tol = 1e-6
         if abs(abs(axis_angle) - 90.0) < tol:  # axis_angle is -90 or 90.
+            # `label_rotation` is determined by comparing the coordinates of
+            # the midpoint of the axis with those of the other corner point.
+            midpoint = (c0 + c1) * 0.5
             # (the other corner is on the right side) xor
             # (the label is at the other corner)
-            if (c2[0] > midpoint[0]) ^ is_corner_label:
+            if (c2[0] > midpoint[0]) ^ is_corner:
                 label_rotation = 90.0
             else:
                 label_rotation = -90.0
@@ -206,9 +207,10 @@ class TernaryAxis(XAxis):
         else:
             # For readability, the angle is adjusted to be in [-90, +90]
             label_rotation = (axis_angle + 90.0) % 180.0 - 90.0
-            # (the other corner is below the axis) xor
+            # (the label rotation is +-180 different from the axis) xor
+            # (the triangle is clockwise) xor
             # (the label is at the other corner)
-            if (c2[1] < midpoint[1]) ^ is_corner_label:
+            if (abs(axis_angle) > 90.0) ^ clockwise ^ is_corner:
                 va = 'bottom'
             else:
                 va = 'top'
