@@ -5,7 +5,7 @@ from matplotlib import rcParams
 import matplotlib.cbook as cbook
 import matplotlib.font_manager as font_manager
 import matplotlib.text as mtext
-from mpltern.ternary_tick import TTick, LTick, RTick
+from mpltern.ternary.tick import TTick, LTick, RTick
 
 
 class TernaryAxis(XAxis):

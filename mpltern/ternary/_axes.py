@@ -9,11 +9,11 @@ import matplotlib.lines as mlines
 import matplotlib.patches as mpatches
 import matplotlib.transforms as mtransforms
 import matplotlib.axis as maxis
-from .spines import Spine
-from .transforms import (
+from mpltern.ternary.spines import Spine
+from mpltern.ternary.transforms import (
     TernaryTransform, VerticalTernaryTransform,
     BarycentricTransform, TernaryScaleTransform)
-from mpltern.ternary_axis import TAxis, LAxis, RAxis
+from mpltern.ternary.axis import TAxis, LAxis, RAxis
 
 
 def _create_corners(corners=None, rotation=None):

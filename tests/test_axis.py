@@ -2,7 +2,7 @@ import numpy as np
 
 import pytest
 from matplotlib.transforms import IdentityTransform
-from mpltern.ternary_axis import TernaryAxis
+from mpltern.ternary.axis import TernaryAxis
 
 
 expected = [

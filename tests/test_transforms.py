@@ -1,6 +1,6 @@
 import numpy as np
 import pytest
-from mpltern.transforms import TernaryTransform, BarycentricTransform
+from mpltern.ternary.transforms import BarycentricTransform
 
 
 corners_list = [

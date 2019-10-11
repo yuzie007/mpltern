@@ -1,7 +1,7 @@
 import numpy as np
 
 import pytest
-from mpltern.ternary_tick import TernaryTick
+from mpltern.ternary.tick import TernaryTick
 
 
 expected = [
