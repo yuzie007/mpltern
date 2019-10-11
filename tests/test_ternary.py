@@ -139,3 +139,25 @@ def test_tick_direction():
     ax.tick_params(direction='out')  # Default of Matplotlib 2.0+
     ax = fig.add_subplot(133, projection='ternary')
     ax.tick_params(direction='inout')
+
+
+class TestAnnotate:
+    @check_figures_equal(extensions=['pdf'])
+    def test_basic(self, fig_test, fig_ref):
+        fig_test = plt.figure()
+        ax = fig_test.add_subplot(projection='ternary')
+        ax.annotate('Annotation', (0.6, 0.2, 0.2))
+
+        fig_ref = plt.figure()
+        ax = fig_ref.add_subplot(projection='ternary')
+        ax.annotate('Annotation', tlr=(0.6, 0.2, 0.2))
+
+    @check_figures_equal(extensions=['pdf'])
+    def test_with_tlrtext(self, fig_test, fig_ref):
+        fig_test = plt.figure()
+        ax = fig_test.add_subplot(projection='ternary')
+        ax.annotate('Annotation', (0.6, 0.2, 0.2), (0.2, 0.6, 0.2))
+
+        fig_ref = plt.figure()
+        ax = fig_ref.add_subplot(projection='ternary')
+        ax.annotate('Annotation', (0.6, 0.2, 0.2), tlrtext=(0.2, 0.6, 0.2))

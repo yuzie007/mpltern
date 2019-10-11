@@ -2,7 +2,6 @@
 
 ## High
 
-- `annotate`
 - `errorbar` (implementation of error bars along ternary axes)
 - Modification of how to register `TernaryAxes` (to be similar to `Axes3D`)
 - Rotation of axis-labels
@@ -14,6 +13,7 @@
 
 ## Medium
 
+- `annotate`: Adequate manipulations for `xycoords` and `textcoords`
 - Crosshairs
 - Isoproportion lines
 

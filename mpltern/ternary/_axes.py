@@ -467,6 +467,18 @@ class TernaryAxes(TernaryAxesBase):
     def text_xy(self, x, y, s, *args, **kwargs):
         return super().text(x, y, s, *args, **kwargs)
 
+    def annotate(self, s, tlr, *args, **kwargs):
+        # TODO: Add adequate manipulation for `xycoords` and `textcoods`
+        xy = self._brl2xy_transform.transform(tlr)
+        if len(args) > 0:
+                tlrtext = args[0]
+                args = args[1:]
+        else:
+            tlrtext = kwargs.pop('tlrtext', None)
+        if tlrtext is not None:
+            kwargs['xytext'] = self._brl2xy_transform.transform(tlrtext)
+        return super().annotate(s, xy, *args, **kwargs)
+
     def axtline(self, x=0, ymin=0, ymax=1, **kwargs):
         """
         Add a equi-t line across the axes.
