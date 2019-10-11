@@ -2,8 +2,6 @@
 
 ## High
 
-- `errorbar` (implementation of error bars along ternary axes)
-- Modification of how to register `TernaryAxes` (to be similar to `Axes3D`)
 - Rotation of axis-labels
     - along the figure bottom
     - along the axis
@@ -19,6 +17,8 @@
 
 ## Low
 
+- `errorbar` (implementation of error bars along ternary axes? The error bars
+in ternary plots for different axes may be correlated with each other.)
 - More general (hexagonal) plotting of a part of the triangle
 - Parallelogram plots
 - Piper diagram
