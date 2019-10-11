@@ -1,7 +1,7 @@
 import pytest
 from matplotlib.testing.decorators import image_comparison
 import matplotlib.pyplot as plt
-import taxes
+import mpltern
 
 rotations = range(0, 361, 5)
 baseline_images_list = [['triangle_rotation_{}'.format(r)] for r in rotations]

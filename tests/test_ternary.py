@@ -2,7 +2,7 @@ import pytest
 from matplotlib.testing.decorators import (
     image_comparison, check_figures_equal)
 import matplotlib.pyplot as plt
-from taxes.datasets import get_spiral
+from mpltern.datasets import get_spiral
 
 
 @image_comparison(baseline_images=['axis_and_tick'], style='mpl20')

@@ -13,7 +13,7 @@ from .spines import Spine
 from .transforms import (
     TernaryTransform, VerticalTernaryTransform,
     BarycentricTransform, TernaryScaleTransform)
-from taxes.ternary_axis import TAxis, LAxis, RAxis
+from mpltern.ternary_axis import TAxis, LAxis, RAxis
 
 
 def _create_corners(corners=None, rotation=None):
@@ -171,7 +171,7 @@ class TernaryAxesBase(Axes):
         return mpatches.Polygon(self.corners)
 
     def _gen_axes_spines(self, locations=None, offset=0.0, units='inches'):
-        # Use `Spine` in `taxes`
+        # Use `Spine` in `mpltern`
         spines = OrderedDict((side, Spine.linear_spine(self, side))
                              for side in ['left', 'right', 'bottom', 'top'])
         spines['top'].set_visible(False)  # Not to make an unexpected dot

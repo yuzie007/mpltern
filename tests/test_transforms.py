@@ -1,6 +1,6 @@
 import numpy as np
 import pytest
-from taxes.transforms import TernaryTransform, BarycentricTransform
+from mpltern.transforms import TernaryTransform, BarycentricTransform
 
 
 corners_list = [

@@ -36,7 +36,7 @@ class TernaryTick(XTick):
         }[self.tick_name](self._pad)
 
     def _get_axis_transform(self, which):
-        """Helper method in `taxes` to select an appropriate transform."""
+        """Helper method in `mpltern` to select an appropriate transform."""
         return {
             'ttick': self.axes.get_taxis_transform,
             'ltick': self.axes.get_laxis_transform,
@@ -197,7 +197,7 @@ class TernaryTick(XTick):
             self.label1.set_rotation(user_angle)
             self.label2.set_rotation(user_angle)
 
-    # Helper methods for `taxes`
+    # Helper methods for `mpltern`
 
     def get_tick_angle(self):
         # The angle here is for `direction='in'`

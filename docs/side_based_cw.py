@@ -1,7 +1,7 @@
 import numpy as np
 
 import matplotlib.pyplot as plt
-import taxes
+import mpltern
 
 
 fig = plt.figure(figsize=(10.8, 3.2))

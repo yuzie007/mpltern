@@ -2,7 +2,7 @@ import numpy as np
 
 from matplotlib.testing.decorators import image_comparison
 import matplotlib.pyplot as plt
-from taxes.datasets import get_scatter_points
+from mpltern.datasets import get_scatter_points
 
 
 class TestScatter:

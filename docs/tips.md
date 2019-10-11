@@ -158,6 +158,13 @@ find a good solution to do that.
 
 ## `Axis`
 
+### `set_ticks_position`
+
+In `matplotlib`, `default` actually does not restore the default positions
+of ticks.
+This may be due to the compatibility with `matplotlib` 1.x.
+In `mpltern`, `default` is equivalent to `tick1`.
+
 ### `offsetText`
 
 When, for example, we have a large y-axis values, `matplotlib` shows the value
