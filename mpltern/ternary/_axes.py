@@ -114,13 +114,13 @@ class TernaryAxesBase(Axes):
         # For data
 
         # This should be called only once at the first time to define the
-        # transformations between (b, r, l) and (x, y)
+        # transformations between (t, l, r) and (x, y)
         corners_xy = self.transLimits.transform(self.corners)
-        self._brl2xy_transform = transTernaryScale + BarycentricTransform(corners_xy)
+        self.transProjection = transTernaryScale + BarycentricTransform(corners_xy)
 
         # Transform from the barycentric coordinates to the original
         # Axes coordinates
-        self._ternary_axes_transform = self._brl2xy_transform + self.transLimits
+        self._ternary_axes_transform = self.transProjection + self.transLimits
 
     def get_taxis_transform(self, which='grid'):
         return self._taxis_transform
@@ -271,7 +271,7 @@ class TernaryAxesBase(Axes):
         lmin, lmax = self.get_llim()
         rmin, rmax = self.get_rlim()
         points = [[tmax, lmin, rmin], [tmin, lmax, rmin], [tmin, lmin, rmax]]
-        points = self._brl2xy_transform.transform(points)
+        points = self.transProjection.transform(points)
         bbox = mtransforms.Bbox.unit()
         bbox.update_from_data_xy(points, ignore=True)
         return bbox
@@ -379,7 +379,7 @@ class TernaryAxesBase(Axes):
         - drag_pan (`Pan/Zoom`)
         (https://matplotlib.org/users/navigation_toolbar.html)
         """
-        # points = self._brl2xy_transform.inverted().transform(self.corners)
+        # points = self.transProjection.inverted().transform(self.corners)
         points = self._ternary_axes_transform.inverted().transform(self.corners)
 
         tmax = points[0, 0]
@@ -461,7 +461,7 @@ class TernaryAxes(TernaryAxesBase):
 
     def text(self, t, l, r, s, *args, **kwargs):
         tlr = np.column_stack((t, l, r))
-        x, y = self._brl2xy_transform.transform(tlr).T
+        x, y = self.transProjection.transform(tlr).T
         return super().text(x, y, s, *args, **kwargs)
 
     def text_xy(self, x, y, s, *args, **kwargs):
@@ -469,14 +469,14 @@ class TernaryAxes(TernaryAxesBase):
 
     def annotate(self, s, tlr, *args, **kwargs):
         # TODO: Add adequate manipulation for `xycoords` and `textcoods`
-        xy = self._brl2xy_transform.transform(tlr)
+        xy = self.transProjection.transform(tlr)
         if len(args) > 0:
                 tlrtext = args[0]
                 args = args[1:]
         else:
             tlrtext = kwargs.pop('tlrtext', None)
         if tlrtext is not None:
-            kwargs['xytext'] = self._brl2xy_transform.transform(tlrtext)
+            kwargs['xytext'] = self.transProjection.transform(tlrtext)
         return super().annotate(s, xy, *args, **kwargs)
 
     def axtline(self, x=0, ymin=0, ymax=1, **kwargs):
@@ -724,60 +724,60 @@ class TernaryAxes(TernaryAxesBase):
 
     def plot(self, t, l, r, *args, **kwargs):
         tlr = np.column_stack((t, l, r))
-        x, y = self._brl2xy_transform.transform(tlr).T
+        x, y = self.transProjection.transform(tlr).T
         return super().plot(x, y, *args, **kwargs)
 
     def scatter(self, t, l, r, *args, **kwargs):
         tlr = np.column_stack((t, l, r))
-        x, y = self._brl2xy_transform.transform(tlr).T
+        x, y = self.transProjection.transform(tlr).T
         return super().scatter(x, y, *args, **kwargs)
 
     def hexbin(self, t, l, r, *args, **kwargs):
         tlr = np.column_stack((t, l, r))
-        x, y = self._brl2xy_transform.transform(tlr).T
+        x, y = self.transProjection.transform(tlr).T
         return super().hexbin(x, y, *args, **kwargs)
 
     def arrow(self, t, l, r, dt, dl, dr, *args, **kwargs):
         tlr = np.column_stack((t, l, r))
-        x, y = self._brl2xy_transform.transform(tlr)[0]
+        x, y = self.transProjection.transform(tlr)[0]
         tlr = np.column_stack((t + dt, l + dl, r + dr))
-        dx, dy = self._brl2xy_transform.transform(tlr)[0]
+        dx, dy = self.transProjection.transform(tlr)[0]
         dx -= x
         dy -= y
         return super().arrow(x, y, dx, dy, *args, **kwargs)
 
     def quiver(self, t, l, r, dt, dl, dr, *args, **kwargs):
         tlr = np.column_stack((t, l, r))
-        x, y = self._brl2xy_transform.transform(tlr).T
+        x, y = self.transProjection.transform(tlr).T
         tlr = np.column_stack((t + dt, l + dl, r + dr))
-        u, v = self._brl2xy_transform.transform(tlr).T
+        u, v = self.transProjection.transform(tlr).T
         u -= x
         v -= y
         return super().quiver(x, y, u, v, *args, **kwargs)
 
     def fill(self, t, l, r, *args, **kwargs):
         tlr = np.column_stack((t, l, r))
-        x, y = self._brl2xy_transform.transform(tlr).T
+        x, y = self.transProjection.transform(tlr).T
         return super().fill(x, y, *args, **kwargs)
 
     def tricontour(self, t, l, r, *args, **kwargs):
         tlr = np.column_stack((t, l, r))
-        x, y = self._brl2xy_transform.transform(tlr).T
+        x, y = self.transProjection.transform(tlr).T
         return super().tricontour(x, y, *args, **kwargs)
 
     def tricontourf(self, t, l, r, *args, **kwargs):
         tlr = np.column_stack((t, l, r))
-        x, y = self._brl2xy_transform.transform(tlr).T
+        x, y = self.transProjection.transform(tlr).T
         return super().tricontourf(x, y, *args, **kwargs)
 
     def tripcolor(self, t, l, r, *args, **kwargs):
         tlr = np.column_stack((t, l, r))
-        x, y = self._brl2xy_transform.transform(tlr).T
+        x, y = self.transProjection.transform(tlr).T
         return super().tripcolor(x, y, *args, **kwargs)
 
     def triplot(self, t, l, r, *args, **kwargs):
         tlr = np.column_stack((t, l, r))
-        x, y = self._brl2xy_transform.transform(tlr).T
+        x, y = self.transProjection.transform(tlr).T
         tplot = self.plot
         self.plot = super().plot
         tmp = super().triplot(x, y, *args, **kwargs)
