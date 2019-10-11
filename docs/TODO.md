@@ -6,7 +6,6 @@
     - along the figure bottom
     - along the axis
 - Arrows along the axes (using some transforms)
-- Tick-labels inside the triangle
 - Advanced examples
 
 ## Medium

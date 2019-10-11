@@ -17,7 +17,7 @@ class TernaryTick(XTick):
         else:
             mode = 'default'
             angle = labelrotation
-        cbook._check_in_list(['auto', 'default', 'tick', 'axis'],
+        cbook._check_in_list(['auto', 'default', 'tick', 'axis', 'manual'],
                              labelrotation=mode)
         self._labelrotation = (mode, angle)
 
@@ -170,6 +170,15 @@ class TernaryTick(XTick):
 
         # Tick labels
         mode, user_angle = self._labelrotation
+        if mode == 'manual':
+            # The same set of arbitrary properties for tick labels can be set
+            # by passing a dictionary.
+            if isinstance(user_angle, dict):
+                self.label.update(user_angle)
+            elif isinstance(user_angle, (np.floating, float)):
+                self.label.rotation(user_angle)
+            return
+
         ha1, va1 = self._determine_anchor(mode, axis1_angle, tick1_angle, 1)
         self.label1.set_ha(ha1)
         self.label1.set_va(va1)
