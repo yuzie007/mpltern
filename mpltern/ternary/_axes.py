@@ -11,7 +11,7 @@ import matplotlib.transforms as mtransforms
 import matplotlib.axis as maxis
 from mpltern.ternary.spines import Spine
 from mpltern.ternary.transforms import (
-    TernaryTransform, VerticalTernaryTransform,
+    TernaryTransform, TernaryPerpendicularTransform,
     BarycentricTransform, TernaryScaleTransform)
 from mpltern.ternary.axis import TAxis, LAxis, RAxis
 
@@ -57,14 +57,6 @@ class TernaryAxesBase(Axes):
         self.set_ternary_lim(
             0.0, ternary_scale, 0.0, ternary_scale, 0.0, ternary_scale)
 
-    @property
-    def clockwise(self):
-        corners = self.transAxes.transform(self.corners)
-        d0 = corners[1] - corners[0]
-        d1 = corners[2] - corners[1]
-        d = d0[0] * d1[1] - d1[0] * d0[1]
-        return d < 0.0
-
     def set_figure(self, fig):
         self.viewTLim = mtransforms.Bbox.unit()
         self.viewLLim = mtransforms.Bbox.unit()
@@ -107,9 +99,12 @@ class TernaryAxesBase(Axes):
         self._raxis_transform = transRLimits + raxis_transform + self.transAxes
 
         # For axis labels
-        self._vertical_taxis_transform = VerticalTernaryTransform(self.transAxes, self.corners, 0)
-        self._vertical_laxis_transform = VerticalTernaryTransform(self.transAxes, self.corners, 1)
-        self._vertical_raxis_transform = VerticalTernaryTransform(self.transAxes, self.corners, 2)
+        t_l_t = TernaryPerpendicularTransform(self.transAxes, self.corners, 0)
+        l_l_t = TernaryPerpendicularTransform(self.transAxes, self.corners, 1)
+        r_l_t = TernaryPerpendicularTransform(self.transAxes, self.corners, 2)
+        self._taxis_label_transform = t_l_t
+        self._laxis_label_transform = l_l_t
+        self._raxis_label_transform = r_l_t
 
         # For data
 

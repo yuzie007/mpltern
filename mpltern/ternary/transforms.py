@@ -65,7 +65,7 @@ class InvertedTernaryTransform(Transform):
         return TernaryTransform(self.corners, self.index)
 
 
-class VerticalTernaryTransform(Transform):
+class TernaryPerpendicularTransform(Transform):
     """Transform convenient for axis-labels in TernaryAxis.
 
     Input
@@ -94,19 +94,25 @@ class VerticalTernaryTransform(Transform):
 
     def transform_non_affine(self, points):
         corners = self.trans.transform(self.corners)
-        c0 = corners[(self.index + 1) % 3]
-        c1 = corners[(self.index - 1) % 3]
-        v0 = c1 - c0
-        v1 = [-v0[1], v0[0]]  # Vertical
-        v1 /= np.linalg.norm(v1)
-        v = np.column_stack((v0, v1))
-        return c0 + np.dot(v, points.T).T
+        c0 = corners[(self.index + 0) % 3]
+        c1 = corners[(self.index + 1) % 3]
+        c2 = corners[(self.index + 2) % 3]
+        v10 = c0 - c1
+        v12 = c2 - c1
+        # Obtain the vector perpendicular to v12 in the Gram-Schmidt method.
+        # The obtained `vp` points inside of the triangle, regardless if the
+        # triangle is defined in a clockwise or in a counterclockwise manner.
+        vp = v10 - np.dot(v10, v12) / np.dot(v12, v12) * v12
+        vp /= np.linalg.norm(vp)
+        v = np.column_stack((v12, vp))
+        return c1 + np.dot(v, points.T).T
 
     def inverted(self):
-        return InvertedVerticalTernaryTransform(self.trans, self.corners, self.index)
+        return InvertedTernaryPerpendicularTransform(
+            self.trans, self.corners, self.index)
 
 
-class InvertedVerticalTernaryTransform(Transform):
+class InvertedTernaryPerpendicularTransform(Transform):
     input_dims = 2
     output_dims = 2
     has_inverse = True
@@ -119,18 +125,21 @@ class InvertedVerticalTernaryTransform(Transform):
 
     def transform_non_affine(self, points):
         corners = self.trans.transform(self.corners)
-        c0 = corners[(self.index + 1) % 3]
-        c1 = corners[(self.index - 1) % 3]
-        v0 = c1 - c0
-        v1 = [-v0[1], v0[0]]
-        v1 /= np.linalg.norm(v1)
-        v = np.column_stack((v0, v1))
-        d = points - c0
+        c0 = corners[(self.index + 0) % 3]
+        c1 = corners[(self.index + 1) % 3]
+        c2 = corners[(self.index + 2) % 3]
+        v10 = c0 - c1
+        v12 = c2 - c1
+        vp = v10 - np.dot(v10, v12) / np.dot(v12, v12) * v12
+        vp /= np.linalg.norm(vp)
+        v = np.column_stack((v12, vp))
+        d = points - c1
         tmp = np.dot(np.linalg.inv(v), d.T).T
         return tmp
 
     def inverted(self):
-        return VerticalTernaryTransform(self.corners, self.index)
+        return TernaryPerpendicularTransform(
+            self.trans, self.corners, self.index)
 
 
 class BarycentricTransform(Transform):

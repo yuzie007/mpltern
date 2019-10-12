@@ -44,9 +44,9 @@ class TernaryAxis(XAxis):
                            rotation=0,
                            rotation_mode='anchor')
         trans = {
-            't': self.axes._vertical_taxis_transform,
-            'l': self.axes._vertical_laxis_transform,
-            'r': self.axes._vertical_raxis_transform,
+            't': self.axes._taxis_label_transform,
+            'l': self.axes._laxis_label_transform,
+            'r': self.axes._raxis_label_transform,
         }[self.axis_name]
         label.set_transform(trans)
 
@@ -97,27 +97,27 @@ class TernaryAxis(XAxis):
 
         if self.label_position == 'tick1':
             trans = {
-                't': self.axes._vertical_laxis_transform,
-                'l': self.axes._vertical_raxis_transform,
-                'r': self.axes._vertical_taxis_transform,
+                't': self.axes._laxis_label_transform,
+                'l': self.axes._raxis_label_transform,
+                'r': self.axes._taxis_label_transform,
             }[self.axis_name]
-            lim = max if self.axes.clockwise else min
-            x = 0.5
+            sign = -1.0  # outward triangle
+            x = 0.5  # midpoint of the axis
         elif self.label_position == 'tick2':
             trans = {
-                't': self.axes._vertical_raxis_transform,
-                'l': self.axes._vertical_taxis_transform,
-                'r': self.axes._vertical_laxis_transform,
+                't': self.axes._raxis_label_transform,
+                'l': self.axes._taxis_label_transform,
+                'r': self.axes._laxis_label_transform,
             }[self.axis_name]
-            lim = max if self.axes.clockwise else min
-            x = 0.5
+            sign = -1.0  # outward triangle
+            x = 0.5  # midpoint of the axis
         else:  # self.label_position == 'corner'
             trans = {
-                't': self.axes._vertical_taxis_transform,
-                'l': self.axes._vertical_laxis_transform,
-                'r': self.axes._vertical_raxis_transform,
+                't': self.axes._taxis_label_transform,
+                'l': self.axes._laxis_label_transform,
+                'r': self.axes._raxis_label_transform,
             }[self.axis_name]
-
+            sign = 1.0  # inward triangle
             # Get the corner in the display coordinates, and then get
             # the *x* coordinates in the `trans` coordinates
             corner_index = {'t': 0, 'l': 1, 'r': 2}[self.axis_name]
@@ -125,14 +125,10 @@ class TernaryAxis(XAxis):
             corner = corners[corner_index]
             x = trans.inverted().transform(corner)[0]
 
-            lim = min if self.axes.clockwise else max
-
-        scale = 1.0 if lim == max else -1.0
-
-        points = self._get_points(renderer=renderer)
+        points = self._get_points_surrounding_triangle(renderer=renderer)
         points = trans.inverted().transform(points)
-        y = lim(points[:, 1])
-        position = (x, y + scale * pad)
+        y = max(sign * points[:, 1]) * sign
+        position = (x, y + sign * pad)
 
         self.label.set_position(position)
         self.label.set_transform(trans)
@@ -179,24 +175,22 @@ class TernaryAxis(XAxis):
 
     # Helper methods for `mpltern`
 
-    def _get_points(self, renderer):
+    def _get_points_surrounding_triangle(self, renderer):
         """Get the points of all tick labels in the pixel coordinates."""
+        bboxes_all = []
+        for axis in self.axes._get_axis_list():
+            bboxes, bboxes2 = axis._get_tick_boxes_siblings(renderer=renderer)
+            bboxes_all.extend(bboxes)
+            bboxes_all.extend(bboxes2)
         points = []
-        taxis = self.axes.taxis
-        laxis = self.axes.laxis
-        raxis = self.axes.raxis
-        tbboxes, tbboxes2 = taxis._get_tick_boxes_siblings(renderer=renderer)
-        lbboxes, lbboxes2 = laxis._get_tick_boxes_siblings(renderer=renderer)
-        rbboxes, rbboxes2 = raxis._get_tick_boxes_siblings(renderer=renderer)
-        bboxes = tbboxes + tbboxes2 + lbboxes + lbboxes2 + rbboxes + rbboxes2
-        for bbox in bboxes:
+        for bbox in bboxes_all:
             points.extend([
                 [bbox.x0, bbox.y0],
                 [bbox.x0, bbox.y1],
                 [bbox.x1, bbox.y0],
                 [bbox.x1, bbox.y1],
             ])
-        # In case bboxes do not exists, spines are used.
+        # In case no tick labels exist, points of triangle corners are added.
         points.extend(self.axes.transAxes.transform(self.axes.corners))
         return np.asarray(points)
 
