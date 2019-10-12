@@ -32,6 +32,30 @@ def test_plot():
     ax.plot(t, l, r)
 
 
+class TestArgumentOrder:
+    # Confirm that the argument order does not affect the plots.
+    @check_figures_equal(extensions=['pdf'])
+    def test_argument_order_1(self, fig_test, fig_ref):
+        t, l, r = get_spiral()
+        fig_test = plt.figure()
+        ax = fig_test.add_subplot(111, projection='ternary')
+        ax.plot(r=r, l=l, t=t)
+        fig_ref = plt.figure()
+        ax = fig_ref.add_subplot(111, projection='ternary')
+        ax.plot(t, l, r)
+
+    # Confirm that the plot is the same even if we have kwargs first.
+    @check_figures_equal(extensions=['pdf'])
+    def test_argument_order_2(self, fig_test, fig_ref):
+        t, l, r = get_spiral()
+        fig_test = plt.figure()
+        ax = fig_test.add_subplot(111, projection='ternary')
+        ax.plot(c='C1', r=r, l=l, t=t)
+        fig_ref = plt.figure()
+        ax = fig_ref.add_subplot(111, projection='ternary')
+        ax.plot(t, l, r, c='C1')
+
+
 class TestGivenTriangles:
     rotations = range(0, 360, 90)
     baseline_images_list = [['given_triangles_{}'.format(r)] for r in rotations]
