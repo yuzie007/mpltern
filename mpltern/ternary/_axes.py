@@ -113,8 +113,7 @@ class TernaryAxesBase(Axes):
         corners_xy = self.transLimits.transform(self.corners)
         self.transProjection = transTernaryScale + BarycentricTransform(corners_xy)
 
-        # Transform from the barycentric coordinates to the original
-        # Axes coordinates
+        # From ternary coordinates to the original Axes coordinates
         self._ternary_axes_transform = self.transProjection + self.transLimits
 
         # From barycentric coordinates to the original Axes coordinates
