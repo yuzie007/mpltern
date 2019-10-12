@@ -2,11 +2,12 @@
 
 ## High
 
+- Smart parsing of ternary data
+- Documentation
 - Rotation of axis-labels
     - along the figure bottom
     - along the axis
-- Arrows along the axes (using some transforms)
-- Advanced examples
+- Advanced examples (inset etc.)
 
 ## Medium
 
