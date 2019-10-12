@@ -117,6 +117,12 @@ class TernaryAxesBase(Axes):
         # Axes coordinates
         self._ternary_axes_transform = self.transProjection + self.transLimits
 
+        # From barycentric coordinates to the original Axes coordinates
+        self.transAxesProjection = BarycentricTransform(self.corners)
+
+        # From barycentric coordinates to display coordinates
+        self.transTernaryAxes = self.transAxesProjection + self.transAxes
+
     def get_taxis_transform(self, which='grid'):
         if which == 'label':
             return self._taxis_label_transform
@@ -464,13 +470,18 @@ class TernaryAxes(TernaryAxesBase):
         return self.raxis.set_label_text(rlabel, fontdict, **kwargs)
 
     def text(self, *args, **kwargs):
-        if 'transform' in kwargs and kwargs['transform'].input_dims == 2:
+        trans = kwargs.pop('transform', None)
+        if trans is not None and trans.input_dims == 2:
             return super().text(*args[:3], **kwargs)
         else:
             t, l, r, s = args[:4]
             tlr = np.column_stack((t, l, r))
-            x, y = self.transProjection.transform(tlr).T
-            return super().text(x, y, s, *args[3:], **kwargs)
+            if trans == self.transTernaryAxes:
+                kwargs['transform'] = self.transAxes
+                x, y = self.transAxesProjection.transform(tlr).T
+            else:
+                x, y = self.transProjection.transform(tlr).T
+            return super().text(x, y, s, *args[4:], **kwargs)
 
     def annotate(self, s, tlr, *args, **kwargs):
         # TODO: Add adequate manipulation for `xycoords` and `textcoods`
@@ -743,16 +754,25 @@ class TernaryAxes(TernaryAxesBase):
         return super().hexbin(x, y, *args, **kwargs)
 
     def arrow(self, *args, **kwargs):
-        if 'transform' in kwargs and kwargs['transform'].input_dims == 2:
+        trans = kwargs.pop('transform', None)
+        if trans is not None and trans.input_dims == 2:
             return super().arrow(*args[:4], **kwargs)
         else:
             t, l, r, dt, dl, dr = args[:6]
             tlr = np.column_stack((t, l, r))
-            x, y = self.transProjection.transform(tlr)[0]
-            tlr = np.column_stack((t + dt, l + dl, r + dr))
-            dx, dy = self.transProjection.transform(tlr)[0]
-            dx -= x
-            dy -= y
+            if trans == self.transTernaryAxes:
+                kwargs['transform'] = self.transAxes
+                x, y = self.transAxesProjection.transform(tlr)[0]
+                tlr = np.column_stack((t + dt, l + dl, r + dr))
+                dx, dy = self.transAxesProjection.transform(tlr)[0]
+                dx -= x
+                dy -= y
+            else:
+                x, y = self.transProjection.transform(tlr)[0]
+                tlr = np.column_stack((t + dt, l + dl, r + dr))
+                dx, dy = self.transProjection.transform(tlr)[0]
+                dx -= x
+                dy -= y
             return super().arrow(x, y, dx, dy, **kwargs)
 
     def quiver(self, t, l, r, dt, dl, dr, *args, **kwargs):
