@@ -463,13 +463,14 @@ class TernaryAxes(TernaryAxesBase):
             self.raxis.labelpad = labelpad
         return self.raxis.set_label_text(rlabel, fontdict, **kwargs)
 
-    def text(self, t, l, r, s, *args, **kwargs):
-        tlr = np.column_stack((t, l, r))
-        x, y = self.transProjection.transform(tlr).T
-        return super().text(x, y, s, *args, **kwargs)
-
-    def text_xy(self, x, y, s, *args, **kwargs):
-        return super().text(x, y, s, *args, **kwargs)
+    def text(self, *args, **kwargs):
+        if 'transform' in kwargs and kwargs['transform'].input_dims == 2:
+            return super().text(*args[:3], **kwargs)
+        else:
+            t, l, r, s = args[:4]
+            tlr = np.column_stack((t, l, r))
+            x, y = self.transProjection.transform(tlr).T
+            return super().text(x, y, s, *args[3:], **kwargs)
 
     def annotate(self, s, tlr, *args, **kwargs):
         # TODO: Add adequate manipulation for `xycoords` and `textcoods`
@@ -741,14 +742,18 @@ class TernaryAxes(TernaryAxesBase):
         x, y = self.transProjection.transform(tlr).T
         return super().hexbin(x, y, *args, **kwargs)
 
-    def arrow(self, t, l, r, dt, dl, dr, *args, **kwargs):
-        tlr = np.column_stack((t, l, r))
-        x, y = self.transProjection.transform(tlr)[0]
-        tlr = np.column_stack((t + dt, l + dl, r + dr))
-        dx, dy = self.transProjection.transform(tlr)[0]
-        dx -= x
-        dy -= y
-        return super().arrow(x, y, dx, dy, *args, **kwargs)
+    def arrow(self, *args, **kwargs):
+        if 'transform' in kwargs and kwargs['transform'].input_dims == 2:
+            return super().arrow(*args[:4], **kwargs)
+        else:
+            t, l, r, dt, dl, dr = args[:6]
+            tlr = np.column_stack((t, l, r))
+            x, y = self.transProjection.transform(tlr)[0]
+            tlr = np.column_stack((t + dt, l + dl, r + dr))
+            dx, dy = self.transProjection.transform(tlr)[0]
+            dx -= x
+            dy -= y
+            return super().arrow(x, y, dx, dy, **kwargs)
 
     def quiver(self, t, l, r, dt, dl, dr, *args, **kwargs):
         tlr = np.column_stack((t, l, r))
