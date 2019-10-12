@@ -44,9 +44,9 @@ class TernaryAxis(XAxis):
                            rotation=0,
                            rotation_mode='anchor')
         trans = {
-            't': self.axes._taxis_label_transform,
-            'l': self.axes._laxis_label_transform,
-            'r': self.axes._raxis_label_transform,
+            't': self.axes.get_taxis_transform(which='label'),
+            'l': self.axes.get_laxis_transform(which='label'),
+            'r': self.axes.get_raxis_transform(which='label'),
         }[self.axis_name]
         label.set_transform(trans)
 
@@ -97,25 +97,25 @@ class TernaryAxis(XAxis):
 
         if self.label_position == 'tick1':
             trans = {
-                't': self.axes._laxis_label_transform,
-                'l': self.axes._raxis_label_transform,
-                'r': self.axes._taxis_label_transform,
+                't': self.axes.get_laxis_transform(which='label'),
+                'l': self.axes.get_raxis_transform(which='label'),
+                'r': self.axes.get_taxis_transform(which='label'),
             }[self.axis_name]
             sign = -1.0  # outward triangle
             x = 0.5  # midpoint of the axis
         elif self.label_position == 'tick2':
             trans = {
-                't': self.axes._raxis_label_transform,
-                'l': self.axes._taxis_label_transform,
-                'r': self.axes._laxis_label_transform,
+                't': self.axes.get_raxis_transform(which='label'),
+                'l': self.axes.get_taxis_transform(which='label'),
+                'r': self.axes.get_laxis_transform(which='label'),
             }[self.axis_name]
             sign = -1.0  # outward triangle
             x = 0.5  # midpoint of the axis
         else:  # self.label_position == 'corner'
             trans = {
-                't': self.axes._taxis_label_transform,
-                'l': self.axes._laxis_label_transform,
-                'r': self.axes._raxis_label_transform,
+                't': self.axes.get_taxis_transform(which='label'),
+                'l': self.axes.get_laxis_transform(which='label'),
+                'r': self.axes.get_raxis_transform(which='label'),
             }[self.axis_name]
             sign = 1.0  # inward triangle
             # Get the corner in the display coordinates, and then get

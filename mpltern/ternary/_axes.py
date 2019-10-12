@@ -118,13 +118,22 @@ class TernaryAxesBase(Axes):
         self._ternary_axes_transform = self.transProjection + self.transLimits
 
     def get_taxis_transform(self, which='grid'):
-        return self._taxis_transform
+        if which == 'label':
+            return self._taxis_label_transform
+        else:
+            return self._taxis_transform
 
     def get_laxis_transform(self, which='grid'):
-        return self._laxis_transform
+        if which == 'label':
+            return self._laxis_label_transform
+        else:
+            return self._laxis_transform
 
     def get_raxis_transform(self, which='grid'):
-        return self._raxis_transform
+        if which == 'label':
+            return self._raxis_label_transform
+        else:
+            return self._raxis_transform
 
     def _get_axis_text_transform(self, pad_points, trans, which):
         if which == 'tick1':
