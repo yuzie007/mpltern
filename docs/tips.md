@@ -210,3 +210,13 @@ plots (`_set_ternary_lim_from_xlim_and_ylim`).
 
 If you want to prohibit e.g. `Zoom-to-rectanble`, you need to override e.g.
 `can_zoom` to return `False`. (`PolarAxes` does this.)
+
+## Registration of a new projection
+
+In Matplotlib, `Axes3D` can be used by importing `mpl_toolkits.mplot3d.Axes3D`,
+as described in the [Matplotlib mplot3d tutorial](https://matplotlib.org/mpl_toolkits/mplot3d/tutorial.html).
+In `mpltern`, however, I decided NOT to follow this way due to the increase of
+the typing effort.
+Instead, `TernaryAxes` is available by just importing `mpltern`.
+This is one of the exceptional cases in `mpltern`, where in most cases I
+try to follow the Matplotlib ways.
