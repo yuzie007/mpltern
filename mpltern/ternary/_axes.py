@@ -16,6 +16,21 @@ from mpltern.ternary.transforms import (
 from mpltern.ternary.axis import TAxis, LAxis, RAxis
 
 
+def _parse_ternary(f):
+    def parse(self, *args, **kwargs):
+        trans = kwargs.pop('transform', None)
+        if trans is not None and trans.input_dims == 2:
+            return f(self, *args, **kwargs)
+        else:
+            t, l, r, = args[:3]
+            args = args[3:]
+            tlr = np.column_stack((t, l, r))
+            x, y = self.transProjection.transform(tlr).T
+            args = (x, y, *args)
+            return f(self, *args, **kwargs)
+    return parse
+
+
 def _create_corners(corners=None, rotation=None):
     from scipy.special import sindg, cosdg
     if corners is None:
@@ -737,19 +752,16 @@ class TernaryAxes(TernaryAxesBase):
         self.add_patch(p)
         return p
 
-    def plot(self, t, l, r, *args, **kwargs):
-        tlr = np.column_stack((t, l, r))
-        x, y = self.transProjection.transform(tlr).T
-        return super().plot(x, y, *args, **kwargs)
+    @_parse_ternary
+    def plot(self, *args, **kwargs):
+        return super().plot(*args, **kwargs)
 
-    def scatter(self, t, l, r, *args, **kwargs):
-        tlr = np.column_stack((t, l, r))
-        x, y = self.transProjection.transform(tlr).T
-        return super().scatter(x, y, *args, **kwargs)
+    @_parse_ternary
+    def scatter(self, *args, **kwargs):
+        return super().scatter(*args, **kwargs)
 
-    def hexbin(self, t, l, r, *args, **kwargs):
-        tlr = np.column_stack((t, l, r))
-        x, y = self.transProjection.transform(tlr).T
+    @_parse_ternary
+    def hexbin(self, *args, **kwargs):
         return super().hexbin(x, y, *args, **kwargs)
 
     def arrow(self, *args, **kwargs):
@@ -783,25 +795,21 @@ class TernaryAxes(TernaryAxesBase):
         v -= y
         return super().quiver(x, y, u, v, *args, **kwargs)
 
-    def fill(self, t, l, r, *args, **kwargs):
-        tlr = np.column_stack((t, l, r))
-        x, y = self.transProjection.transform(tlr).T
-        return super().fill(x, y, *args, **kwargs)
+    @_parse_ternary
+    def fill(self, *args, **kwargs):
+        return super().fill(*args, **kwargs)
 
-    def tricontour(self, t, l, r, *args, **kwargs):
-        tlr = np.column_stack((t, l, r))
-        x, y = self.transProjection.transform(tlr).T
-        return super().tricontour(x, y, *args, **kwargs)
+    @_parse_ternary
+    def tricontour(self, *args, **kwargs):
+        return super().tricontour(*args, **kwargs)
 
-    def tricontourf(self, t, l, r, *args, **kwargs):
-        tlr = np.column_stack((t, l, r))
-        x, y = self.transProjection.transform(tlr).T
-        return super().tricontourf(x, y, *args, **kwargs)
+    @_parse_ternary
+    def tricontourf(self, *args, **kwargs):
+        return super().tricontourf(*args, **kwargs)
 
-    def tripcolor(self, t, l, r, *args, **kwargs):
-        tlr = np.column_stack((t, l, r))
-        x, y = self.transProjection.transform(tlr).T
-        return super().tripcolor(x, y, *args, **kwargs)
+    @_parse_ternary
+    def tripcolor(self, *args, **kwargs):
+        return super().tripcolor(*args, **kwargs)
 
     def triplot(self, t, l, r, *args, **kwargs):
         tlr = np.column_stack((t, l, r))

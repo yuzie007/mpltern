@@ -96,6 +96,15 @@ not possible whether the given value is already scaled or not.
 **To avoid any confusions, it is strongly suggested that you scaled the three
 variables beforehand outside `taxes`.**
 
+## `Axes`
+
+### `Axes.plot`
+
+The first arguments `x` and `y` are actually "almost" positional arguments, and
+therefore their order cannot be exchanged.
+In `mpltern`, Following this behavior, also in `mpltern`, it is not allowed to
+exchange the order of `t`, `l`, `r` as keyword arguments.
+
 ## AxesSubplot
 
 The `AxesSubplot` class is *dynamically* created by

@@ -32,28 +32,44 @@ def test_plot():
     ax.plot(t, l, r)
 
 
-class TestArgumentOrder:
-    # Confirm that the argument order does not affect the plots.
-    @check_figures_equal(extensions=['pdf'])
-    def test_argument_order_1(self, fig_test, fig_ref):
-        t, l, r = get_spiral()
-        fig_test = plt.figure()
-        ax = fig_test.add_subplot(111, projection='ternary')
-        ax.plot(r=r, l=l, t=t)
-        fig_ref = plt.figure()
-        ax = fig_ref.add_subplot(111, projection='ternary')
-        ax.plot(t, l, r)
+# In Matplotlib, it is NOT allowed to exchange `x` and `y` in `ax.plot` even
+# when specifying them as keyward arguments. Following this behavior, in
+# `mpltern`, the order of `t`, `l`, `r` must not be able to exchange.
+# The following tests must, therefore, return errors.
 
-    # Confirm that the plot is the same even if we have kwargs first.
-    @check_figures_equal(extensions=['pdf'])
-    def test_argument_order_2(self, fig_test, fig_ref):
-        t, l, r = get_spiral()
+# class TestArgumentOrder:
+#     # Confirm that the argument order does not affect the plots.
+#     @check_figures_equal(extensions=['pdf'])
+#     def test_argument_order_1(self, fig_test, fig_ref):
+#         t, l, r = get_spiral()
+#         fig_test = plt.figure()
+#         ax = fig_test.add_subplot(111, projection='ternary')
+#         ax.plot(r=r, l=l, t=t)
+#         fig_ref = plt.figure()
+#         ax = fig_ref.add_subplot(111, projection='ternary')
+#         ax.plot(t, l, r)
+#
+#     # Confirm that the plot is the same even if we have kwargs first.
+#     @check_figures_equal(extensions=['pdf'])
+#     def test_argument_order_2(self, fig_test, fig_ref):
+#         t, l, r = get_spiral()
+#         fig_test = plt.figure()
+#         ax = fig_test.add_subplot(111, projection='ternary')
+#         ax.plot(c='C1', r=r, l=l, t=t)
+#         fig_ref = plt.figure()
+#         ax = fig_ref.add_subplot(111, projection='ternary')
+#         ax.plot(t, l, r, c='C1')
+
+
+class TestTransform:
+    # Confirm that `plot` can recognize `ax.transAxes` and handle data
+    # ax expected.
+    @image_comparison(baseline_images=['transAxes'], extensions=['pdf'],
+                      style='mpl20')
+    def test_tranform_1(self):
         fig_test = plt.figure()
         ax = fig_test.add_subplot(111, projection='ternary')
-        ax.plot(c='C1', r=r, l=l, t=t)
-        fig_ref = plt.figure()
-        ax = fig_ref.add_subplot(111, projection='ternary')
-        ax.plot(t, l, r, c='C1')
+        ax.plot([0, 1], [0, 1], transform=ax.transAxes)
 
 
 class TestGivenTriangles:
