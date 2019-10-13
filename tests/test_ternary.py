@@ -80,13 +80,21 @@ def test_data_with_five_arguments():
 
 
 class TestArguments:
-    # @image_comparison(baseline_images=['arguments_6'], extensions=['pdf'],
-    #                   style='mpl20')
-    # def test_arguments_6(self):
-    #     fig = plt.figure()
-    #     ax = fig.add_subplot(projection='ternary')
-    #     t, l, r = get_spiral()
-    #     lines = ax.plot(t, l, r, l, r, t)
+    @image_comparison(baseline_images=['arguments_6'], extensions=['pdf'],
+                      style='mpl20')
+    def test_arguments_6(self):
+        fig = plt.figure()
+        ax = fig.add_subplot(projection='ternary')
+        t, l, r = get_spiral()
+        lines = ax.plot(t, l, r, l, r, t)
+
+    @image_comparison(baseline_images=['arguments_7'], extensions=['pdf'],
+                      style='mpl20')
+    def test_arguments_7(self):
+        fig = plt.figure()
+        ax = fig.add_subplot(projection='ternary')
+        t, l, r = get_spiral()
+        lines = ax.plot(t, l, r, 'C3:', l, r, t)
 
     def test_no_arguments(self):
         # In Matplotlib, `ax.plot()` without any arguments returns an empty
