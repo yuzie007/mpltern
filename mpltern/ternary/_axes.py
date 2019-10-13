@@ -26,6 +26,7 @@ def _parse_ternary(f):
         # If no `args` are given, return an empty list like Matplotlib
         # by calling the superclass method via `f`.
         if not args or (trans is not None and trans.input_dims == 2):
+            kwargs['transform'] = trans
             return f(self, *args, **kwargs)
         else:
             # Process the 'data' kwarg.
@@ -46,7 +47,12 @@ def _parse_ternary(f):
                 this, args = args[:3], args[3:]
                 t, l, r = this
                 tlr = np.column_stack((t, l, r))
-                x, y = self.transProjection.transform(tlr).T
+                if trans == self.transTernaryAxes:
+                    kwargs['transform'] = self.transAxes
+                    x, y = self.transAxesProjection.transform(tlr).T
+                else:
+                    kwargs['transform'] = self.transData
+                    x, y = self.transProjection.transform(tlr).T
                 replaced += (x, y)
                 if args and isinstance(args[0], str):
                     replaced += args[0],  # Format string
@@ -65,11 +71,17 @@ def _parse_ternary_3(f):
         # If no `args` are given, return an empty list like Matplotlib
         # by calling the superclass method via `f`.
         if not args or (trans is not None and trans.input_dims == 2):
+            kwargs['transform'] = trans
             return f(self, *args, **kwargs)
         else:
             t, l, r = args[:3]
             tlr = np.column_stack((t, l, r))
-            x, y = self.transProjection.transform(tlr).T
+            if trans == self.transTernaryAxes:
+                kwargs['transform'] = self.transAxes
+                x, y = self.transAxesProjection.transform(tlr).T
+            else:
+                kwargs['transform'] = self.transData
+                x, y = self.transProjection.transform(tlr).T
             args = (x, y, *args[3:])
             return f(self, *args, **kwargs)
     return parse
@@ -843,11 +855,6 @@ class TernaryAxes(TernaryAxesBase):
     def tripcolor(self, *args, **kwargs):
         return super().tripcolor(*args, **kwargs)
 
-    def triplot(self, t, l, r, *args, **kwargs):
-        tlr = np.column_stack((t, l, r))
-        x, y = self.transProjection.transform(tlr).T
-        tplot = self.plot
-        self.plot = super().plot
-        tmp = super().triplot(x, y, *args, **kwargs)
-        self.plot = tplot
-        return tmp
+    @_parse_ternary_3
+    def triplot(self, *args, **kwargs):
+        return super().triplot(*args, **kwargs)
