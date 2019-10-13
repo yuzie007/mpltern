@@ -2,6 +2,7 @@ from collections import OrderedDict
 
 import numpy as np
 
+import matplotlib as mpl
 from matplotlib import cbook
 from matplotlib import docstring
 from matplotlib.axes import Axes
@@ -24,6 +25,16 @@ def _parse_ternary(f):
         if not args or (trans is not None and trans.input_dims == 2):
             return f(self, *args, **kwargs)
         else:
+            # Process the 'data' kwarg.
+            data = kwargs.pop("data", None)
+            if data is not None:
+                args = [mpl._replacer(data, arg) for arg in args]
+                # Ternary data w/ or w/o a format string
+                if len(args) not in [3, 4]:
+                    raise ValueError(
+                        "The number of positional arguments with data must be "
+                        "3 or 4 in Mpltern due to ambiguity of arguments; use "
+                        "multiple plotting calls instead")
             t, l, r, = args[:3]
             args = args[3:]
             tlr = np.column_stack((t, l, r))

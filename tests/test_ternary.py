@@ -61,13 +61,40 @@ def test_plot():
 #         ax.plot(t, l, r, c='C1')
 
 
-def test_no_arguments():
-    # In Matplotlib, `ax.plot()` without any arguments returns an empty list.
-    # This test checks whether `mpltern` mimics this behavior.
+def test_data():
     fig = plt.figure()
     ax = fig.add_subplot(projection='ternary')
-    lines = ax.plot()
-    assert lines == []
+    t, l, r = get_spiral()
+    data = {'t': t, 'l': l, 'r': r}
+    ax.plot('t', 'l', 'r', data=data)
+
+
+def test_data_with_five_arguments():
+    # When with data, the number of positional arguments must be 3 or 4.
+    fig = plt.figure()
+    ax = fig.add_subplot(projection='ternary')
+    t, l, r = get_spiral()
+    data = {'t': t, 'l': l, 'r': r}
+    with pytest.raises(ValueError):
+        ax.plot('t', 'l', 'r', 'foo', 'bar', data=data)
+
+
+class TestArguments:
+    # @image_comparison(baseline_images=['arguments_6'], extensions=['pdf'],
+    #                   style='mpl20')
+    # def test_arguments_6(self):
+    #     fig = plt.figure()
+    #     ax = fig.add_subplot(projection='ternary')
+    #     t, l, r = get_spiral()
+    #     lines = ax.plot(t, l, r, l, r, t)
+
+    def test_no_arguments(self):
+        # In Matplotlib, `ax.plot()` without any arguments returns an empty
+        # list. This test checks whether `mpltern` mimics this behavior.
+        fig = plt.figure()
+        ax = fig.add_subplot(projection='ternary')
+        lines = ax.plot()
+        assert lines == []
 
 
 class TestTransform:
