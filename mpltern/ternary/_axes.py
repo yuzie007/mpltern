@@ -18,6 +18,9 @@ from mpltern.ternary.axis import TAxis, LAxis, RAxis
 
 
 def _parse_ternary(f):
+    """
+    Parse ternary data from each set of 3 (or 4 for format strings) arguments.
+    """
     def parse(self, *args, **kwargs):
         trans = kwargs.pop('transform', None)
         # If no `args` are given, return an empty list like Matplotlib
@@ -49,6 +52,25 @@ def _parse_ternary(f):
                     replaced += args[0],  # Format string
                     args = args[1:]
             args = replaced
+            return f(self, *args, **kwargs)
+    return parse
+
+
+def _parse_ternary_3(f):
+    """
+    Parse ternary data from the first 3 arguments.
+    """
+    def parse(self, *args, **kwargs):
+        trans = kwargs.pop('transform', None)
+        # If no `args` are given, return an empty list like Matplotlib
+        # by calling the superclass method via `f`.
+        if not args or (trans is not None and trans.input_dims == 2):
+            return f(self, *args, **kwargs)
+        else:
+            t, l, r = args[:3]
+            tlr = np.column_stack((t, l, r))
+            x, y = self.transProjection.transform(tlr).T
+            args = (x, y, *args[3:])
             return f(self, *args, **kwargs)
     return parse
 
@@ -782,9 +804,9 @@ class TernaryAxes(TernaryAxesBase):
     def scatter(self, *args, **kwargs):
         return super().scatter(*args, **kwargs)
 
-    @_parse_ternary
+    @_parse_ternary_3
     def hexbin(self, *args, **kwargs):
-        return super().hexbin(x, y, *args, **kwargs)
+        return super().hexbin(*args, **kwargs)
 
     def arrow(self, *args, **kwargs):
         trans = kwargs.pop('transform', None)
@@ -821,15 +843,15 @@ class TernaryAxes(TernaryAxesBase):
     def fill(self, *args, **kwargs):
         return super().fill(*args, **kwargs)
 
-    @_parse_ternary
+    @_parse_ternary_3
     def tricontour(self, *args, **kwargs):
         return super().tricontour(*args, **kwargs)
 
-    @_parse_ternary
+    @_parse_ternary_3
     def tricontourf(self, *args, **kwargs):
         return super().tricontourf(*args, **kwargs)
 
-    @_parse_ternary
+    @_parse_ternary_3
     def tripcolor(self, *args, **kwargs):
         return super().tripcolor(*args, **kwargs)
 
