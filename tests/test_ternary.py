@@ -223,3 +223,11 @@ def test_tick_direction():
     ax.tick_params(direction='out')  # Default of Matplotlib 2.0+
     ax = fig.add_subplot(133, projection='ternary')
     ax.tick_params(direction='inout')
+
+
+@image_comparison(baseline_images=['text'], extensions=['pdf'], style='mpl20')
+def test_text():
+    fig = plt.figure()
+    ax = fig.add_subplot(projection='ternary')
+    v = 1.0 / 3.0
+    ax.text(v, v, v, 'center', ha='center', va='center')

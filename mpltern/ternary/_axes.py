@@ -539,19 +539,9 @@ class TernaryAxes(TernaryAxesBase):
             self.raxis.labelpad = labelpad
         return self.raxis.set_label_text(rlabel, fontdict, **kwargs)
 
+    @_parse_ternary_3
     def text(self, *args, **kwargs):
-        trans = kwargs.pop('transform', None)
-        if trans is not None and trans.input_dims == 2:
-            return super().text(*args[:3], **kwargs)
-        else:
-            t, l, r, s = args[:4]
-            tlr = np.column_stack((t, l, r))
-            if trans == self.transTernaryAxes:
-                kwargs['transform'] = self.transAxes
-                x, y = self.transAxesProjection.transform(tlr).T
-            else:
-                x, y = self.transProjection.transform(tlr).T
-            return super().text(x, y, s, *args[4:], **kwargs)
+        return super().text(*args, **kwargs)
 
     def axtline(self, x=0, ymin=0, ymax=1, **kwargs):
         """
