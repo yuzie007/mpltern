@@ -19,7 +19,9 @@ from mpltern.ternary.axis import TAxis, LAxis, RAxis
 def _parse_ternary(f):
     def parse(self, *args, **kwargs):
         trans = kwargs.pop('transform', None)
-        if trans is not None and trans.input_dims == 2:
+        # If no `args` are given, return an empty list like Matplotlib
+        # by calling the superclass method via `f`.
+        if not args or (trans is not None and trans.input_dims == 2):
             return f(self, *args, **kwargs)
         else:
             t, l, r, = args[:3]

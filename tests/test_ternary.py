@@ -61,6 +61,15 @@ def test_plot():
 #         ax.plot(t, l, r, c='C1')
 
 
+def test_no_arguments():
+    # In Matplotlib, `ax.plot()` without any arguments returns an empty list.
+    # This test checks whether `mpltern` mimics this behavior.
+    fig = plt.figure()
+    ax = fig.add_subplot(projection='ternary')
+    lines = ax.plot()
+    assert lines == []
+
+
 class TestTransform:
     # Confirm that `plot` can recognize `ax.transAxes` and handle data
     # ax expected.

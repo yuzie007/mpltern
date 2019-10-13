@@ -105,6 +105,10 @@ therefore their order cannot be exchanged.
 In `mpltern`, Following this behavior, also in `mpltern`, it is not allowed to
 exchange the order of `t`, `l`, `r` as keyword arguments.
 
+`ax.plot()`, without any positional arguments, are also allowed
+(`_process_plot_var_args.__call__`). In this case, a list of no length (`[]`)
+is returned.
+
 ## AxesSubplot
 
 The `AxesSubplot` class is *dynamically* created by
