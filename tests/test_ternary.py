@@ -1,8 +1,10 @@
+import numpy as np
+
 import pytest
 from matplotlib.testing.decorators import (
     image_comparison, check_figures_equal)
 import matplotlib.pyplot as plt
-from mpltern.datasets import get_spiral
+from mpltern.datasets import (get_spiral, get_triangular_grid)
 
 
 @image_comparison(baseline_images=['axis_and_tick'], style='mpl20')
@@ -231,3 +233,90 @@ def test_text():
     ax = fig.add_subplot(projection='ternary')
     v = 1.0 / 3.0
     ax.text(v, v, v, 'center', ha='center', va='center')
+
+
+class TestArrow:
+    @image_comparison(baseline_images=['arrow_data'], extensions=['pdf'],
+                      style='mpl20')
+    def test_arrow_data(self):
+        fig = plt.figure()
+        ax = fig.add_subplot(projection='ternary')
+        ax.set_ternary_min(-0.2, -0.2, -0.2)
+        ax.arrow(0.2, 0.2, 0.8, 0.6, 0.0, -0.6)
+
+    @image_comparison(baseline_images=['arrow_axes'], extensions=['pdf'],
+                      style='mpl20')
+    def test_arrow_axes(self):
+        fig = plt.figure()
+        ax = fig.add_subplot(projection='ternary')
+        ax.set_ternary_min(-0.2, -0.2, -0.2)
+        ax.arrow(0.2, 0.2, 0.8, 0.6, 0.0, -0.6, transform=ax.transTernaryAxes)
+
+    @image_comparison(baseline_images=['arrow_xy_data'], extensions=['pdf'],
+                      style='mpl20')
+    def test_arrow_xy_data(self):
+        fig = plt.figure()
+        ax = fig.add_subplot(projection='ternary')
+        ax.set_ternary_min(-0.2, -0.2, -0.2)
+        ax.arrow(0.2, 0.2, 0.6, 0.6, transform=ax.transData)
+
+    @image_comparison(baseline_images=['arrow_xy_axes'], extensions=['pdf'],
+                      style='mpl20')
+    def test_arrow_xy_axes(self):
+        fig = plt.figure()
+        ax = fig.add_subplot(projection='ternary')
+        ax.set_ternary_min(-0.2, -0.2, -0.2)
+        ax.arrow(0.2, 0.2, 0.6, 0.6, transform=ax.transAxes)
+
+
+class TestQuiver:
+    @image_comparison(baseline_images=['quiver'], extensions=['pdf'],
+                      style='mpl20')
+    def test_quiver(self):
+        t, l, r = get_triangular_grid()
+        dt = 1.0 / 3.0 - t
+        dl = 1.0 / 3.0 - l
+        dr = 1.0 / 3.0 - r
+        fig = plt.figure()
+        ax = fig.add_subplot(projection='ternary')
+        ax.quiver(t, l, r, dt, dl, dr)
+
+    @image_comparison(baseline_images=['quiver_color'], extensions=['pdf'],
+                      style='mpl20')
+    def test_quiver_color(self):
+        t, l, r = get_triangular_grid()
+        dt = 1.0 / 3.0 - t
+        dl = 1.0 / 3.0 - l
+        dr = 1.0 / 3.0 - r
+        length = np.sqrt(dt ** 2 + dl ** 2 + dr ** 2)
+        fig = plt.figure()
+        ax = fig.add_subplot(projection='ternary')
+        pc = ax.quiver(t, l, r, dt, dl, dr, length)
+        colorbar = fig.colorbar(pc, pad=0.2)
+        colorbar.set_label('Length', rotation=270, va='baseline')
+
+    @image_comparison(baseline_images=['quiver_xy_data'], extensions=['pdf'],
+                      style='mpl20')
+    def test_quiver_xy_data(self):
+        x = np.linspace(0, 1, 11)
+        y = np.linspace(0, 1, 11)
+        x, y = np.meshgrid(x, y)
+        dx = 0.5 - x
+        dy = 0.5 - y
+        fig = plt.figure()
+        ax = fig.add_subplot(projection='ternary')
+        ax.set_ternary_min(-0.2, -0.2, -0.2)
+        ax.quiver(x, y, dx, dy, transform=ax.transData)
+
+    @image_comparison(baseline_images=['quiver_xy_axes'], extensions=['pdf'],
+                      style='mpl20')
+    def test_quiver_xy_axes(self):
+        x = np.linspace(0, 1, 11)
+        y = np.linspace(0, 1, 11)
+        x, y = np.meshgrid(x, y)
+        dx = 0.5 - x
+        dy = 0.5 - y
+        fig = plt.figure()
+        ax = fig.add_subplot(projection='ternary')
+        ax.set_ternary_min(-0.2, -0.2, -0.2)
+        ax.quiver(x, y, dx, dy, transform=ax.transAxes)

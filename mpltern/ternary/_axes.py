@@ -15,7 +15,8 @@ from mpltern.ternary.transforms import (
     BarycentricTransform, TernaryScaleTransform)
 from mpltern.ternary.axis import TAxis, LAxis, RAxis
 from mpltern.ternary.ternary_parser import (
-    _parse_ternary_single, _parse_ternary_multiple)
+    _parse_ternary_single, _parse_ternary_multiple,
+    _parse_ternary_vector, _parse_ternary_vector_field)
 
 
 def _create_corners(corners=None, rotation=None):
@@ -729,36 +730,13 @@ class TernaryAxes(TernaryAxesBase):
     def hexbin(self, *args, **kwargs):
         return super().hexbin(*args, **kwargs)
 
+    @_parse_ternary_vector
     def arrow(self, *args, **kwargs):
-        trans = kwargs.pop('transform', None)
-        if trans is not None and trans.input_dims == 2:
-            return super().arrow(*args[:4], **kwargs)
-        else:
-            t, l, r, dt, dl, dr = args[:6]
-            tlr = np.column_stack((t, l, r))
-            if trans == self.transTernaryAxes:
-                kwargs['transform'] = self.transAxes
-                x, y = self.transAxesProjection.transform(tlr)[0]
-                tlr = np.column_stack((t + dt, l + dl, r + dr))
-                dx, dy = self.transAxesProjection.transform(tlr)[0]
-                dx -= x
-                dy -= y
-            else:
-                x, y = self.transProjection.transform(tlr)[0]
-                tlr = np.column_stack((t + dt, l + dl, r + dr))
-                dx, dy = self.transProjection.transform(tlr)[0]
-                dx -= x
-                dy -= y
-            return super().arrow(x, y, dx, dy, **kwargs)
+        return super().arrow(*args, **kwargs)
 
-    def quiver(self, t, l, r, dt, dl, dr, *args, **kwargs):
-        tlr = np.column_stack((t, l, r))
-        x, y = self.transProjection.transform(tlr).T
-        tlr = np.column_stack((t + dt, l + dl, r + dr))
-        u, v = self.transProjection.transform(tlr).T
-        u -= x
-        v -= y
-        return super().quiver(x, y, u, v, *args, **kwargs)
+    @_parse_ternary_vector_field
+    def quiver(self, *args, **kwargs):
+        return super().quiver(*args, **kwargs)
 
     @_parse_ternary_multiple
     def fill(self, *args, **kwargs):
