@@ -2,7 +2,6 @@
 
 ## High
 
-- Smart parsing of ternary data
 - Documentation
 - Rotation of axis-labels
     - along the figure bottom
@@ -11,6 +10,7 @@
 
 ## Medium
 
+- `fill_betweent`, `fill_betweenl`, `fill_betweenr`
 - `annotate`: Adequate manipulations for `xycoords` and `textcoords`
 - Crosshairs
 - Isoproportion lines
