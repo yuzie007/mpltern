@@ -743,6 +743,10 @@ class TernaryAxes(TernaryAxesBase):
         return super().fill(*args, **kwargs)
 
     @_parse_ternary_single
+    def hist2d(self, *args, **kwargs):
+        return super().hist2d(*args, **kwargs)
+
+    @_parse_ternary_single
     def tricontour(self, *args, **kwargs):
         return super().tricontour(*args, **kwargs)
 
