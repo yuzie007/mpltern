@@ -4,32 +4,14 @@ import pytest
 from matplotlib.testing.decorators import (
     image_comparison, check_figures_equal)
 import matplotlib.pyplot as plt
-from mpltern.datasets import (get_spiral, get_triangular_grid)
+from mpltern.datasets import (
+    get_spiral, get_scatter_points, get_triangular_grid)
 
 
-@image_comparison(baseline_images=['axis_and_tick'], style='mpl20')
-def test_axis_and_tick():
-    fig = plt.figure()
-    ax = fig.add_subplot(111, projection='ternary')
-
-    ax.set_tlabel('Top')
-    ax.set_llabel('Left')
-    ax.set_rlabel('Right')
-
-    ax.taxis.set_label_position('tick1')
-    ax.laxis.set_label_position('tick1')
-    ax.raxis.set_label_position('tick1')
-
-    # Or, you can do
-    # ax.taxis.set_label_text('Top')
-    # ax.laxis.set_label_text('Left')
-    # ax.raxis.set_label_text('Right')
-
-
-@image_comparison(baseline_images=['plot'], style='mpl20')
+@image_comparison(baseline_images=['plot'], extensions=['pdf'], style='mpl20')
 def test_plot():
     fig = plt.figure()
-    ax = fig.add_subplot(111, projection='ternary')
+    ax = fig.add_subplot(projection='ternary')
     t, l, r = get_spiral()
     ax.plot(t, l, r)
 
@@ -142,28 +124,36 @@ class TestGivenTriangles:
         ax.grid()
 
 
-@image_comparison(baseline_images=['corner_labels'], style='mpl20')
-def test_corner_labels():
-    fig = plt.figure()
-    ax = fig.add_subplot(111, projection='ternary')
+class TestAxisLabelPosition:
+    positions = ['corner', 'tick1', 'tick2']
+    baseline_images_list = [
+        ['axis_label_position_{}'.format(p)] for p in positions]
 
-    ax.set_tlabel('Top')
-    ax.set_llabel('Left')
-    ax.set_rlabel('Right')
+    @pytest.mark.parametrize('position, baseline_images',
+                             zip(positions, baseline_images_list))
+    @image_comparison(baseline_images=None, extensions=['pdf'], style='mpl20')
+    def test_axis_label_position(self, position, baseline_images):
+        fig = plt.figure()
+        ax = fig.add_subplot(projection='ternary')
 
-    ax.taxis.set_label_position('corner')
-    ax.laxis.set_label_position('corner')
-    ax.raxis.set_label_position('corner')
+        ax.set_tlabel('Top')
+        ax.set_llabel('Left')
+        ax.set_rlabel('Right')
+
+        ax.taxis.set_label_position(position)
+        ax.laxis.set_label_position(position)
+        ax.raxis.set_label_position(position)
 
 
-@image_comparison(baseline_images=['opposite_ticks'], style='mpl20')
+@image_comparison(baseline_images=['opposite_ticks'], extensions=['pdf'],
+                  style='mpl20')
 def test_opposite_ticks():
     # This changes only tick & label positions but does not change data
     # visualizations.
     # Check if the tick-markers, tick-labels, and axis-labels are shown as
     # expected.
     fig = plt.figure()
-    ax = fig.add_subplot(111, projection='ternary')
+    ax = fig.add_subplot(projection='ternary')
 
     ax.opposite_ticks(True)
 
@@ -215,16 +205,18 @@ def set_spans(ax):
     ax.axrspan(0.5, 0.6, fc='C2', alpha=0.2, clip_on=False)  # region sandwiched by rmin and rmax
 
 
-@image_comparison(baseline_images=['tick_direction'], style='mpl20')
-def test_tick_direction():
-    fig = plt.figure(figsize=(12.8, 4.8))
-    fig.subplots_adjust(left=0.075, right=0.925, wspace=0.5)
-    ax = fig.add_subplot(131, projection='ternary')
-    ax.tick_params(direction='in')
-    ax = fig.add_subplot(132, projection='ternary')
-    ax.tick_params(direction='out')  # Default of Matplotlib 2.0+
-    ax = fig.add_subplot(133, projection='ternary')
-    ax.tick_params(direction='inout')
+class TestTickDirection:
+    directions = ['in', 'out', 'inout']
+    baseline_images_list = [
+        ['tick_direction_{}'.format(d)] for d in directions]
+
+    @pytest.mark.parametrize('direction, baseline_images',
+                             zip(directions, baseline_images_list))
+    @image_comparison(baseline_images=None, extensions=['pdf'], style='mpl20')
+    def test_tick_direction(self, direction, baseline_images):
+        fig = plt.figure()
+        ax = fig.add_subplot(projection='ternary')
+        ax.tick_params(direction=direction)
 
 
 @image_comparison(baseline_images=['text'], extensions=['pdf'], style='mpl20')
@@ -233,6 +225,26 @@ def test_text():
     ax = fig.add_subplot(projection='ternary')
     v = 1.0 / 3.0
     ax.text(v, v, v, 'center', ha='center', va='center')
+
+
+class TestScatter:
+    @image_comparison(baseline_images=['scatter'], extensions=['pdf'],
+                      style='mpl20')
+    def test_scatter(self):
+        t, l, r = get_scatter_points()
+        fig = plt.figure()
+        ax = fig.add_subplot(projection='ternary')
+        ax.scatter(t, l, r)
+
+    @image_comparison(baseline_images=['scatter_color'], extensions=['pdf'],
+                      style='mpl20')
+    def test_scatter_color(self):
+        t, l, r = get_scatter_points()
+        fig = plt.figure()
+        ax = fig.add_subplot(111, projection='ternary')
+        sc = ax.scatter(t, l, r, c=range(len(t)))
+        colorbar = fig.colorbar(sc, ax=ax, pad=0.15)
+        colorbar.set_label('Count', rotation=270, va='baseline')
 
 
 class TestArrow:

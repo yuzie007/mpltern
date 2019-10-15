@@ -15,9 +15,9 @@ class TernaryTick(XTick):
         elif isinstance(labelrotation, (tuple, list)):
             mode, angle = labelrotation
         else:
-            mode = 'default'
+            mode = 'tick'
             angle = labelrotation
-        cbook._check_in_list(['auto', 'default', 'tick', 'axis', 'manual'],
+        cbook._check_in_list(['tick', 'axis', 'horizontal', 'manual'],
                              labelrotation=mode)
         self._labelrotation = (mode, angle)
 
@@ -65,7 +65,7 @@ class TernaryTick(XTick):
 
         Parameters
         ----------
-        mode : {'auto', 'default', 'tick', 'axis'}
+        mode : {'tick', 'axis', 'horizontal'}
         axis_angle : float
             Spine angle in degree.
         tick_angle : float
@@ -81,16 +81,7 @@ class TernaryTick(XTick):
         tick_angle = (tick_angle + 180.0) % 360.0 - 180.0  # [-180, 180]
         axis_angle = (axis_angle + 180.0) % 360.0 - 180.0  # [-180, 180]
         tol = 1e-6
-        if mode == 'tick':
-            va = 'center_baseline'
-            if abs(tick_angle - 90.0) < tol:
-                ha = 'right' if tick_angle < 0.0 else 'left'
-            elif abs(tick_angle) < 90.0:
-                ha = 'right'
-            else:
-                ha = 'left'
-            return ha, va
-        elif mode == 'axis':
+        if mode == 'axis':
             index = {'ttick': 0, 'ltick': 1, 'rtick': 2}[self.tick_name]
             i0 = (index + 0) % 3
             i1 = (index + 1) % 3
@@ -106,11 +97,8 @@ class TernaryTick(XTick):
                 midpoint = (c0 + c1) * 0.5
                 xy = -(c2 - midpoint) + midpoint
             if abs(xy[1] - midpoint[1]) < tol:  # same *y* coordinate
-                label_rotation = 90.0 if xy[0] < midpoint[0] else 270.0
                 va = 'baseline'  # As the label may be rotated by 90 deg.
             else:
-                # For readability, the angle is adjusted to be in [-90, +90]
-                label_rotation = (axis_angle + 90.0) % 180.0 - 90.0
                 if xy[1] < midpoint[1]:  # lower of the axis
                     va = 'top'
                 else:
@@ -118,44 +106,55 @@ class TernaryTick(XTick):
             ha = 'center'
             return ha, va
 
-        # Correct when the triangle is counterclockwise
-        is_tick1 = (tick_angle - axis_angle) % 360.0 - 180.0 < 0.0
-        is_baseline = (-150.0 + tol < tick_angle < -30.0 - tol)
+        elif mode == 'horizontal':
+            # Correct when the triangle is counterclockwise
+            is_tick1 = (tick_angle - axis_angle) % 360.0 - 180.0 < 0.0
+            is_baseline = (-150.0 + tol < tick_angle < -30.0 - tol)
 
-        # The following part is tuned for regular triangles.
-        if is_tick1:
-            if axis_angle < -135.0 + tol:
-                ha = 'center'
-                va = 'bottom'
-            elif axis_angle < -15.0 - tol:
-                ha = 'right'
-                va = 'baseline' if is_baseline else 'center_baseline'
-            elif axis_angle < 45.0 + tol:
-                ha = 'center'
-                va = 'top'
-            elif axis_angle < 165.0 - tol:
-                ha = 'left'
-                va = 'baseline' if is_baseline else 'center_baseline'
+            # The following part is tuned for regular triangles.
+            if is_tick1:
+                if axis_angle < -135.0 + tol:
+                    ha = 'center'
+                    va = 'bottom'
+                elif axis_angle < -15.0 - tol:
+                    ha = 'right'
+                    va = 'baseline' if is_baseline else 'center_baseline'
+                elif axis_angle < 45.0 + tol:
+                    ha = 'center'
+                    va = 'top'
+                elif axis_angle < 165.0 - tol:
+                    ha = 'left'
+                    va = 'baseline' if is_baseline else 'center_baseline'
+                else:
+                    ha = 'center'
+                    va = 'bottom'
             else:
-                ha = 'center'
-                va = 'bottom'
-        else:
-            if axis_angle < -165.0 + tol:
-                ha = 'center'
-                va = 'top'
-            elif axis_angle < -45.0 - tol:
-                ha = 'left'
-                va = 'baseline' if is_baseline else 'center_baseline'
-            elif axis_angle < 15.0 + tol:
-                ha = 'center'
-                va = 'bottom'
-            elif axis_angle < 135.0 - tol:
+                if axis_angle < -165.0 + tol:
+                    ha = 'center'
+                    va = 'top'
+                elif axis_angle < -45.0 - tol:
+                    ha = 'left'
+                    va = 'baseline' if is_baseline else 'center_baseline'
+                elif axis_angle < 15.0 + tol:
+                    ha = 'center'
+                    va = 'bottom'
+                elif axis_angle < 135.0 - tol:
+                    ha = 'right'
+                    va = 'baseline' if is_baseline else 'center_baseline'
+                else:
+                    ha = 'center'
+                    va = 'top'
+            return ha, va
+
+        else:  # mode == 'tick'
+            va = 'center_baseline'
+            if abs(tick_angle - 90.0) < tol:
+                ha = 'right' if tick_angle < 0.0 else 'left'
+            elif abs(tick_angle) < 90.0:
                 ha = 'right'
-                va = 'baseline' if is_baseline else 'center_baseline'
             else:
-                ha = 'center'
-                va = 'top'
-        return ha, va
+                ha = 'left'
+            return ha, va
 
     def update_position(self, loc):
         # Implementation in `ThetaTick` and `RadialTick` in Matplotlib may be
@@ -165,8 +164,8 @@ class TernaryTick(XTick):
         tick2_angle = tick1_angle + 180.0
         axis1_angle = self.get_axis1_angle()  # in degree
         axis2_angle = self.get_axis2_angle()  # in degree
-        self.tilt(self.tick1line, np.deg2rad(tick1_angle) - np.pi / 2)
-        self.tilt(self.tick2line, np.deg2rad(tick1_angle) + np.pi / 2)
+        self._tilt_marker(self.tick1line, np.deg2rad(tick1_angle) - np.pi / 2)
+        self._tilt_marker(self.tick2line, np.deg2rad(tick1_angle) + np.pi / 2)
 
         # Tick labels
         mode, user_angle = self._labelrotation
@@ -187,12 +186,7 @@ class TernaryTick(XTick):
         self.label2.set_ha(ha2)
         self.label2.set_va(va2)
         self.label2.set_rotation_mode('anchor')
-        if mode in 'tick':
-            text_angle = tick1_angle if ha1 == 'right' else tick2_angle
-            self.label1.set_rotation(text_angle + user_angle)
-            text_angle = tick2_angle if ha2 == 'right' else tick1_angle
-            self.label2.set_rotation(text_angle + user_angle)
-        elif mode == 'axis':
+        if mode == 'axis':
             tol = 1e-6
             text_angle = (axis1_angle + 90.) % 180. - 90.
             if abs(text_angle) > 90.0 - tol:
@@ -202,9 +196,14 @@ class TernaryTick(XTick):
             if abs(text_angle) > 90.0 - tol:
                 text_angle = 90.0 if tick2_angle < 0.0 else 270.0
             self.label2.set_rotation(text_angle + user_angle)
-        else:  # mode in ['auto', 'default']
+        elif mode == 'horizontal':
             self.label1.set_rotation(user_angle)
             self.label2.set_rotation(user_angle)
+        else:  # mode == 'tick':
+            text_angle = tick1_angle if ha1 == 'right' else tick2_angle
+            self.label1.set_rotation(text_angle + user_angle)
+            text_angle = tick2_angle if ha2 == 'right' else tick1_angle
+            self.label2.set_rotation(text_angle + user_angle)
 
     # Helper methods for `mpltern`
 
@@ -227,7 +226,7 @@ class TernaryTick(XTick):
         d = points[1] - points[0]
         return np.rad2deg(np.arctan2(d[1], d[0]))
 
-    def tilt(self, line, angle):
+    def _tilt_marker(self, line, angle):
         if self._tickdir == 'in':
             trans = mtransforms.Affine2D().scale(1.0).rotate(angle)
         elif self._tickdir == 'inout':
