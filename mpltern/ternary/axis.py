@@ -13,6 +13,11 @@ class TernaryAxis(XAxis):
         super().__init__(*args, **kwargs)
         self._label_rotation_mode = 'axis'
 
+    def _copy_tick_props(self, src, dest):
+        super()._copy_tick_props(src, dest)
+        dest.label1.set_y(src.label1.get_position()[1])
+        dest.label2.set_y(src.label2.get_position()[1])
+
     def _get_tick(self, major):
         if major:
             tick_kw = self._major_tick_kw
