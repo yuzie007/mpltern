@@ -5,6 +5,7 @@ from matplotlib import rcParams
 import matplotlib.cbook as cbook
 import matplotlib.font_manager as font_manager
 import matplotlib.text as mtext
+from matplotlib.transforms import Affine2D
 from mpltern.ternary.tick import TTick, LTick, RTick
 
 
@@ -329,3 +330,53 @@ def _get_label_rotation_along_bottom(corners, axis_name, label_position):
         ha = 'center'
 
     return 0.0, ha, va
+
+
+def _get_points_surrounding_text(text: mtext.Text, renderer):
+    """
+    Get the points surrounding ``text`` in the display (pixel) coordinates.
+
+    This method is extracted and modified from ``mtext._get_textbox``.
+
+    ``parts`` is the list of:
+        - ``t`` : string of each line
+        - ``wh`` : width and height of ``text`` without rotation. In the
+          height, the descent is not included and therefore have to be
+          subtracted to get ``ymin``.
+        - ``x`` and ``y`` : ``xmin`` and ``ymax`` relative to ``position``
+          after the ``text`` rotation and alignment. (0, 0) is the rotation
+          center.
+
+    ``position`` : absolute position of ``text`` in the display coordinates.
+        The ``parts`` above are relative coordinates to ``position``.
+
+    1. We must get the four corners surrounding ``text``. For this, we first
+      rotate back the ``text`` box and find ``xmin``, ``ymin``, ``xmax``,
+      ``ymax``.
+    2. Then we rotate again the four points.
+    3. Add the absolute position of ``text`` to the rotated four points and
+       return them.
+    """
+    projected_xs = []
+    projected_ys = []
+
+    tr = Affine2D().rotate_deg(-text.get_rotation())
+
+    _, parts, d = text._get_layout(renderer)
+
+    for t, wh, x, y in parts:
+        w, h = wh
+
+        xt1, yt1 = tr.transform_point((x, y))
+        yt1 -= d
+        xt2, yt2 = xt1 + w, yt1 + h
+
+        projected_xs.extend([xt1, xt2])
+        projected_ys.extend([yt1, yt2])
+
+    xmin, ymin = min(projected_xs), min(projected_ys)
+    xmax, ymax = max(projected_xs), max(projected_ys)
+
+    position = text.get_transform().transform(text.get_position())
+    points = np.array([[xmin, ymin], [xmax, ymin], [xmax, ymax], [xmin, ymax]])
+    return tr.inverted().transform(points) + position
