@@ -357,25 +357,31 @@ def _get_points_surrounding_text(text: mtext.Text, renderer):
     3. Add the absolute position of ``text`` to the rotated four points and
        return them.
     """
-    projected_xs = []
-    projected_ys = []
-
     tr = Affine2D().rotate_deg(-text.get_rotation())
 
     _, parts, d = text._get_layout(renderer)
 
-    for t, wh, x, y in parts:
-        w, h = wh
+    # In ``Text.get_window_extent``, if the empty text is given, it just
+    # returns ``Bbox`` with no width and no height.
+    # To be consistent, here also empty box is given for empty text.
+    if text.get_text() == '':
+        xmin = ymin = xmax = ymax = 0.0
 
-        xt1, yt1 = tr.transform_point((x, y))
-        yt1 -= d
-        xt2, yt2 = xt1 + w, yt1 + h
+    else:
+        projected_xs = []
+        projected_ys = []
+        for t, wh, x, y in parts:
+            w, h = wh
 
-        projected_xs.extend([xt1, xt2])
-        projected_ys.extend([yt1, yt2])
+            xt1, yt1 = tr.transform_point((x, y))
+            yt1 -= d
+            xt2, yt2 = xt1 + w, yt1 + h
 
-    xmin, ymin = min(projected_xs), min(projected_ys)
-    xmax, ymax = max(projected_xs), max(projected_ys)
+            projected_xs.extend([xt1, xt2])
+            projected_ys.extend([yt1, yt2])
+
+        xmin, ymin = min(projected_xs), min(projected_ys)
+        xmax, ymax = max(projected_xs), max(projected_ys)
 
     position = text.get_transform().transform(text.get_position())
     points = np.array([[xmin, ymin], [xmax, ymin], [xmax, ymax], [xmin, ymax]])
