@@ -71,24 +71,6 @@ class TernaryAxis(XAxis):
         self.label_position = position
         self.stale = True
 
-    def _get_tick_boxes_siblings(self, renderer):
-        """
-        Get the bounding boxes for this `.axis` and its siblings
-        as set by `.Figure.align_xlabels` or  `.Figure.align_ylablels`.
-
-        By default it just gets bboxes for self.
-        """
-        bboxes = []
-        bboxes2 = []
-        # get the Grouper that keeps track of x-label groups for this figure
-        grp = self.figure._align_xlabel_grp
-        # if we want to align labels from other axes:
-        ticks_to_draw = self._update_ticks()
-        tlb, tlb2 = self._get_tick_bboxes(ticks_to_draw, renderer)
-        bboxes.extend(tlb)
-        bboxes2.extend(tlb2)
-        return bboxes, bboxes2
-
     def _update_label_position(self, renderer):
         """
         Update the label position based on the bounding box enclosing
@@ -183,19 +165,14 @@ class TernaryAxis(XAxis):
 
     def _get_points_surrounding_triangle(self, renderer):
         """Get the points of all tick labels in the pixel coordinates."""
-        bboxes_all = []
+        ticks = []
         for axis in self.axes._get_axis_list():
-            bboxes, bboxes2 = axis._get_tick_boxes_siblings(renderer=renderer)
-            bboxes_all.extend(bboxes)
-            bboxes_all.extend(bboxes2)
+            ticks.extend(axis._update_ticks())  # Only ticks to draw are added.
         points = []
-        for bbox in bboxes_all:
-            points.extend([
-                [bbox.x0, bbox.y0],
-                [bbox.x0, bbox.y1],
-                [bbox.x1, bbox.y0],
-                [bbox.x1, bbox.y1],
-            ])
+        for tick in ticks:
+            for text in [tick.label1, tick.label2]:
+                if text.get_visible():
+                    points.extend(_get_points_surrounding_text(text, renderer))
         # In case no tick labels exist, points of triangle corners are added.
         points.extend(self.axes.transAxes.transform(self.axes.corners))
         return np.asarray(points)
