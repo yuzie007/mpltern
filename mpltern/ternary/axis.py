@@ -183,9 +183,9 @@ class TernaryAxis(XAxis):
 
         Parameters
         ----------
-        mode : {'axis', 'bottom', 'none'}
+        mode : {'axis', 'horizontal', 'manual'}
         """
-        cbook._check_in_list(['axis', 'bottom', 'none'], mode=mode)
+        cbook._check_in_list(['axis', 'horizontal', 'manual'], mode=mode)
         self._label_rotation_mode = mode
 
     def _get_label_rotation(self):
@@ -209,8 +209,8 @@ class TernaryAxis(XAxis):
         if mode == 'axis':
             label_rotation, ha, va = _get_label_rotation_along_axis(
                 corners, self.axis_name, self.label_position)
-        elif mode == 'bottom':
-            label_rotation, ha, va = _get_label_rotation_along_bottom(
+        elif mode == 'horizontal':
+            label_rotation, ha, va = _get_label_rotation_horizontal(
                 corners, self.axis_name, self.label_position)
         else:
             label_rotation = self.label.get_rotation()
@@ -273,7 +273,7 @@ def _get_label_rotation_along_axis(corners, axis_name, label_position):
     return label_rotation, 'center', va
 
 
-def _get_label_rotation_along_bottom(corners, axis_name, label_position):
+def _get_label_rotation_horizontal(corners, axis_name, label_position):
     # Index of the corner
     index = {'t': 0, 'l': 1, 'r': 2}[axis_name]
     if label_position == 'tick1':
