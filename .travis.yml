@@ -1,0 +1,3 @@
+language: python
+install: python -mpip install scipy matplotlib
+script: python -mpytest
