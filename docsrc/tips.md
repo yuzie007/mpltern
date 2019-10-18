@@ -53,7 +53,7 @@ may be also helpful to understand.
 
 ## Convention in other software
 
-In the corner-based perspective, [existing codes](alternatives.md) for ternary
+In the corner-based perspective, [existing codes](alternatives.rst) for ternary
 plots give the following orders by default:
 
 |Code           |Order of triangle corners|Ticks    |
