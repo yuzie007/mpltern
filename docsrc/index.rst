@@ -1,6 +1,6 @@
-:orphan:
-
-.. title:: Mpltern: Ternary plots based on Matplotlib
+#######
+Mpltern
+#######
 
 .. _source code: https://github.com/yuzie007/mpltern
 .. _Matplotlib: https://matplotlib.org
@@ -41,7 +41,7 @@ production of ternary plots with publication quality.
       <span class="clear_screenshots"></span>
 
 Installation
-------------
+============
 
 The latest version of Mpltern is available from `GitHub <source code_>`_.
 
@@ -52,23 +52,25 @@ The latest version of Mpltern is available from `GitHub <source code_>`_.
 Installations via PyPI and Conda are also planned.
 
 Examples
---------
+========
 
-Various examples of Mpltern are found in
+Various examples of Mpltern are found in the
 :doc:`examples gallery <gallery/index>`.
 
 Citing Mpltern
---------------
+==============
 
 At this moment, the author requests to cite the URL of this page if Mpltern
 contributes to a scientific publication.
+Of course, `Matplotlib should be also very much acknowledged <https://matplotlib.org/citing.html>`_
+when using Mpltern.
 
 DOIs
-====
+----
 
 None yet.
 
 Author
-------
+======
 
 Yuji Ikeda (Max-Planck-Institut für Eisenforschung GmbH, Germany)
