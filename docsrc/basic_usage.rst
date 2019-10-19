@@ -32,4 +32,4 @@ You may see the following Archimedean spiral in the triangle.
 
 .. image:: basic_usage.svg
 
-See also `more examples <../gallery/index.html>`_.
+See also `more examples <gallery/index.html>`_.
