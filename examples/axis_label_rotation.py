@@ -15,7 +15,6 @@ The rotation of axis labels can be controlled via e.g.
     ``verticalalignment``, and ``rotation`` of axis labels directly,
     which are anymore never modified automatically by Mpltern.
 """
-
 import matplotlib.pyplot as plt
 from mpltern.ternary.datasets import get_spiral
 

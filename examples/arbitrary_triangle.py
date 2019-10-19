@@ -11,7 +11,6 @@ from mpltern.ternary.datasets import get_spiral
 
 fig = plt.figure()
 
-# Triangle corners in the square of ((0, 0), (1, 0), (1, 1), (0, 1))
 corners = ((0.5, 0.0), (1.0, 0.5), (0.0, 1.0))
 ax = fig.add_subplot(projection='ternary', corners=corners)
 
