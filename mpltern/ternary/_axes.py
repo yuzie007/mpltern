@@ -37,12 +37,10 @@ def _create_corners(corners=None, rotation=None):
     corners = np.asarray(corners)
     if rotation is not None:
         # The rotation is done around the centroid of the given triangle.
-        center = np.average(corners, axis=0)
-        rotation_matrix = [
-            [cosdg(rotation), -sindg(rotation)],
-            [sindg(rotation), cosdg(rotation)],
-        ]
-        corners = np.dot(rotation_matrix, (corners - center).T).T + center
+        cx, cy = np.average(corners, axis=0)
+        a, b = cosdg(rotation), sindg(rotation)
+        trans = mtransforms.Affine2D().from_values(a, b, -b, a, cx, cy)
+        corners = trans.transform(corners)
         # The following shift places the triangle inside the original
         # square `Axes` as much as possible.
         tmp = (np.min(corners, axis=0) + np.max(corners, axis=0)) * 0.5
