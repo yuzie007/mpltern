@@ -366,3 +366,14 @@ class TestQuiver:
         ax = fig.add_subplot(projection='ternary')
         ax.set_ternary_min(-0.2, -0.2, -0.2)
         ax.quiver(x, y, dx, dy, transform=ax.transAxes)
+
+
+@image_comparison(baseline_images=['legend'], extensions=['pdf'],
+                  style='mpl20')
+def test_legend():
+    ax = plt.subplot(projection='ternary')
+
+    for seed in [1, 9, 6, 8]:
+        ax.scatter(*get_scatter_points(11, seed=seed), alpha=0.5, label=seed)
+
+    ax.legend()
