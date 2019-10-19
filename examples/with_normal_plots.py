@@ -7,7 +7,7 @@ Ternary plots of Mpltern can be combined with normal Matplotlib plots very
 straightforwardly.
 """
 import matplotlib.pyplot as plt
-from mpltern.datasets import get_spiral
+from mpltern.ternary.datasets import get_spiral
 
 
 t, l, r = get_spiral()

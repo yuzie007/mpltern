@@ -9,24 +9,24 @@ def get_spiral(ternary_scale=1.0):
 
     https://en.wikipedia.org/wiki/Archimedean_spiral
     """
-    t = np.linspace(0, np.pi * 10, 201)
+    theta = np.linspace(0, np.pi * 10, 201)
     a = 0.01
-    b = 1.0 / 3.0 + a * t * np.sin(t + np.pi / 3.0 * 0.0)
-    r = 1.0 / 3.0 + a * t * np.sin(t + np.pi / 3.0 * 2.0)
-    l = 1.0 / 3.0 + a * t * np.sin(t + np.pi / 3.0 * 4.0)
-    return b * ternary_scale, r * ternary_scale, l * ternary_scale
+    t = 1.0 / 3.0 + a * theta * np.sin(theta + np.pi / 3.0 * 0.0)
+    l = 1.0 / 3.0 + a * theta * np.sin(theta + np.pi / 3.0 * 2.0)
+    r = 1.0 / 3.0 + a * theta * np.sin(theta + np.pi / 3.0 * 4.0)
+    return t * ternary_scale, l * ternary_scale, r * ternary_scale
 
 
 def get_scatter_points(n=201, seed=19680801):
     np.random.seed(seed)
-    b = np.random.rand(n)
-    r = np.random.rand(n)
+    t = np.random.rand(n)
     l = np.random.rand(n)
-    s = (b + r + l)
-    b /= s
-    r /= s
+    r = np.random.rand(n)
+    s = (t + l + r)
+    t /= s
     l /= s
-    return b, r, l
+    r /= s
+    return t, l, r
 
 
 def get_triangular_grid(n=11, prec=1e-6):
@@ -41,7 +41,7 @@ def get_triangular_grid(n=11, prec=1e-6):
 
 
 def get_shanon_entropies(n=11, prec=1e-6):
-    b, r, l = get_triangular_grid(n, prec)
-    # The following works even e.g. p0 == 0.
-    v = -1.0 * (xlogy(b, b) + xlogy(r, r) + xlogy(l, l))
-    return b, r, l, v
+    t, l, r = get_triangular_grid(n, prec)
+    # The following works even when y == 0.
+    v = -1.0 * (xlogy(t, t) + xlogy(l, l) + xlogy(r, r))
+    return t, l, r, v

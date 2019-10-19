@@ -6,7 +6,7 @@ Arbitrary triangle
 You can make a ternary plot on an triangle with arbitrary shape.
 """
 import matplotlib.pyplot as plt
-from mpltern.datasets import get_spiral
+from mpltern.ternary.datasets import get_spiral
 
 
 fig = plt.figure()

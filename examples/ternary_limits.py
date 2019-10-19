@@ -12,7 +12,7 @@ We can limit the ranges of ternary axes.
     - `ggtern <http://www.ggtern.com/ternary-scales/>`_
 """
 import matplotlib.pyplot as plt
-from mpltern.datasets import get_spiral
+from mpltern.ternary.datasets import get_spiral
 
 
 fig = plt.figure()
