@@ -85,6 +85,7 @@ the following alternatives.
         - ternary-plots_
         - alcheyst-ternplot_
     - GUI
+        - `Delta Plotware <https://www.deltaplotware.com>`_
         - `DPlot <https://www.dplot.com/index.htm>`_
         - JMP_
         - Origin_
