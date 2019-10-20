@@ -83,13 +83,8 @@ class TernaryTick(XTick):
         tol = 1e-6
         if mode == 'axis':
             index = {'ttick': 0, 'ltick': 1, 'rtick': 2}[self.tick_name]
-            i0 = (index + 0) % 3
-            i1 = (index + 1) % 3
-            i2 = (index + 2) % 3
             corners = self.axes.corners
-            c0 = corners[i0]
-            c1 = corners[i1]
-            c2 = corners[i2]
+            c0, c1, c2 = np.roll(corners, -index, axis=0)
             if tick_index == 1:
                 midpoint = (c2 + c0) * 0.5
                 xy = -(c1 - midpoint) + midpoint
