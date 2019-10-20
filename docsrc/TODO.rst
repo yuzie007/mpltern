@@ -9,6 +9,8 @@ High
 - PyPI uploading
 - Zenodo DOI
 - CI
+- Legend
+- Spine names
 
 Medium
 ======
