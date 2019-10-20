@@ -29,11 +29,9 @@ def _create_corners(corners=None, rotation=None):
         # The horizontal center of the triangle has 0.5 as the *x*
         # coordinate in the original `Axes` coordinates.
         # The other coordinates are given to make the regular triangle.
-        corners = (
-            (0.5, 1.0),
-            (0.5 - 1.0 / np.sqrt(3.0), 0.0),
-            (0.5 + 1.0 / np.sqrt(3.0), 0.0),
-        )
+        xmin = 0.5 - 1.0 / np.sqrt(3.0)
+        xmax = 0.5 + 1.0 / np.sqrt(3.0)
+        corners = ((0.5, 1.0), (xmin, 0.0), (xmax, 0.0))
     corners = np.asarray(corners)
     if rotation is not None:
         # The rotation is done around the centroid of the given triangle.

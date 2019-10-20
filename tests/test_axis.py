@@ -453,11 +453,9 @@ class DummyTernaryAxis:
 
 def _create_axis(rotation):
     from scipy.special import cosdg, sindg
-    corners = np.array([
-        (0.5, 1.0),
-        (0.5 - 1.0 / np.sqrt(3.0), 0.0),
-        (0.5 + 1.0 / np.sqrt(3.0), 0.0),
-    ])
+    xmin = 0.5 - 1.0 / np.sqrt(3.0)
+    xmax = 0.5 + 1.0 / np.sqrt(3.0)
+    corners = np.array([(0.5, 1.0), (xmin, 0.0), (xmax, 0.0)])
     rotation_matrix = ([
         [cosdg(rotation), -sindg(rotation)],
         [sindg(rotation),  cosdg(rotation)],
