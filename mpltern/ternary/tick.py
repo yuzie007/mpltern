@@ -58,7 +58,7 @@ class TernaryTick(XTick):
         l.set_transform(self._get_axis_transform(which='grid'))
         return l
 
-    def _determine_anchor(self, mode, axis_angle, tick_angle, tick_index):
+    def _determine_anchor(self, mode, axis_angle, tick_angle):
         """Determine tick-label alignments.
 
         from the spine and the tick angles.
@@ -77,29 +77,24 @@ class TernaryTick(XTick):
             Horizontal alignment.
         va : str
             Vertical alignment.
+        rotation : float
         """
         tick_angle = (tick_angle + 180.0) % 360.0 - 180.0  # [-180, 180]
         axis_angle = (axis_angle + 180.0) % 360.0 - 180.0  # [-180, 180]
         tol = 1e-6
         if mode == 'axis':
-            index = {'ttick': 0, 'ltick': 1, 'rtick': 2}[self.tick_name]
-            corners = self.axes.corners
-            c0, c1, c2 = np.roll(corners, -index, axis=0)
-            if tick_index == 1:
-                midpoint = (c2 + c0) * 0.5
-                xy = -(c1 - midpoint) + midpoint
+            is_tick1 = (tick_angle - axis_angle) % 360.0 - 180.0 < 0.0
+            if abs(abs(axis_angle) - 90.0) < tol:
+                va = 'baseline'
+                rotation = 90.0 if is_tick1 ^ (axis_angle > 0.0) else 270.0
+            elif abs(axis_angle) < 90.0:
+                va = 'top' if is_tick1 else 'baseline'
+                rotation = axis_angle
             else:
-                midpoint = (c0 + c1) * 0.5
-                xy = -(c2 - midpoint) + midpoint
-            if abs(xy[1] - midpoint[1]) < tol:  # same *y* coordinate
-                va = 'baseline'  # As the label may be rotated by 90 deg.
-            else:
-                if xy[1] < midpoint[1]:  # lower of the axis
-                    va = 'top'
-                else:
-                    va = 'baseline'
+                va = 'baseline' if is_tick1 else 'top'
+                rotation = axis_angle + 180.0
             ha = 'center'
-            return ha, va
+            return ha, va, rotation
 
         elif mode == 'horizontal':
             # Correct when the triangle is counterclockwise
@@ -139,7 +134,7 @@ class TernaryTick(XTick):
                 else:
                     ha = 'center'
                     va = 'top'
-            return ha, va
+            return ha, va, None
 
         else:  # mode == 'tick'
             va = 'center_baseline'
@@ -149,7 +144,7 @@ class TernaryTick(XTick):
                 ha = 'right'
             else:
                 ha = 'left'
-            return ha, va
+            return ha, va, None
 
     def update_position(self, loc):
         # Implementation in `ThetaTick` and `RadialTick` in Matplotlib may be
@@ -170,24 +165,19 @@ class TernaryTick(XTick):
             self.label2.set_rotation(user_angle)
             return
 
-        ha1, va1 = self._determine_anchor(mode, axis1_angle, tick1_angle, 1)
+        ha1, va1, rotation1 = self._determine_anchor(
+            mode, axis1_angle, tick1_angle)
         self.label1.set_ha(ha1)
         self.label1.set_va(va1)
         self.label1.set_rotation_mode('anchor')
-        ha2, va2 = self._determine_anchor(mode, axis2_angle, tick2_angle, 2)
+        ha2, va2, rotation2 = self._determine_anchor(
+            mode, axis2_angle, tick2_angle)
         self.label2.set_ha(ha2)
         self.label2.set_va(va2)
         self.label2.set_rotation_mode('anchor')
         if mode == 'axis':
-            tol = 1e-6
-            text_angle = (axis1_angle + 90.) % 180. - 90.
-            if abs(text_angle) > 90.0 - tol:
-                text_angle = 90.0 if tick1_angle < 0.0 else 270.0
-            self.label1.set_rotation(text_angle + user_angle)
-            text_angle = (axis2_angle + 90.) % 180. - 90.
-            if abs(text_angle) > 90.0 - tol:
-                text_angle = 90.0 if tick2_angle < 0.0 else 270.0
-            self.label2.set_rotation(text_angle + user_angle)
+            self.label1.set_rotation(rotation1 + user_angle)
+            self.label2.set_rotation(rotation2 + user_angle)
         elif mode == 'horizontal':
             self.label1.set_rotation(user_angle)
             self.label2.set_rotation(user_angle)

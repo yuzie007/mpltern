@@ -1,17 +1,20 @@
 import pytest
+from itertools import product
 from matplotlib.testing.decorators import image_comparison
 import matplotlib.pyplot as plt
 from mpltern.ternary.datasets import get_spiral
 
 
 class TestGivenTriangles:
+    labelrotations = ['tick', 'axis', 'horizontal']
     rotations = range(0, 360, 90)
-    baseline_images_list = [['given_triangles_{}'.format(r)] for r in rotations]
+    expected = [(lr, r, ['given_triangles_{}_{}'.format(lr, r)])
+                for lr, r in product(labelrotations, rotations)]
 
-    @pytest.mark.parametrize('rotation, baseline_images',
-                             zip(rotations, baseline_images_list))
+    @pytest.mark.parametrize('labelrotation, rotation, baseline_images',
+                             expected)
     @image_comparison(baseline_images=None, extensions=['pdf'], style='mpl20')
-    def test_given_triangles(self, rotation, baseline_images):
+    def test_given_triangles(self, labelrotation, rotation, baseline_images):
         # Check if the tick-markers, tick-labels, and axis-labels are shown as
         # expected.
         fig = plt.figure()
@@ -24,6 +27,8 @@ class TestGivenTriangles:
         ax.set_tlabel('Top')
         ax.set_llabel('Left')
         ax.set_rlabel('Right')
+
+        ax.tick_params(labelrotation=labelrotation)
 
         ax.grid()
 
