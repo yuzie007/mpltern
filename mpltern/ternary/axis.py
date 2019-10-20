@@ -139,7 +139,7 @@ class TernaryAxis(XAxis):
         """
         if position in ['tick1', 'default']:
             self.set_tick_params(which='both', tick1On=True, label1On=True,
-                                 tich2On=False, label2On=False)
+                                 tick2On=False, label2On=False)
         elif position == 'tick2':
             self.set_tick_params(which='both', tick1On=False, label1On=False,
                                  tick2On=True, label2On=True)
