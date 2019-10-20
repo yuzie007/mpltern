@@ -134,7 +134,7 @@ class TernaryTick(XTick):
                 else:
                     ha = 'center'
                     va = 'top'
-            return ha, va, None
+            return ha, va, 0.0
 
         else:  # mode == 'tick'
             va = 'center_baseline'
@@ -144,7 +144,8 @@ class TernaryTick(XTick):
                 ha = 'right'
             else:
                 ha = 'left'
-            return ha, va, None
+            rotation = tick_angle if ha == 'right' else tick_angle + 180.0
+            return ha, va, rotation
 
     def update_position(self, loc):
         # Implementation in `ThetaTick` and `RadialTick` in Matplotlib may be
@@ -169,23 +170,15 @@ class TernaryTick(XTick):
             mode, axis1_angle, tick1_angle)
         self.label1.set_ha(ha1)
         self.label1.set_va(va1)
+        self.label1.set_rotation(rotation1 + user_angle)
         self.label1.set_rotation_mode('anchor')
+
         ha2, va2, rotation2 = self._determine_anchor(
             mode, axis2_angle, tick2_angle)
         self.label2.set_ha(ha2)
         self.label2.set_va(va2)
+        self.label2.set_rotation(rotation2 + user_angle)
         self.label2.set_rotation_mode('anchor')
-        if mode == 'axis':
-            self.label1.set_rotation(rotation1 + user_angle)
-            self.label2.set_rotation(rotation2 + user_angle)
-        elif mode == 'horizontal':
-            self.label1.set_rotation(user_angle)
-            self.label2.set_rotation(user_angle)
-        else:  # mode == 'tick':
-            text_angle = tick1_angle if ha1 == 'right' else tick2_angle
-            self.label1.set_rotation(text_angle + user_angle)
-            text_angle = tick2_angle if ha2 == 'right' else tick1_angle
-            self.label2.set_rotation(text_angle + user_angle)
 
     # Helper methods for `mpltern`
 
