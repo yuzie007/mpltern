@@ -1,3 +1,8 @@
 language: python
-install: python -mpip install scipy matplotlib
-script: python -mpytest
+install:
+  - python -mpip install pytest pytest-cov
+  - python -mpip install scipy matplotlib
+  - python -mpip install codecov coverage
+script: python -mpytest --cov=./
+after_success:
+  - codecov
