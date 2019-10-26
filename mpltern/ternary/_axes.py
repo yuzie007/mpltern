@@ -139,12 +139,10 @@ class TernaryAxesBase(Axes):
         else:
             return self._raxis_transform
 
-    def _get_axis_text_transform(self, pad_points, trans, which):
-        if which == 'tick1':
-            ps1 = trans.transform([[0.0, 0.0], [0.0, 1.0]])
-        else:
-            ps1 = trans.transform([[0.0, 1.0], [0.0, 0.0]])
-        d1 = ps1[0] - ps1[1]  # outward against the triangle
+    def _get_axis_text_transform(self, pad_points, trans, indices):
+        corners = [[1., 0., 0.], [0., 1., 0.], [0., 0., 1.]]
+        points = self.transTernaryAxes.transform(corners)[indices]
+        d1 = points[1] - points[0]  # outward against the triangle
         x, y = d1 / np.linalg.norm(d1) * pad_points / 72.0
         return (trans +
                 mtransforms.ScaledTranslation(x, y,
@@ -153,27 +151,27 @@ class TernaryAxesBase(Axes):
 
     def get_taxis_text1_transform(self, pad_points):
         trans = self.get_taxis_transform(which='tick1')
-        return self._get_axis_text_transform(pad_points, trans, 'tick1')
+        return self._get_axis_text_transform(pad_points, trans, [1, 2])
 
     def get_taxis_text2_transform(self, pad_points):
         trans = self.get_taxis_transform(which='tick2')
-        return self._get_axis_text_transform(pad_points, trans, 'tick2')
+        return self._get_axis_text_transform(pad_points, trans, [2, 1])
 
     def get_laxis_text1_transform(self, pad_points):
         trans = self.get_laxis_transform(which='tick1')
-        return self._get_axis_text_transform(pad_points, trans, 'tick1')
+        return self._get_axis_text_transform(pad_points, trans, [2, 0])
 
     def get_laxis_text2_transform(self, pad_points):
         trans = self.get_laxis_transform(which='tick2')
-        return self._get_axis_text_transform(pad_points, trans, 'tick2')
+        return self._get_axis_text_transform(pad_points, trans, [0, 2])
 
     def get_raxis_text1_transform(self, pad_points):
         trans = self.get_raxis_transform(which='tick1')
-        return self._get_axis_text_transform(pad_points, trans, 'tick1')
+        return self._get_axis_text_transform(pad_points, trans, [0, 1])
 
     def get_raxis_text2_transform(self, pad_points):
         trans = self.get_raxis_transform(which='tick2')
-        return self._get_axis_text_transform(pad_points, trans, 'tick2')
+        return self._get_axis_text_transform(pad_points, trans, [1, 0])
 
     def _gen_axes_patch(self):
         return mpatches.Polygon(self.corners)
