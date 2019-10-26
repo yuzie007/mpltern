@@ -109,7 +109,8 @@ class TernaryAxis(XAxis):
             # Get the corner in the display coordinates, and then get
             # the *x* coordinates in the `trans` coordinates
             corner_index = {'t': 0, 'l': 1, 'r': 2}[self.axis_name]
-            corners = self.axes.transAxes.transform(self.axes.corners)
+            corners = [[1., 0., 0.], [0., 1., 0.], [0., 0., 1.]]
+            corners = self.axes.transTernaryAxes.transform(corners)
             corner = corners[corner_index]
             x = trans.inverted().transform(corner)[0]
 
@@ -174,7 +175,8 @@ class TernaryAxis(XAxis):
                 if text.get_visible():
                     points.extend(_get_points_surrounding_text(text, renderer))
         # In case no tick labels exist, points of triangle corners are added.
-        points.extend(self.axes.transAxes.transform(self.axes.corners))
+        corners = [[1., 0., 0.], [0., 1., 0.], [0., 0., 1.]]
+        points.extend(self.axes.transTernaryAxes.transform(corners))
         return np.asarray(points)
 
     def set_label_rotation_mode(self, mode):
@@ -203,7 +205,8 @@ class TernaryAxis(XAxis):
             Vertical alignment of the axis label as a parameter of `Text`.
         """
         # Corners in the pixel coordinates
-        corners = self.axes.transAxes.transform(self.axes.corners)
+        corners = [[1., 0., 0.], [0., 1., 0.], [0., 0., 1.]]
+        corners = self.axes.transTernaryAxes.transform(corners)
 
         mode = self._label_rotation_mode
         if mode == 'axis':
