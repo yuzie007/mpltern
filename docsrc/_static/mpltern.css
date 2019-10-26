@@ -1,0 +1,14 @@
+@import url("solar.css");
+
+/* Override solar.css by the default of sphinx13. */
+body {
+    margin: auto;
+    min-width: 780px;
+    max-width: 1080px;
+}
+
+/* Override basic.css. */
+div.body {
+    min-width: initial;
+    max-width: initial;
+}
