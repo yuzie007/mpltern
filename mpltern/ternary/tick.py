@@ -138,8 +138,8 @@ class TernaryTick(XTick):
 
         else:  # mode == 'tick'
             va = 'center_baseline'
-            if abs(tick_angle - 90.0) < tol:
-                ha = 'right' if tick_angle < 0.0 else 'left'
+            if abs(abs(tick_angle) - 90.0) < tol:
+                ha = 'right' if abs(axis_angle) < 0.0 else 'left'
             elif abs(tick_angle) < 90.0:
                 ha = 'right'
             else:
