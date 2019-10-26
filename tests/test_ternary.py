@@ -172,6 +172,20 @@ def test_tick_labels_inside_triangle():
     [text.update(rkwargs) for text in ax.raxis.get_ticklabels()]
 
 
+@image_comparison(baseline_images=['negative_ticks'],
+                  extensions=['pdf'], style='mpl20')
+def test_negative_ticks():
+    """
+    The previous algorithm for tick-marker rotations did not work as expected
+    because it relied on the data coordinates while the sign change of x-
+    and/or y-coordinates happened when changing the view limits.
+    This should be now fixed by relying not on the data coordiantes but on the
+    axes coordinates, and hence it should pass this test.
+    """
+    ax = plt.subplot(projection='ternary')
+    ax.set_ternary_min(0, 3, -3)
+
+
 @check_figures_equal()
 def test_ternary_lim(fig_test, fig_ref):
     """

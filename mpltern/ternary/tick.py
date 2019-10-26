@@ -184,8 +184,10 @@ class TernaryTick(XTick):
 
     def get_tick_angle(self):
         # The angle here is for `direction='in'`
-        trans = self._get_axis_transform(which='grid')
-        points = trans.transform([[0., 0.], [0., 1.]])
+        name = self.tick_name
+        indices = {'ttick': [2, 1], 'ltick': [0, 2], 'rtick': [1, 0]}[name]
+        corners = [[1., 0., 0.], [0., 1., 0.], [0., 0., 1.]]
+        points = self.axes.transTernaryAxes.transform(corners)[indices]
         d = points[1] - points[0]
         return np.rad2deg(np.arctan2(d[1], d[0]))
 
