@@ -21,7 +21,7 @@ class TernaryTransform(Transform):
 
     def __init__(self, corners, index, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.corners = np.asarray(corners)
+        self.corners = np.asarray(corners, float)
         self.index = index
 
     def transform_non_affine(self, points):
@@ -47,7 +47,7 @@ class InvertedTernaryTransform(Transform):
 
     def __init__(self, corners, index, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.corners = np.asarray(corners)
+        self.corners = np.asarray(corners, float)
         self.index = index
 
     def transform_non_affine(self, points):
@@ -89,7 +89,7 @@ class TernaryPerpendicularTransform(Transform):
     def __init__(self, trans, corners, index, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.trans = trans
-        self.corners = np.asarray(corners)
+        self.corners = np.asarray(corners, float)
         self.index = index
 
     def transform_non_affine(self, points):
@@ -120,7 +120,7 @@ class InvertedTernaryPerpendicularTransform(Transform):
     def __init__(self, trans, corners, index, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.trans = trans
-        self.corners = np.asarray(corners)
+        self.corners = np.asarray(corners, float)
         self.index = index
 
     def transform_non_affine(self, points):
@@ -154,10 +154,10 @@ class BarycentricTransform(Transform):
 
     def __init__(self, corners, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.corners = np.asarray(corners)
+        self.corners = np.asarray(corners, float)
 
     def transform_non_affine(self, points):
-        points = np.asarray(points)
+        points = np.asarray(points, float)
         points /= np.sum(points, axis=1)[:, np.newaxis]
         return np.dot(points, self.corners)
 
@@ -172,7 +172,7 @@ class InvertedBarycentricTransform(Transform):
 
     def __init__(self, corners, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.corners = np.asarray(corners)
+        self.corners = np.asarray(corners, float)
 
     def transform_non_affine(self, points):
         xys = np.column_stack((points, np.ones(points.shape[0])))
@@ -196,7 +196,7 @@ class TernaryScaleTransform(Transform):
         self.ternary_scale = ternary_scale
 
     def transform_non_affine(self, values):
-        return np.asarray(values) / self.ternary_scale
+        return np.asarray(values, float) / self.ternary_scale
 
     def inverted(self):
         return InvertedTernaryScaleTransform(self.ternary_scale)
@@ -212,7 +212,7 @@ class InvertedTernaryScaleTransform(Transform):
         self.ternary_scale = ternary_scale
 
     def transform_non_affine(self, values):
-        return np.asarray(values) * self.ternary_scale
+        return np.asarray(values, float) * self.ternary_scale
 
     def inverted(self):
         return TernaryScaleTransform(self.ternary_scale)
