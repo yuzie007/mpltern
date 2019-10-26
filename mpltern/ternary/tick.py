@@ -158,6 +158,11 @@ class TernaryTick(XTick):
         self._tilt_marker(self.tick1line, np.deg2rad(tick1_angle) - np.pi / 2)
         self._tilt_marker(self.tick2line, np.deg2rad(tick1_angle) + np.pi / 2)
 
+        # Since the triangle geometry is updated when drawing, transforms for
+        # texts must be also updated for consistent padding.
+        self.label1.set_transform(self._get_text1_transform()[0])
+        self.label2.set_transform(self._get_text2_transform()[0])
+
         # Tick labels
         mode, user_angle = self._labelrotation
 
