@@ -49,7 +49,15 @@ def _create_corners(corners=None, rotation=None):
 class TernaryAxesBase(Axes):
     def __init__(self, *args, ternary_scale=1.0, corners=None, rotation=None,
                  **kwargs):
-        self.corners = _create_corners(corners, rotation)
+        # Triangle corners in the original data coordinates
+        self.corners_data = _create_corners(corners, rotation)
+        sx = np.sqrt(3.0) * 0.5  # Scale for x
+        xmin = 0.5 - 1.0 / np.sqrt(3.0)
+        v = xmin * sx
+        trans = mtransforms.Affine2D().from_values(sx, 0.0, 0.0, 1.0, -v, 0.0)
+        # Triangle corners in the original ``Axes`` coordinates
+        self.corners_axes = trans.transform(self.corners_data)
+
         self.ternary_scale = ternary_scale
         super().__init__(*args, **kwargs)
         self.set_aspect('equal', adjustable='box', anchor='C')
@@ -89,34 +97,33 @@ class TernaryAxesBase(Axes):
         transRLimits = mtransforms.BboxTransformFrom(
             mtransforms.TransformedBbox(self.viewRLim, self.transScale))
 
-        taxis_transform = TernaryTransform(self.corners, 0)
-        laxis_transform = TernaryTransform(self.corners, 1)
-        raxis_transform = TernaryTransform(self.corners, 2)
+        corners_axes = self.corners_axes
+
+        taxis_transform = TernaryTransform(corners_axes, 0)
+        laxis_transform = TernaryTransform(corners_axes, 1)
+        raxis_transform = TernaryTransform(corners_axes, 2)
 
         self._taxis_transform = transTLimits + taxis_transform + self.transAxes
         self._laxis_transform = transLLimits + laxis_transform + self.transAxes
         self._raxis_transform = transRLimits + raxis_transform + self.transAxes
 
         # For axis labels
-        t_l_t = TernaryPerpendicularTransform(self.transAxes, self.corners, 0)
-        l_l_t = TernaryPerpendicularTransform(self.transAxes, self.corners, 1)
-        r_l_t = TernaryPerpendicularTransform(self.transAxes, self.corners, 2)
+        t_l_t = TernaryPerpendicularTransform(self.transAxes, corners_axes, 0)
+        l_l_t = TernaryPerpendicularTransform(self.transAxes, corners_axes, 1)
+        r_l_t = TernaryPerpendicularTransform(self.transAxes, corners_axes, 2)
         self._taxis_label_transform = t_l_t
         self._laxis_label_transform = l_l_t
         self._raxis_label_transform = r_l_t
 
-        # For data
-
-        # This should be called only once at the first time to define the
-        # transformations between (t, l, r) and (x, y)
-        corners_xy = self.transLimits.transform(self.corners)
-        self.transProjection = transTernaryScale + BarycentricTransform(corners_xy)
+        # From ternary coordinates to the original data coordinates
+        self.transProjection = (transTernaryScale
+                                + BarycentricTransform(self.corners_data))
 
         # From ternary coordinates to the original Axes coordinates
         self._ternary_axes_transform = self.transProjection + self.transLimits
 
         # From barycentric coordinates to the original Axes coordinates
-        self.transAxesProjection = BarycentricTransform(self.corners)
+        self.transAxesProjection = BarycentricTransform(self.corners_axes)
 
         # From barycentric coordinates to display coordinates
         self.transTernaryAxes = self.transAxesProjection + self.transAxes
@@ -174,7 +181,7 @@ class TernaryAxesBase(Axes):
         return self._get_axis_text_transform(pad_points, trans, [1, 0])
 
     def _gen_axes_patch(self):
-        return mpatches.Polygon(self.corners)
+        return mpatches.Polygon(self.corners_axes)
 
     def _gen_axes_spines(self, locations=None, offset=0.0, units='inches'):
         # Use `Spine` in `mpltern`
@@ -200,6 +207,10 @@ class TernaryAxesBase(Axes):
         self.set_llim(0.0, self.ternary_scale)
         self.set_rlim(0.0, self.ternary_scale)
         super().cla()
+        xmin = 0.5 - 1.0 / np.sqrt(3.0)
+        xmax = 0.5 + 1.0 / np.sqrt(3.0)
+        self.set_xlim(xmin, xmax)
+        self.set_ylim(0.0, 1.0)
 
     @docstring.dedent_interpd
     def grid(self, b=None, which='major', axis='both', **kwargs):
@@ -386,7 +397,8 @@ class TernaryAxesBase(Axes):
         (https://matplotlib.org/users/navigation_toolbar.html)
         """
         # points = self.transProjection.inverted().transform(self.corners)
-        points = self._ternary_axes_transform.inverted().transform(self.corners)
+        trans = self._ternary_axes_transform.inverted()
+        points = trans.transform(self.corners_axes)
 
         tmax = points[0, 0]
         tmin = points[1, 0]

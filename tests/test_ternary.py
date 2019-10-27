@@ -265,10 +265,16 @@ class TestScatter:
     def test_scatter_color(self):
         t, l, r = get_scatter_points()
         fig = plt.figure()
+        fig.subplots_adjust(left=0.075, right=0.85)
         ax = fig.add_subplot(111, projection='ternary')
         sc = ax.scatter(t, l, r, c=range(len(t)))
-        colorbar = fig.colorbar(sc, ax=ax, pad=0.15)
+        cax = ax.inset_axes([1.05, 0.1, 0.05, 0.9], transform=ax.transAxes)
+        colorbar = fig.colorbar(sc, cax=cax)
         colorbar.set_label('Count', rotation=270, va='baseline')
+
+        ax.set_tlabel('Top')
+        ax.set_llabel('Left')
+        ax.set_rlabel('Right')
 
 
 class TestArrow:
@@ -326,10 +332,16 @@ class TestQuiver:
         dr = 1.0 / 3.0 - r
         length = np.sqrt(dt ** 2 + dl ** 2 + dr ** 2)
         fig = plt.figure()
+        fig.subplots_adjust(left=0.075, right=0.85)
         ax = fig.add_subplot(projection='ternary')
         pc = ax.quiver(t, l, r, dt, dl, dr, length)
-        colorbar = fig.colorbar(pc, pad=0.2)
+        cax = ax.inset_axes([1.05, 0.1, 0.05, 0.9], transform=ax.transAxes)
+        colorbar = fig.colorbar(pc, cax=cax)
         colorbar.set_label('Length', rotation=270, va='baseline')
+
+        ax.set_tlabel('Top')
+        ax.set_llabel('Left')
+        ax.set_rlabel('Right')
 
     @image_comparison(baseline_images=['quiver_xy_data'], extensions=['pdf'],
                       style='mpl20')
