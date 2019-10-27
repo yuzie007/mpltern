@@ -1,8 +1,8 @@
 import numpy as np
 
 import pytest
-from matplotlib.transforms import IdentityTransform
 from mpltern.ternary.axis import TernaryAxis
+from mpltern.ternary.transforms import BarycentricTransform
 
 
 expected = [
@@ -460,9 +460,10 @@ def _create_axis(rotation):
         [cosdg(rotation), -sindg(rotation)],
         [sindg(rotation),  cosdg(rotation)],
     ])
+
     self = DummyTernaryAxis()
     self.axes.corners = np.dot(rotation_matrix, corners.T).T
-    self.axes.transAxes = IdentityTransform()
+    self.axes.transTernaryAxes = BarycentricTransform(self.axes.corners)
     self._label_rotation_mode = 'axis'
     return self
 
