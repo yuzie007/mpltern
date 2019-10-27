@@ -300,7 +300,7 @@ class TestArrow:
         fig = plt.figure()
         ax = fig.add_subplot(projection='ternary')
         ax.set_ternary_min(-0.2, -0.2, -0.2)
-        ax.arrow(0.2, 0.2, 0.6, 0.6, transform=ax.transData)
+        ax.arrow(-0.3, 0.2, 0.6, 0.6, transform=ax.transData)
 
     @image_comparison(baseline_images=['arrow_xy_axes'], extensions=['pdf'],
                       style='mpl20')
@@ -346,10 +346,10 @@ class TestQuiver:
     @image_comparison(baseline_images=['quiver_xy_data'], extensions=['pdf'],
                       style='mpl20')
     def test_quiver_xy_data(self):
-        x = np.linspace(0, 1, 11)
-        y = np.linspace(0, 1, 11)
+        x = np.linspace(-0.5, 0.5, 11)
+        y = np.linspace(+0.0, 1.0, 11)
         x, y = np.meshgrid(x, y)
-        dx = 0.5 - x
+        dx = -x
         dy = 0.5 - y
         fig = plt.figure()
         ax = fig.add_subplot(projection='ternary')

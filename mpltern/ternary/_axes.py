@@ -26,12 +26,12 @@ def _create_corners(corners=None, rotation=None):
         # The bottom and the top of the triangle have 0.0 and 1.0,
         # respectively, as the *y* coordinate in the original `Axes`
         # coordinates.
-        # The horizontal center of the triangle has 0.5 as the *x*
+        # The horizontal center of the triangle has 0.0 as the *x*
         # coordinate in the original `Axes` coordinates.
         # The other coordinates are given to make the regular triangle.
-        xmin = 0.5 - 1.0 / np.sqrt(3.0)
-        xmax = 0.5 + 1.0 / np.sqrt(3.0)
-        corners = ((0.5, 1.0), (xmin, 0.0), (xmax, 0.0))
+        xmin = -1.0 / np.sqrt(3.0)
+        xmax = +1.0 / np.sqrt(3.0)
+        corners = ((0.0, 1.0), (xmin, 0.0), (xmax, 0.0))
     corners = np.asarray(corners)
     if rotation is not None:
         # The rotation is done around the centroid of the given triangle.
@@ -42,7 +42,7 @@ def _create_corners(corners=None, rotation=None):
         # The following shift places the triangle inside the original
         # square `Axes` as much as possible.
         tmp = (np.min(corners, axis=0) + np.max(corners, axis=0)) * 0.5
-        corners += (np.array([0.5, 0.5]) - tmp)
+        corners += (np.array([0.0, 0.5]) - tmp)
     return corners
 
 
@@ -52,7 +52,7 @@ class TernaryAxesBase(Axes):
         # Triangle corners in the original data coordinates
         self.corners_data = _create_corners(corners, rotation)
         sx = np.sqrt(3.0) * 0.5  # Scale for x
-        xmin = 0.5 - 1.0 / np.sqrt(3.0)
+        xmin = -1.0 / np.sqrt(3.0)
         v = xmin * sx
         trans = mtransforms.Affine2D().from_values(sx, 0.0, 0.0, 1.0, -v, 0.0)
         # Triangle corners in the original ``Axes`` coordinates
@@ -207,8 +207,8 @@ class TernaryAxesBase(Axes):
         self.set_llim(0.0, self.ternary_scale)
         self.set_rlim(0.0, self.ternary_scale)
         super().cla()
-        xmin = 0.5 - 1.0 / np.sqrt(3.0)
-        xmax = 0.5 + 1.0 / np.sqrt(3.0)
+        xmin = -1.0 / np.sqrt(3.0)
+        xmax = +1.0 / np.sqrt(3.0)
         self.set_xlim(xmin, xmax)
         self.set_ylim(0.0, 1.0)
 
