@@ -1,8 +1,12 @@
 language: python
+env:
+  - MATPLOTLIB_VERSION=3.0.3
+  - MATPLOTLIB_VERSION=3.1.1
 install:
+  - python -mpip install matplotlib==$MATPLOTLIB_VERSION
   - python -mpip install pytest pytest-cov
-  - python -mpip install scipy matplotlib
+  - python -mpip install scipy
   - python -mpip install codecov coverage
-script: python -mpytest --cov=./
+script: python -mpytest --cov=./ --log-level=DEBUG
 after_success:
   - codecov
