@@ -1,6 +1,7 @@
 import numpy as np
 
 import pytest
+from matplotlib.transforms import Affine2D
 from mpltern.ternary.tick import TernaryTick
 
 
@@ -451,16 +452,11 @@ class DummyTernaryTick:
 
 
 def _create_tick(rotation):
-    from scipy.special import cosdg, sindg
     xmin = 0.5 - 1.0 / np.sqrt(3.0)
     xmax = 0.5 + 1.0 / np.sqrt(3.0)
     corners = np.array([(0.5, 1.0), (xmin, 0.0), (xmax, 0.0)])
-    rotation_matrix = ([
-        [cosdg(rotation), -sindg(rotation)],
-        [sindg(rotation),  cosdg(rotation)],
-    ])
     self = DummyTernaryTick()
-    self.axes.corners = np.dot(rotation_matrix, corners.T).T
+    self.axes.corners = Affine2D().rotate_deg(rotation).transform(corners)
     return self
 
 

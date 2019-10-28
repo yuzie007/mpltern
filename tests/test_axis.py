@@ -1,6 +1,7 @@
 import numpy as np
 
 import pytest
+from matplotlib.transforms import Affine2D
 from mpltern.ternary.axis import TernaryAxis
 from mpltern.ternary.transforms import BarycentricTransform
 
@@ -452,17 +453,11 @@ class DummyTernaryAxis:
 
 
 def _create_axis(rotation):
-    from scipy.special import cosdg, sindg
     xmin = 0.5 - 1.0 / np.sqrt(3.0)
     xmax = 0.5 + 1.0 / np.sqrt(3.0)
     corners = np.array([(0.5, 1.0), (xmin, 0.0), (xmax, 0.0)])
-    rotation_matrix = ([
-        [cosdg(rotation), -sindg(rotation)],
-        [sindg(rotation),  cosdg(rotation)],
-    ])
-
     self = DummyTernaryAxis()
-    self.axes.corners = np.dot(rotation_matrix, corners.T).T
+    self.axes.corners = Affine2D().rotate_deg(rotation).transform(corners)
     self.axes.transTernaryAxes = BarycentricTransform(self.axes.corners)
     self._label_rotation_mode = 'axis'
     return self
