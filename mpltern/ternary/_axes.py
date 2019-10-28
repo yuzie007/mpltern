@@ -81,9 +81,9 @@ class TernaryAxesBase(Axes):
         self.laxis = LAxis(self)
         self.raxis = RAxis(self)
 
-        self.spines['bottom'].register_axis(self.taxis)
-        self.spines['right' ].register_axis(self.laxis)
-        self.spines['left'  ].register_axis(self.raxis)
+        self.spines['tside'].register_axis(self.taxis)
+        self.spines['lside'].register_axis(self.laxis)
+        self.spines['rside'].register_axis(self.raxis)
 
         self._update_transScale()
 
@@ -127,6 +127,14 @@ class TernaryAxesBase(Axes):
 
         # From barycentric coordinates to display coordinates
         self.transTernaryAxes = self.transAxesProjection + self.transAxes
+
+    def get_xaxis_transform(self, which='grid'):
+        # Overridden not to call spines
+        return self._xaxis_transform
+
+    def get_yaxis_transform(self, which='grid'):
+        # Overridden not to call spines
+        return self._yaxis_transform
 
     def get_taxis_transform(self, which='grid'):
         if which == 'label':
@@ -186,8 +194,7 @@ class TernaryAxesBase(Axes):
     def _gen_axes_spines(self, locations=None, offset=0.0, units='inches'):
         # Use `Spine` in `mpltern`
         spines = OrderedDict((side, Spine.linear_spine(self, side))
-                             for side in ['left', 'right', 'bottom', 'top'])
-        spines['top'].set_visible(False)  # Not to make an unexpected dot
+                             for side in ['tside', 'lside', 'rside'])
         return spines
 
     def get_taxis(self):
