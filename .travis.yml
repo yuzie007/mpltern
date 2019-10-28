@@ -5,7 +5,6 @@ env:
 install:
   - python -mpip install matplotlib==$MATPLOTLIB_VERSION
   - python -mpip install pytest pytest-cov
-  - python -mpip install scipy
   - python -mpip install codecov coverage
 script: python -mpytest --cov=./ --log-level=DEBUG
 after_success:

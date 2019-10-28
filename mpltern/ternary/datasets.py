@@ -1,7 +1,6 @@
 import numpy as np
 
 import itertools
-from scipy.special import xlogy
 
 
 def get_spiral(ternary_scale=1.0):
@@ -43,5 +42,5 @@ def get_triangular_grid(n=11, prec=1e-6):
 def get_shanon_entropies(n=11, prec=1e-6):
     t, l, r = get_triangular_grid(n, prec)
     # The following works even when y == 0.
-    v = -1.0 * (xlogy(t, t) + xlogy(l, l) + xlogy(r, r))
+    v = -1.0 * (np.log(t ** t) + np.log(l ** l) + np.log(r ** r))
     return t, l, r, v
