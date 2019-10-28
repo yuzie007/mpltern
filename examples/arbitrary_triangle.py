@@ -9,10 +9,8 @@ import matplotlib.pyplot as plt
 from mpltern.ternary.datasets import get_spiral
 
 
-fig = plt.figure()
-
-corners = ((0.5, 0.0), (1.0, 0.5), (0.0, 1.0))
-ax = fig.add_subplot(projection='ternary', corners=corners)
+corners = ((0.0, 0.0), (0.5, 0.5), (-0.5, 1.0))
+ax = plt.subplot(projection='ternary', corners=corners)
 
 ax.plot(*get_spiral())
 

@@ -3,23 +3,14 @@
 Spans
 =====
 
-A line or a band horizontal to an ternary axis can be plotted by the folowing
-commands similarly to ``axhline``, ``axvline``, ``axhspan``, ``axvspan`` in
-Matplotlib.
-
-- ``axtline``
-- ``axlline``
-- ``axrline``
-- ``axtspan``
-- ``axlspan``
-- ``axrspan``
+A line or a band horizontal to an ternary axis can be plotted by the commands
+``axtline``, ``axlline``, ``axrline``, ``axtspan``, ``axlspan``, ``axrspan``.
 """
 import matplotlib.pyplot as plt
 import mpltern  # noqa: F401
 
 
-fig = plt.figure()
-ax = fig.add_subplot(projection='ternary')
+ax = plt.subplot(projection='ternary')
 
 ax.set_tlabel('Top')
 ax.set_llabel('Left')

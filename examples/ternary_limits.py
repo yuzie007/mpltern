@@ -4,19 +4,12 @@ Ternary limits
 ==============
 
 We can limit the ranges of ternary axes.
-
-.. note::
-    The same feature has been implemented also in other softwares for ternary
-    plots.
-
-    - `ggtern <http://www.ggtern.com/ternary-scales/>`_
 """
 import matplotlib.pyplot as plt
 from mpltern.ternary.datasets import get_spiral
 
 
-fig = plt.figure()
-ax = fig.add_subplot(projection='ternary')
+ax = plt.subplot(projection='ternary')
 
 ax.plot(*get_spiral())
 

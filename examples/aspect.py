@@ -3,16 +3,14 @@
 Aspect
 ======
 
-The triangle can be scaled by `ax.set_aspect`.
+The triangle aspect can be modified by `ax.set_aspect`.
 For more general triangles, use ``rotation`` and/or ``corners``.
 """
 import matplotlib.pyplot as plt
 from mpltern.ternary.datasets import get_spiral
 
 
-fig = plt.figure()
-
-ax = fig.add_subplot(111, projection='ternary')
+ax = plt.subplot(projection='ternary')
 ax.plot(*get_spiral())
 
 ax.set_aspect(1.5)

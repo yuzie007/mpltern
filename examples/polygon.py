@@ -3,7 +3,7 @@
 Polygon
 =======
 
-Polygons in ternary plots can be put by ``ax.fill``.
+Polygons in ternary plots can be put using ``ax.fill``.
 """
 import matplotlib.pyplot as plt
 import mpltern  # noqa: F401

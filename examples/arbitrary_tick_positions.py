@@ -12,9 +12,7 @@ import matplotlib.pyplot as plt
 from mpltern.ternary.datasets import get_spiral
 
 
-fig = plt.figure()
-
-ax = fig.add_subplot(projection='ternary')
+ax = plt.subplot(projection='ternary')
 
 ax.plot(*get_spiral())
 
