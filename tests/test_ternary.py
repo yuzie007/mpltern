@@ -186,6 +186,25 @@ def test_negative_ticks():
     ax.set_ternary_min(0, 3, -3)
 
 
+@image_comparison(baseline_images=['manual_ticks'],
+                  extensions=['pdf'], style='mpl20')
+def test_manual_ticks():
+    ax = plt.subplot(projection='ternary')
+
+    ax.plot(*get_spiral())
+
+    ax.grid()
+
+    ax.set_tlabel('Top')
+    ax.set_llabel('Left')
+    ax.set_rlabel('Right')
+
+    # Specify tick positions manually.
+    ax.taxis.set_ticks([0.2, 0.4, 0.6, 0.8, 1.0])
+    ax.laxis.set_ticks([0.2, 0.4, 0.6, 0.8, 1.0])
+    ax.raxis.set_ticks([0.2, 0.4, 0.6, 0.8, 1.0])
+
+
 @check_figures_equal()
 def test_ternary_lim(fig_test, fig_ref):
     """

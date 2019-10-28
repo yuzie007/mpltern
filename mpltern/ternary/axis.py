@@ -5,6 +5,7 @@ from matplotlib import rcParams
 import matplotlib.cbook as cbook
 import matplotlib.font_manager as font_manager
 import matplotlib.text as mtext
+import matplotlib.ticker as mticker
 from matplotlib.transforms import Affine2D
 from mpltern.ternary.tick import TTick, LTick, RTick
 
@@ -18,6 +19,22 @@ class TernaryAxis(XAxis):
         super()._copy_tick_props(src, dest)
         dest.label1.set_y(src.label1.get_position()[1])
         dest.label2.set_y(src.label2.get_position()[1])
+
+    def set_ticks(self, ticks, minor=False):
+        """
+        Set the locations of the tick marks from sequence ticks
+
+        Parameters
+        ----------
+        ticks : sequence of floats
+        minor : bool
+        """
+        if minor:
+            self.set_minor_locator(mticker.FixedLocator(ticks))
+            return self.get_minor_ticks(len(ticks))
+        else:
+            self.set_major_locator(mticker.FixedLocator(ticks))
+            return self.get_major_ticks(len(ticks))
 
     def _get_tick(self, major):
         if major:
