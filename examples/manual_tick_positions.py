@@ -1,9 +1,9 @@
 """
-========================
-Arbitrary tick positions
-========================
+=====================
+Manual tick positions
+=====================
 
-Arbitrary tick positions can be given manually in the same way as Matplotlib.
+Tick positions can be given manually in the same way as Matplotlib.
 
 This feature may be useful e.g. when you do not want to show zero ticks to make
 corner axis labels closer to the triangle.
