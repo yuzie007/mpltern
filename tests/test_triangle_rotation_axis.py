@@ -16,7 +16,7 @@ corners_dict['CW' ] = ((0.5, 1.0), (xmax, 0.0), (xmin, 0.0))
 
 bs = [False, True]
 rotations = range(0, 361, 15)
-expected = [(c, b, r, ['triangle_rotation_axis_{}_{}_{}'.format(c, b, r)])
+expected = [(c, b, r, ['{}_{}_{}'.format(c, b, r)])
             for c, b, r in product(['CCW', 'CW'], bs, rotations)]
 
 
