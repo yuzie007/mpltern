@@ -2,11 +2,11 @@ import numpy as np
 
 from matplotlib.axis import XAxis
 from matplotlib import rcParams
-import matplotlib.cbook as cbook
 import matplotlib.font_manager as font_manager
 import matplotlib.text as mtext
 import matplotlib.ticker as mticker
 from matplotlib.transforms import Affine2D
+import mpltern.cbook as cbook
 from mpltern.ternary.tick import TTick, LTick, RTick
 
 
@@ -184,8 +184,12 @@ class TernaryAxis(XAxis):
     def _get_points_surrounding_triangle(self, renderer):
         """Get the points of all tick labels in the pixel coordinates."""
         ticks = []
+        # Only ticks to draw are added.
         for axis in self.axes._get_axis_list():
-            ticks.extend(axis._update_ticks())  # Only ticks to draw are added.
+            try:
+                ticks.extend(axis._update_ticks())
+            except:  # For Matplotlib 3.0.3
+                ticks.extend(axis._update_ticks(renderer))
         points = []
         for tick in ticks:
             for text in [tick.label1, tick.label2]:

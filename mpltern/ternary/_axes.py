@@ -2,8 +2,6 @@ from collections import OrderedDict
 
 import numpy as np
 
-from matplotlib import cbook
-from matplotlib import docstring
 from matplotlib.axes import Axes
 import matplotlib.lines as mlines
 import matplotlib.patches as mpatches
@@ -13,6 +11,7 @@ from mpltern.ternary.spines import Spine
 from mpltern.ternary.transforms import (
     TernaryTransform, TernaryPerpendicularTransform,
     BarycentricTransform, TernaryScaleTransform)
+from mpltern import cbook
 from mpltern.ternary.axis import TAxis, LAxis, RAxis
 from mpltern.ternary.ternary_parser import (
     _parse_ternary_single, _parse_ternary_multiple,
@@ -20,7 +19,6 @@ from mpltern.ternary.ternary_parser import (
 
 
 def _create_corners(corners=None, rotation=None):
-    from scipy.special import sindg, cosdg
     if corners is None:
         # By default, regular upward triangle is created.
         # The bottom and the top of the triangle have 0.0 and 1.0,
@@ -36,8 +34,7 @@ def _create_corners(corners=None, rotation=None):
     if rotation is not None:
         # The rotation is done around the centroid of the given triangle.
         cx, cy = np.average(corners, axis=0)
-        a, b = cosdg(rotation), sindg(rotation)
-        trans = mtransforms.Affine2D().from_values(a, b, -b, a, cx, cy)
+        trans = mtransforms.Affine2D().rotate_deg_around(cx, cy, rotation)
         corners = trans.transform(corners)
         # The following shift places the triangle inside the original
         # square `Axes` as much as possible.
@@ -219,7 +216,6 @@ class TernaryAxesBase(Axes):
         self.set_xlim(xmin, xmax)
         self.set_ylim(0.0, 1.0)
 
-    @docstring.dedent_interpd
     def grid(self, b=None, which='major', axis='both', **kwargs):
         """
         Configure the grid lines.
@@ -393,6 +389,16 @@ class TernaryAxesBase(Axes):
     def drag_pan(self, *args, **kwargs):
         super().drag_pan(*args, **kwargs)
         self._set_ternary_lim_from_xlim_and_ylim()
+
+    def get_children(self):
+        from matplotlib import __version__ as mversion
+        children = super().get_children()
+        major, minor, patch = [int(_) for _ in mversion.split('.')]
+        if (major, minor) <= (3, 0):
+            children.remove(self.xaxis)
+            children.remove(self.yaxis)
+            children.extend(self._get_axis_list())
+        return children
 
     def _set_ternary_lim_from_xlim_and_ylim(self):
         """Set ternary lim from xlim and ylim in the interactive mode.

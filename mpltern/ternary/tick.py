@@ -1,8 +1,8 @@
 import numpy as np
 
-import matplotlib.cbook as cbook
 import matplotlib.transforms as mtransforms
 from matplotlib.axis import XTick
+import mpltern.cbook as cbook
 
 
 class TernaryTick(XTick):
