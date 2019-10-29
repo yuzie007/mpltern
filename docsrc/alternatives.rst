@@ -1,4 +1,4 @@
-Alternatives for ternary plots
+Alternatives for Ternary Plots
 ==============================
 
 If Mpltern does not satisfy your demands for ternary plots, one can think about

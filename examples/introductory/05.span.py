@@ -1,7 +1,7 @@
 """
-=====
-Spans
-=====
+====
+Span
+====
 
 A line or a band horizontal to an ternary axis can be plotted by the commands
 ``axtline``, ``axlline``, ``axrline``, ``axtspan``, ``axlspan``, ``axrspan``.

@@ -8,21 +8,16 @@ High
 - Documentation
 - PyPI uploading
 - Zenodo DOI
-- CI
-- Legend
-- Spine names
 
 Medium
 ======
 
 - Crosshairs
 - Reduce the usages of private methods in Matplotlib
-- Advanced examples (inset etc.)
 
 Low
 ===
 
-- ``fill_betweent``, ``fill_betweenl``, ``fill_betweenr``
 - ``annotate``
   (Adequate manipulations for ``xycoords`` and ``textcoords`` are required,
   which is tough for my current time schedule.)

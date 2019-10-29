@@ -7,7 +7,7 @@ The normalization of ternary plots can be modified using ``ternary_scale``.
 
 .. note::
     The ternary data are automatically normalized with a few exceptions.
-    See details in :doc:`../conventions`.
+    See details in :doc:`../../conventions`.
 """
 import matplotlib.pyplot as plt
 from mpltern.ternary.datasets import get_spiral

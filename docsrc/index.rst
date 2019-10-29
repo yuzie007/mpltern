@@ -1,11 +1,13 @@
-#######
-Mpltern
-#######
+#########
+|mpltern|
+#########
 
 .. _source code: https://github.com/yuzie007/mpltern
 .. _Matplotlib: https://matplotlib.org
 .. _seaborn: https://seaborn.pydata.org
 .. _Jupyter: http://jupyter.org
+
+.. |mpltern| image:: _static/sphx_glr_logos0_003.svg
 
 Mpltern is a Python plotting library based on Matplotlib_ specifically designed
 for `ternary plots <https://en.wikipedia.org/wiki/Ternary_plot>`_.
@@ -48,14 +50,10 @@ The latest version of Mpltern is available from `GitHub <source code_>`_.
 .. code-block::
 
    git clone https://github.com/yuzie007/mpltern.git
+   cd mpltern
+   python setup.py install
 
 Installations via PyPI and Conda are also planned.
-
-Examples
-========
-
-Various examples of Mpltern are found in the
-:doc:`examples gallery <gallery/index>`.
 
 Citing Mpltern
 ==============
@@ -73,4 +71,7 @@ None yet.
 Author
 ======
 
-Yuji Ikeda (Max-Planck-Institut für Eisenforschung GmbH, Germany)
+Yuji Ikeda
+(`Github <https://github.com/yuzie007>`_,
+`Google Scholar <https://scholar.google.co.jp/citations?user=2m5dkBwAAAAJ&hl=en>`_,
+`ResearchGate <https://www.researchgate.net/profile/Yuji_Ikeda6>`_)

@@ -10,6 +10,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from mpltern.ternary.datasets import get_scatter_points
 
+
 t0, l0, r0 = get_scatter_points(100, seed=19)
 t1, l1, r1 = get_scatter_points(100, seed=68)
 

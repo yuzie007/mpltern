@@ -14,6 +14,7 @@ import os
 import shutil
 
 import mpltern
+import sphinx_bootstrap_theme
 
 
 # General configuration
@@ -22,9 +23,6 @@ import mpltern
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
 extensions = [
-    'sphinx.ext.autodoc',
-    'sphinx.ext.intersphinx',
-    'numpydoc',  # Needs to be loaded *after* autodoc.
     'sphinx_gallery.gen_gallery',
     'sphinx_copybutton',
 ]
@@ -75,24 +73,21 @@ class matplotlib_svg_scraper(object):
         return matplotlib_scraper(*args, format='svg', **kwargs)
 
 
-intersphinx_mapping = {
-    'python': ('https://docs.python.org/3', None),
-    'numpy': ('https://docs.scipy.org/doc/numpy/', None),
-    'scipy': ('https://docs.scipy.org/doc/scipy/reference/', None),
-}
-
-
 # Sphinx gallery configuration
+from sphinx_gallery.sorting import ExplicitOrder
+from sphinx_gallery.sorting import FileNameSortKey
 sphinx_gallery_conf = {
     'examples_dirs': ['../examples'],
     'filename_pattern': '^((?!sgskip).)*$',
     'gallery_dirs': ['gallery'],
     'doc_module': ('mpltern', ),
-    'reference_url': {
-        'mpltern': None,
-        'numpy': 'https://docs.scipy.org/doc/numpy',
-        'scipy': 'https://docs.scipy.org/doc/scipy/reference',
-    },
+    'subsection_order': ExplicitOrder(['../examples/introductory',
+                                       '../examples/intermediate',
+                                       '../examples/axis_and_tick',
+                                       '../examples/triangle',
+                                       '../examples/advanced',
+                                       '../examples/miscellaneous']),
+    'within_subsection_order': FileNameSortKey,
     'min_reported_time': 1,
     # The following is commented out because SVG does not work nicely yet
     # for `ax.pcolormesh(shading='gouraud')
@@ -129,17 +124,34 @@ github_project_url = "https://github.com/yuzie007/mpltern/"
 
 # Options for HTML output
 # -----------------------
-html_theme = 'basic'
-html_style = 'mpltern.css'
+html_theme = 'bootstrap'
+html_theme_options = {
+    'navbar_links': [
+        # ("home", "index"),
+        ("Documents", "contents"),
+        ("Examples", "gallery/index"),
+     ],
 
-# The name of an image file (within the static path) to place at the top of
-# the sidebar.
-html_logo = '_static/sphx_glr_logos0_003.svg'
+    # Render the next and previous page links in navbar. (Default: true)
+    'navbar_sidebarrel': False,
+
+    # Render the current pages TOC in the navbar. (Default: true)
+    'navbar_pagenav': False,
+
+    # Location of link to source.
+    # Options are "nav" (default), "footer" or anything else to exclude.
+    'source_link_position': None,
+}
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
+
+
+def setup(app):
+    app.add_stylesheet("mpltern.css")
+
 
 # If nonempty, this is the file name suffix for generated HTML files.  The
 # default is ``".html"``.

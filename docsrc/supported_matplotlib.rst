@@ -11,8 +11,8 @@ in case ``va=='center_baseline'`` and ``rotation_mode=='anchor'``
 (https://github.com/matplotlib/matplotlib/issues/13028).
 If these Matplotlib versions are used, tick-label positions are not as
 expected.
-**I therefore strongly discourage to use these old Matplotlib versions and
-suggest to use higher versions.**
+**When using Mpltern, therefore it is strongly discouraged to use these old
+Matplotlib versions and instead suggested to use higher versions.**
 I however also have to note that Matplotlib 3.1 may also have other serious
 bugs (e.g. https://github.com/matplotlib/matplotlib/issues/14751).
 Until the versions where both the bugs are fixed, the users of Mpltern have to

@@ -1,3 +1,5 @@
+:orphan:
+
 ########
 Overview
 ########
@@ -9,6 +11,8 @@ Overview
    implemented_methods.rst
    gallery/index.rst
    conventions.rst
+   aims.rst
    publications.rst
-   notes_for_implementation.rst
    alternatives.rst
+   notes_for_implementation.rst
+   TODO.rst

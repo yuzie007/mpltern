@@ -7,4 +7,3 @@ Gallery
 #######
 
 This gallery contains examples of Mpltern.
-Created using `Sphinx-Gallery <https://sphinx-gallery.github.io>`_.

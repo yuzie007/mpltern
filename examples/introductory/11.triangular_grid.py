@@ -12,6 +12,7 @@ from mpltern.ternary.datasets import get_triangular_grid
 t, l, r = get_triangular_grid()
 
 fig = plt.figure(figsize=(10.8, 4.8))
+fig.subplots_adjust(wspace=0.3)
 
 ax = fig.add_subplot(121, projection='ternary')
 ax.triplot(t, l, r)
