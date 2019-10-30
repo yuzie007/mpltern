@@ -1,6 +1,6 @@
 import numpy as np
 
-from matplotlib.transforms import Transform
+from matplotlib.transforms import Transform, ScaledTranslation
 
 
 class TernaryTransform(Transform):
@@ -63,6 +63,52 @@ class InvertedTernaryTransform(Transform):
 
     def inverted(self):
         return TernaryTransform(self.corners, self.index)
+
+
+class _TernaryShiftBase(Transform):
+    input_dims = 2
+    output_dims = 2
+    has_inverse = True
+
+    def __init__(self, indices, figure, axes, pad_points):
+        super().__init__()
+        self.indices = indices
+        self.figure = figure
+        self.axes = axes
+        self.pad_points = pad_points
+
+    def _get_translation(self):
+        corners = [[1., 0., 0.], [0., 1., 0.], [0., 0., 1.]]
+        points = self.axes.transTernaryAxes.transform(corners)[self.indices]
+        d1 = points[1] - points[0]  # outward against the triangle
+        return d1 / np.linalg.norm(d1) * self.pad_points / 72.0
+
+
+class TernaryShift(_TernaryShiftBase):
+    """Shift of tick labels from tick points
+
+    This is essentially a wrapper of ScaledTranslation, but the direction to
+    pad it determined on the fly when drawing.
+    """
+    def transform_non_affine(self, values):
+        x, y = self._get_translation()
+        trans = ScaledTranslation(x, y, self.figure.dpi_scale_trans)
+        return trans.transform(values)
+
+    def inverted(self):
+        return InvertedTernaryShift(
+            self.indices, self.figure, self.axes, self.pad_points)
+
+
+class InvertedTernaryShift(_TernaryShiftBase):
+    def transform_non_affine(self, values):
+        x, y = self._get_translation()
+        trans = ScaledTranslation(-x, -y, self.figure.dpi_scale_trans)
+        return trans.transform(values)
+
+    def inverted(self):
+        return TernaryShift(
+            self.indices, self.figure, self.axes, self.pad_points)
 
 
 class TernaryPerpendicularTransform(Transform):

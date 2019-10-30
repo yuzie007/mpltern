@@ -121,6 +121,19 @@ class TestAxisLabelPosition:
         ax.raxis.set_label_position(position)
 
 
+@image_comparison(baseline_images=['aspect'], extensions=['pdf'],
+                  style='mpl20')
+def test_aspect():
+    ax = plt.subplot(projection='ternary')
+    ax.plot(*get_spiral())
+
+    ax.set_aspect(1.5)
+
+    ax.set_tlabel('Top')
+    ax.set_llabel('Left')
+    ax.set_rlabel('Right')
+
+
 @image_comparison(baseline_images=['opposite_ticks'], extensions=['pdf'],
                   style='mpl20')
 def test_opposite_ticks():

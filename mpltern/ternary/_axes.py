@@ -10,7 +10,7 @@ import matplotlib.axis as maxis
 from mpltern.ternary.spines import Spine
 from mpltern.ternary.transforms import (
     TernaryTransform, TernaryPerpendicularTransform,
-    BarycentricTransform, TernaryScaleTransform)
+    BarycentricTransform, TernaryScaleTransform, TernaryShift)
 from mpltern import cbook
 from mpltern.ternary.axis import TAxis, LAxis, RAxis
 from mpltern.ternary.ternary_parser import (
@@ -152,14 +152,9 @@ class TernaryAxesBase(Axes):
             return self._raxis_transform
 
     def _get_axis_text_transform(self, pad_points, trans, indices):
-        corners = [[1., 0., 0.], [0., 1., 0.], [0., 0., 1.]]
-        points = self.transTernaryAxes.transform(corners)[indices]
-        d1 = points[1] - points[0]  # outward against the triangle
-        x, y = d1 / np.linalg.norm(d1) * pad_points / 72.0
-        return (trans +
-                mtransforms.ScaledTranslation(x, y,
-                                              self.figure.dpi_scale_trans),
-                'top', 'center')  # `va` and `ha` are modified in `TernaryTick`
+        pad_shift = TernaryShift(indices, self.figure, self.axes, pad_points)
+        # `va` and `ha` are modified in `TernaryTick`
+        return trans + pad_shift, 'top', 'center'
 
     def get_taxis_text1_transform(self, pad_points):
         trans = self.get_taxis_transform(which='tick1')
