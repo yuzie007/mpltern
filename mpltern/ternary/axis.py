@@ -188,7 +188,7 @@ class TernaryAxis(XAxis):
         for axis in self.axes._get_axis_list():
             try:
                 ticks.extend(axis._update_ticks())
-            except:  # For Matplotlib 3.0.3
+            except TypeError:  # For Matplotlib 3.0.3
                 ticks.extend(axis._update_ticks(renderer))
         points = []
         for tick in ticks:
