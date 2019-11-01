@@ -1,0 +1,16 @@
+
+:orphan:
+
+.. _sphx_glr_gallery_advanced_sg_execution_times:
+
+Computation times
+=================
+**00:01.572** total execution time for **gallery_advanced** files:
+
+- **00:00.336**: :ref:`sphx_glr_gallery_advanced_05.inset.py` (``05.inset.py``)
+- **00:00.288**: :ref:`sphx_glr_gallery_advanced_02.minor_ticks.py` (``02.minor_ticks.py``)
+- **00:00.219**: :ref:`sphx_glr_gallery_advanced_06.plot_fixed_onto_triangle.py` (``06.plot_fixed_onto_triangle.py``)
+- **00:00.211**: :ref:`sphx_glr_gallery_advanced_00.colored_axes.py` (``00.colored_axes.py``)
+- **00:00.205**: :ref:`sphx_glr_gallery_advanced_01.arrows_along_axes.py` (``01.arrows_along_axes.py``)
+- **00:00.165**: :ref:`sphx_glr_gallery_advanced_04.tick_labels_inside_triangle.py` (``04.tick_labels_inside_triangle.py``)
+- **00:00.147**: :ref:`sphx_glr_gallery_advanced_03.manual_tick_positions.py` (``03.manual_tick_positions.py``)

@@ -1,0 +1,10 @@
+
+:orphan:
+
+.. _sphx_glr_gallery_miscellaneous_sg_execution_times:
+
+Computation times
+=================
+**00:00.244** total execution time for **gallery_miscellaneous** files:
+
+- **00:00.244**: :ref:`sphx_glr_gallery_miscellaneous_logos0.py` (``logos0.py``)

@@ -1,0 +1,14 @@
+
+:orphan:
+
+.. _sphx_glr_gallery_axis_and_tick_sg_execution_times:
+
+Computation times
+=================
+**00:01.943** total execution time for **gallery_axis_and_tick** files:
+
+- **00:00.456**: :ref:`sphx_glr_gallery_axis_and_tick_tick_direction.py` (``tick_direction.py``)
+- **00:00.409**: :ref:`sphx_glr_gallery_axis_and_tick_tick_rotation.py` (``tick_rotation.py``)
+- **00:00.407**: :ref:`sphx_glr_gallery_axis_and_tick_axis_label_rotation.py` (``axis_label_rotation.py``)
+- **00:00.362**: :ref:`sphx_glr_gallery_axis_and_tick_axis_label_position.py` (``axis_label_position.py``)
+- **00:00.308**: :ref:`sphx_glr_gallery_axis_and_tick_tick_position.py` (``tick_position.py``)

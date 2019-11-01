@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Conventions in mpltern &#8212; mpltern 0.3.0+1.g3830ae7.dirty documentation</title>
+    <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/gallery.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mpltern.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js"></script>
+    <script type="text/javascript" src="_static/copybutton.js"></script>
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="_static/bootstrap-sphinx.js "></script>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="index.html">
+          mpltern</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.3.0+1.g3830ae7.dirty</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="installation.html">Installation</a></li>
+                <li><a href="contents.html">Documents</a></li>
+                <li><a href="gallery/index.html">Examples</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"></ul>
+</li>
+              
+            
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="body col-md-12 content" role="main">
+      
+  <div class="section" id="conventions-in-mpltern">
+<h1>Conventions in mpltern<a class="headerlink" href="#conventions-in-mpltern" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="axes-and-ticks">
+<h2>Axes and Ticks<a class="headerlink" href="#axes-and-ticks" title="Permalink to this headline">¶</a></h2>
+<p>In a ternary plot, three variables which sum to a constant
+<code class="docutils literal notranslate"><span class="pre">t</span> <span class="pre">+</span> <span class="pre">l</span> <span class="pre">+</span> <span class="pre">r</span> <span class="pre">=</span> <span class="pre">ternary_scale</span></code> (= 1 in mpltern by default) are projected onto
+a two-dimensional triangle.
+Each variable is associated with each corner of the triangle, and the value is
+represented by the scaled distance to the corner from its opposite side.</p>
+<p>There may be two kinds of perspectives to read a ternary plot; the
+“corner-based” and the “side-based” perspectives.
+<strong>Mpltern adopts the “corner-based” perspective.</strong>
+In this perspective, each of the three variables is associated with a corner of
+the triangle, and the position in the triangle is given as the scaled distance
+to the corner from its opposite side, as already written above.
+In mpltern, the order of the variables is <code class="docutils literal notranslate"><span class="pre">T</span> <span class="pre">(top)</span> <span class="pre">→</span> <span class="pre">L</span> <span class="pre">(left)</span> <span class="pre">→</span> <span class="pre">R</span> <span class="pre">(right)</span></code>
+(counterclockwise).</p>
+<p>In mpltern, by default, the ticks are shown to the right side of the triangle
+with seeing the corresponding corner upward.
+You can put the ticks to the opposite sides by <code class="docutils literal notranslate"><span class="pre">ax.opposite_ticks(True)</span></code>.
+Notice that, although the tick positions are changed, still a point in the
+triangle corresponds to the same composition (see the red point).</p>
+<img alt="_images/corner_based_1.svg" src="_images/corner_based_1.svg" /><img alt="_images/corner_based_2.svg" src="_images/corner_based_2.svg" /><p>Some people read a ternary plot with the “side-based” perspective like the
+figure below. In this perspective, we must also specify if the ticks proceed
+in a clockwise or a counterclockwise manner.
+<em>Be careful that, in the “side-based” perspective, a point in the triangle
+corresponds to different compositions between the clockwise and the
+counterclockwise tick progresses</em>, which may be confusing (see the red point).
+This also means that a position for a side does not immediately associated with
+the value of the corresponding variable in the “side-based” perspective.
+To avoid such confusions, in mpltern, the “corner-based” perspective is
+adopted.</p>
+<img alt="_images/side_based_ccw.svg" src="_images/side_based_ccw.svg" /><img alt="_images/side_based_cw.svg" src="_images/side_based_cw.svg" /><p>The discussions
+<a class="reference external" href="https://github.com/marcharper/python-ternary/issues/13">here</a>
+and
+<a class="reference external" href="https://github.com/marcharper/python-ternary/issues/18">here</a>
+may be also helpful to understand.</p>
+</div>
+<div class="section" id="convention-in-other-software">
+<h2>Convention in Other Software<a class="headerlink" href="#convention-in-other-software" title="Permalink to this headline">¶</a></h2>
+<p>In the corner-based perspective, <a class="reference internal" href="alternatives.html"><span class="doc">existing codes</span></a> for ternary
+plots give the following orders by default:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 32%" />
+<col style="width: 50%" />
+<col style="width: 18%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Code</p></th>
+<th class="head"><p>Order of triangle corners</p></th>
+<th class="head"><p>Ticks</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Plotly</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">T</span> <span class="pre">→</span> <span class="pre">L</span> <span class="pre">→</span> <span class="pre">R</span></code> (CCW)</p></td>
+<td><p>CW</p></td>
+</tr>
+<tr class="row-odd"><td><p>python-ternary</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">R</span> <span class="pre">→</span> <span class="pre">T</span> <span class="pre">→</span> <span class="pre">L</span></code> (CCW)</p></td>
+<td><p>CCW</p></td>
+</tr>
+<tr class="row-even"><td><p>ggtern</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">L</span> <span class="pre">→</span> <span class="pre">R</span> <span class="pre">→</span> <span class="pre">T</span></code> (CCW)</p></td>
+<td><p>CCW</p></td>
+</tr>
+<tr class="row-odd"><td><p>Ternary (R)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">T</span> <span class="pre">→</span> <span class="pre">R</span> <span class="pre">→</span> <span class="pre">L</span></code> (CW)</p></td>
+<td><p>CW</p></td>
+</tr>
+<tr class="row-even"><td><p>d3-ternary</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">L</span> <span class="pre">→</span> <span class="pre">R</span> <span class="pre">→</span> <span class="pre">T</span></code> (CCW)</p></td>
+<td><p>CW</p></td>
+</tr>
+<tr class="row-odd"><td><p>PGFPlots</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">T</span> <span class="pre">→</span> <span class="pre">L</span> <span class="pre">→</span> <span class="pre">R</span></code> (CCW)</p></td>
+<td><p>CCW</p></td>
+</tr>
+<tr class="row-even"><td><p>Veusz</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">R</span> <span class="pre">→</span> <span class="pre">L</span> <span class="pre">→</span> <span class="pre">T</span></code> (CW)</p></td>
+<td><p>CCW</p></td>
+</tr>
+<tr class="row-odd"><td><p>ternaryplot.com</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">T</span> <span class="pre">→</span> <span class="pre">L</span> <span class="pre">→</span> <span class="pre">R</span></code> (CCW)</p></td>
+<td><p>CW</p></td>
+</tr>
+<tr class="row-even"><td><p>Delta Plotware</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">T</span> <span class="pre">→</span> <span class="pre">R</span> <span class="pre">→</span> <span class="pre">L</span></code> (CW)</p></td>
+<td><p>CCW</p></td>
+</tr>
+<tr class="row-odd"><td><p>Dplot</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">R</span> <span class="pre">→</span> <span class="pre">T</span> <span class="pre">→</span> <span class="pre">L</span></code> (CW)</p></td>
+<td><p>CW</p></td>
+</tr>
+<tr class="row-even"><td><p>JMP</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">L</span> <span class="pre">→</span> <span class="pre">T</span> <span class="pre">→</span> <span class="pre">R</span></code> (CW)</p></td>
+<td><p>CW</p></td>
+</tr>
+<tr class="row-odd"><td><p>Origin</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">R</span> <span class="pre">→</span> <span class="pre">T</span> <span class="pre">→</span> <span class="pre">L</span></code> (CCW)</p></td>
+<td><p>CCW</p></td>
+</tr>
+<tr class="row-even"><td><p>Statgraphics</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">T</span> <span class="pre">→</span> <span class="pre">L</span> <span class="pre">→</span> <span class="pre">R</span></code> (CCW)</p></td>
+<td><p>CCW</p></td>
+</tr>
+</tbody>
+</table>
+<p>As found, the majority is</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">T</span> <span class="pre">→</span> <span class="pre">L</span> <span class="pre">→</span> <span class="pre">R</span></code> (CCW) for the order of triangle corners</p></li>
+<li><p>CCW for the ticks progress</p></li>
+</ul>
+<p>Mpltern follows the conventions above.</p>
+</div>
+<div class="section" id="normalization-in-ternary-plots">
+<h2>Normalization in Ternary Plots<a class="headerlink" href="#normalization-in-ternary-plots" title="Permalink to this headline">¶</a></h2>
+<p>In most plotting methods in mpltern, the given three variables are
+automatically normalized by <code class="docutils literal notranslate"><span class="pre">ternary_scale</span></code>.
+By this convention, the three variables can be treated on an equal footing.
+The exceptions are the span-plots like <code class="docutils literal notranslate"><span class="pre">ax.axtline</span></code>.
+Since in these methods only one of the variables is given, in principle it is
+not possible whether the given value is already normalized or not.
+<strong>To avoid confusions, it is strongly suggested to normalize the three
+variables beforehand outside mpltern.</strong></p>
+</div>
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2019, Yuji Ikeda.<br/>
+      Last updated on Nov 01, 2019.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

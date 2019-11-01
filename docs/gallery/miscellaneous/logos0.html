@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Logo &#8212; mpltern 0.3.0+1.g3830ae7.dirty documentation</title>
+    <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mpltern.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js"></script>
+    <script type="text/javascript" src="../../_static/copybutton.js"></script>
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../../_static/bootstrap-sphinx.js "></script>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../index.html">
+          mpltern</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.3.0+1.g3830ae7.dirty</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../../installation.html">Installation</a></li>
+                <li><a href="../../contents.html">Documents</a></li>
+                <li><a href="../index.html">Examples</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"></ul>
+</li>
+              
+            
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="body col-md-12 content" role="main">
+      
+  <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p>Click <a class="reference internal" href="#sphx-glr-download-gallery-miscellaneous-logos0-py"><span class="std std-ref">here</span></a> to download the full example code</p>
+</div>
+<div class="sphx-glr-example-title section" id="logo">
+<span id="sphx-glr-gallery-miscellaneous-logos0-py"></span><h1>Logo<a class="headerlink" href="#logo" title="Permalink to this headline">¶</a></h1>
+<p>This example generates the current mpltern logo.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">mpltern</span>  <span class="c1"># noqa: F401</span>
+
+
+<span class="k">def</span> <span class="nf">create_icon_axes</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">ax_position</span><span class="p">,</span> <span class="n">lw_border</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Create a ternary axes containing the mpltern span plot.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    fig : matplotlib.figure.Figure</span>
+<span class="sd">        The figure to draw into.</span>
+<span class="sd">    ax_position : (float, float, float, float)</span>
+<span class="sd">        The position of the created Axes in figure coordinates as</span>
+<span class="sd">        (x, y, width, height).</span>
+<span class="sd">    lw_border : float</span>
+<span class="sd">        The linewidth of the Axes border.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    ax : matplotlib.axes.Axes</span>
+<span class="sd">        The created Axes.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="n">plt</span><span class="o">.</span><span class="n">rc_context</span><span class="p">({</span><span class="s1">&#39;axes.linewidth&#39;</span><span class="p">:</span> <span class="n">lw_border</span><span class="p">}):</span>
+        <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_axes</span><span class="p">(</span><span class="n">ax_position</span><span class="p">,</span> <span class="n">projection</span><span class="o">=</span><span class="s1">&#39;ternary&#39;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span>
+            <span class="n">tick1On</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">tick2On</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">label1On</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">label2On</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="n">ax</span><span class="o">.</span><span class="n">axtline</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="n">lw_border</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;C0&#39;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">axlline</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="n">lw_border</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;C1&#39;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">axrline</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="n">lw_border</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;C2&#39;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">axtspan</span><span class="p">(</span><span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;C0&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">axlspan</span><span class="p">(</span><span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;C1&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">axrspan</span><span class="p">(</span><span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;C2&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">ax</span>
+
+
+<span class="k">def</span> <span class="nf">add_mpltern_text</span><span class="p">(</span><span class="n">ax</span><span class="p">):</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="s2">&quot;mpltern&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span>
+            <span class="n">ha</span><span class="o">=</span><span class="s1">&#39;right&#39;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="n">ax</span><span class="o">.</span><span class="n">transAxes</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">make_logo</span><span class="p">(</span><span class="n">height_px</span><span class="p">,</span> <span class="n">lw_border</span><span class="p">,</span> <span class="n">with_text</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Create a full figure with the mpltern logo.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    height_px : int</span>
+<span class="sd">        Height of the figure in pixel.</span>
+<span class="sd">    lw_border : float</span>
+<span class="sd">        The linewidth of icon border.</span>
+<span class="sd">    with_text : bool</span>
+<span class="sd">        Whether to draw only the icon or to include &#39;mpltern&#39; as text.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">dpi</span> <span class="o">=</span> <span class="mi">72</span>
+    <span class="n">height</span> <span class="o">=</span> <span class="n">height_px</span> <span class="o">/</span> <span class="n">dpi</span>
+    <span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mf">5.0</span> <span class="o">*</span> <span class="n">height</span><span class="p">,</span> <span class="n">height</span><span class="p">)</span> <span class="k">if</span> <span class="n">with_text</span> <span class="k">else</span> <span class="p">(</span><span class="n">height</span><span class="p">,</span> <span class="n">height</span><span class="p">)</span>
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="n">dpi</span><span class="p">)</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">patch</span><span class="o">.</span><span class="n">set_alpha</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">with_text</span><span class="p">:</span>
+        <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_axes</span><span class="p">([</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">])</span>
+        <span class="n">add_mpltern_text</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
+
+    <span class="n">ax_pos</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.025</span><span class="p">,</span> <span class="mf">0.075</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.85</span><span class="p">)</span> <span class="k">if</span> <span class="n">with_text</span> <span class="k">else</span> <span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">)</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">create_icon_axes</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">ax_pos</span><span class="p">,</span> <span class="n">lw_border</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span>
+</pre></div>
+</div>
+<p>A large logo:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">make_logo</span><span class="p">(</span><span class="n">height_px</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span> <span class="n">lw_border</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+</pre></div>
+</div>
+<img alt="../../_images/sphx_glr_logos0_001.svg" class="sphx-glr-single-img" src="../../_images/sphx_glr_logos0_001.svg" /><p>A large logo including text, as used on the mpltern website.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">make_logo</span><span class="p">(</span><span class="n">height_px</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span> <span class="n">lw_border</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">with_text</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<img alt="../../_images/sphx_glr_logos0_002.svg" class="sphx-glr-single-img" src="../../_images/sphx_glr_logos0_002.svg" /><div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-gallery-miscellaneous-logos0-py">
+<div class="sphx-glr-download docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/762c37275acfdf80924fc2ce6d1750b2/logos0.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">logos0.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/44db2d643316ea554d68f96afb4c6ca5/logos0.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">logos0.ipynb</span></code></a></p>
+</div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2019, Yuji Ikeda.<br/>
+      Last updated on Nov 01, 2019.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

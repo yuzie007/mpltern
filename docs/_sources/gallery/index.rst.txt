@@ -1,0 +1,757 @@
+:orphan:
+
+
+
+.. _sphx_glr_gallery:
+
+.. _examples-index:
+
+.. _gallery:
+
+#######
+Gallery
+#######
+
+This gallery contains examples of mpltern.
+
+
+.. raw:: html
+
+    <div style='clear:both'></div>
+
+
+
+.. _sphx_glr_gallery_introductory:
+
+Introductory
+============
+
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Lines and curves can be put using ax.plot in the same way as Matplotlib.">
+
+.. only:: html
+
+    .. figure:: /gallery/introductory/images/thumb/sphx_glr_00.line_and_curve_thumb.svg
+
+        :ref:`sphx_glr_gallery_introductory_00.line_and_curve.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /gallery/introductory/00.line_and_curve
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Scatter plots can be done using ax.quiver.">
+
+.. only:: html
+
+    .. figure:: /gallery/introductory/images/thumb/sphx_glr_01.scatter_thumb.svg
+
+        :ref:`sphx_glr_gallery_introductory_01.scatter.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /gallery/introductory/01.scatter
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Contour plots can be done using ax.tricontour or ax.tricontourf.">
+
+.. only:: html
+
+    .. figure:: /gallery/introductory/images/thumb/sphx_glr_02.contour_thumb.svg
+
+        :ref:`sphx_glr_gallery_introductory_02.contour.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /gallery/introductory/02.contour
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Pseudocolor plots can be done using ax.tripcolor.">
+
+.. only:: html
+
+    .. figure:: /gallery/introductory/images/thumb/sphx_glr_03.pseudocolor_thumb.svg
+
+        :ref:`sphx_glr_gallery_introductory_03.pseudocolor.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /gallery/introductory/03.pseudocolor
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="The normalization of ternary plots can be modified using ternary_scale.">
+
+.. only:: html
+
+    .. figure:: /gallery/introductory/images/thumb/sphx_glr_04.normalization_thumb.svg
+
+        :ref:`sphx_glr_gallery_introductory_04.normalization.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /gallery/introductory/04.normalization
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="A line or a band horizontal to an ternary axis can be plotted by the commands axtline, axlline,...">
+
+.. only:: html
+
+    .. figure:: /gallery/introductory/images/thumb/sphx_glr_05.span_thumb.svg
+
+        :ref:`sphx_glr_gallery_introductory_05.span.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /gallery/introductory/05.span
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Texts cant be put using ax.text in the same way as Matplotlib.">
+
+.. only:: html
+
+    .. figure:: /gallery/introductory/images/thumb/sphx_glr_06.text_thumb.svg
+
+        :ref:`sphx_glr_gallery_introductory_06.text.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /gallery/introductory/06.text
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Polygons in ternary plots can be put using ax.fill.">
+
+.. only:: html
+
+    .. figure:: /gallery/introductory/images/thumb/sphx_glr_07.polygon_thumb.svg
+
+        :ref:`sphx_glr_gallery_introductory_07.polygon.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /gallery/introductory/07.polygon
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="2D field of arrows can be plotted using ax.quiver.">
+
+.. only:: html
+
+    .. figure:: /gallery/introductory/images/thumb/sphx_glr_08.quiver_thumb.svg
+
+        :ref:`sphx_glr_gallery_introductory_08.quiver.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /gallery/introductory/08.quiver
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="The grid along the tick positions can be plotted using ax.grid. For more detailed control, see ...">
+
+.. only:: html
+
+    .. figure:: /gallery/introductory/images/thumb/sphx_glr_09.grid_thumb.svg
+
+        :ref:`sphx_glr_gallery_introductory_09.grid.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /gallery/introductory/09.grid
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Axis labels can be given using e.g. ax.set_tlabel. For more detailed control, see sphx_glr_gall...">
+
+.. only:: html
+
+    .. figure:: /gallery/introductory/images/thumb/sphx_glr_10.axis_labels_thumb.svg
+
+        :ref:`sphx_glr_gallery_introductory_10.axis_labels.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /gallery/introductory/10.axis_labels
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="A triangular grid can be plotted by giving the grid points to ax.triplot.">
+
+.. only:: html
+
+    .. figure:: /gallery/introductory/images/thumb/sphx_glr_11.triangular_grid_thumb.svg
+
+        :ref:`sphx_glr_gallery_introductory_11.triangular_grid.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /gallery/introductory/11.triangular_grid
+.. raw:: html
+
+    <div style='clear:both'></div>
+
+
+
+.. _sphx_glr_gallery_intermediate:
+
+Intermediate
+============
+
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="The legend can be put using ax.legend in the same way as Matplotlib.">
+
+.. only:: html
+
+    .. figure:: /gallery/intermediate/images/thumb/sphx_glr_legend_thumb.svg
+
+        :ref:`sphx_glr_gallery_intermediate_legend.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /gallery/intermediate/legend
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="We can limit the ranges of ternary axes.">
+
+.. only:: html
+
+    .. figure:: /gallery/intermediate/images/thumb/sphx_glr_ternary_limits_thumb.svg
+
+        :ref:`sphx_glr_gallery_intermediate_ternary_limits.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /gallery/intermediate/ternary_limits
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Ternary plots of mpltern can be combined with normal Matplotlib plots very straightforwardly.">
+
+.. only:: html
+
+    .. figure:: /gallery/intermediate/images/thumb/sphx_glr_with_normal_plots_thumb.svg
+
+        :ref:`sphx_glr_gallery_intermediate_with_normal_plots.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /gallery/intermediate/with_normal_plots
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="You can use seaborn styles with mpltern in the same way as Matplotlib.">
+
+.. only:: html
+
+    .. figure:: /gallery/intermediate/images/thumb/sphx_glr_with_seaborn_styles_thumb.svg
+
+        :ref:`sphx_glr_gallery_intermediate_with_seaborn_styles.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /gallery/intermediate/with_seaborn_styles
+.. raw:: html
+
+    <div style='clear:both'></div>
+
+
+
+.. _sphx_glr_gallery_axis_and_tick:
+
+Axis and Tick
+=============
+
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Axis-label position can be controlled via e.g. ax.taxis.set_label_position.">
+
+.. only:: html
+
+    .. figure:: /gallery/axis_and_tick/images/thumb/sphx_glr_axis_label_position_thumb.svg
+
+        :ref:`sphx_glr_gallery_axis_and_tick_axis_label_position.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /gallery/axis_and_tick/axis_label_position
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Axis-label rotation can be controlled via e.g. ax.taxis.set_label_rotation_mode.">
+
+.. only:: html
+
+    .. figure:: /gallery/axis_and_tick/images/thumb/sphx_glr_axis_label_rotation_thumb.svg
+
+        :ref:`sphx_glr_gallery_axis_and_tick_axis_label_rotation.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /gallery/axis_and_tick/axis_label_rotation
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Tick direction can be changed via ax.tick_params(direction={&#x27;in&#x27;, &#x27;out&#x27;, &#x27;inout&#x27;}).">
+
+.. only:: html
+
+    .. figure:: /gallery/axis_and_tick/images/thumb/sphx_glr_tick_direction_thumb.svg
+
+        :ref:`sphx_glr_gallery_axis_and_tick_tick_direction.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /gallery/axis_and_tick/tick_direction
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Tick position can be changed via ax.opposite_ticks.">
+
+.. only:: html
+
+    .. figure:: /gallery/axis_and_tick/images/thumb/sphx_glr_tick_position_thumb.svg
+
+        :ref:`sphx_glr_gallery_axis_and_tick_tick_position.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /gallery/axis_and_tick/tick_position
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Tick rotation can be changed via ax.tick_params(labelrotation={&#x27;tick&#x27;, &#x27;axis&#x27;, &#x27;horizontal&#x27;}).">
+
+.. only:: html
+
+    .. figure:: /gallery/axis_and_tick/images/thumb/sphx_glr_tick_rotation_thumb.svg
+
+        :ref:`sphx_glr_gallery_axis_and_tick_tick_rotation.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /gallery/axis_and_tick/tick_rotation
+.. raw:: html
+
+    <div style='clear:both'></div>
+
+
+
+.. _sphx_glr_gallery_triangle:
+
+Triangle
+========
+
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="The triangle aspect can be modified by ax.set_aspect. For more general triangles, use rotation ...">
+
+.. only:: html
+
+    .. figure:: /gallery/triangle/images/thumb/sphx_glr_00.aspect_thumb.svg
+
+        :ref:`sphx_glr_gallery_triangle_00.aspect.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /gallery/triangle/00.aspect
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="The triangle for a ternary plot can be rotated by rotation. Axis labels, tick labels, and tick ...">
+
+.. only:: html
+
+    .. figure:: /gallery/triangle/images/thumb/sphx_glr_01.triangle_rotation_thumb.svg
+
+        :ref:`sphx_glr_gallery_triangle_01.triangle_rotation.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /gallery/triangle/01.triangle_rotation
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="You can make a ternary plot on an triangle with arbitrary shape.">
+
+.. only:: html
+
+    .. figure:: /gallery/triangle/images/thumb/sphx_glr_02.arbitrary_triangle_thumb.svg
+
+        :ref:`sphx_glr_gallery_triangle_02.arbitrary_triangle.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /gallery/triangle/02.arbitrary_triangle
+.. raw:: html
+
+    <div style='clear:both'></div>
+
+
+
+.. _sphx_glr_gallery_advanced:
+
+Advanced
+========
+
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="You can give a different color for each axis.">
+
+.. only:: html
+
+    .. figure:: /gallery/advanced/images/thumb/sphx_glr_00.colored_axes_thumb.svg
+
+        :ref:`sphx_glr_gallery_advanced_00.colored_axes.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /gallery/advanced/00.colored_axes
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Arrows along the axes can be put in barycentric coordinates using transforms for TernaryAxes in...">
+
+.. only:: html
+
+    .. figure:: /gallery/advanced/images/thumb/sphx_glr_01.arrows_along_axes_thumb.svg
+
+        :ref:`sphx_glr_gallery_advanced_01.arrows_along_axes.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /gallery/advanced/01.arrows_along_axes
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Minor ticks can be given using Matplotlib locators. Gridlines for minor ticks can be also plott...">
+
+.. only:: html
+
+    .. figure:: /gallery/advanced/images/thumb/sphx_glr_02.minor_ticks_thumb.svg
+
+        :ref:`sphx_glr_gallery_advanced_02.minor_ticks.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /gallery/advanced/02.minor_ticks
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Tick positions can be given manually in the same way as Matplotlib.">
+
+.. only:: html
+
+    .. figure:: /gallery/advanced/images/thumb/sphx_glr_03.manual_tick_positions_thumb.svg
+
+        :ref:`sphx_glr_gallery_advanced_03.manual_tick_positions.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /gallery/advanced/03.manual_tick_positions
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="You can put tick labels inside triangle by setting labelrotation=manual and then specifying app...">
+
+.. only:: html
+
+    .. figure:: /gallery/advanced/images/thumb/sphx_glr_04.tick_labels_inside_triangle_thumb.svg
+
+        :ref:`sphx_glr_gallery_advanced_04.tick_labels_inside_triangle.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /gallery/advanced/04.tick_labels_inside_triangle
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Inset">
+
+.. only:: html
+
+    .. figure:: /gallery/advanced/images/thumb/sphx_glr_05.inset_thumb.svg
+
+        :ref:`sphx_glr_gallery_advanced_05.inset.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /gallery/advanced/05.inset
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="You can plot onto the fixed positions of the triangle by specifying tranform=ax.transTernaryAxe...">
+
+.. only:: html
+
+    .. figure:: /gallery/advanced/images/thumb/sphx_glr_06.plot_fixed_onto_triangle_thumb.svg
+
+        :ref:`sphx_glr_gallery_advanced_06.plot_fixed_onto_triangle.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /gallery/advanced/06.plot_fixed_onto_triangle
+.. raw:: html
+
+    <div style='clear:both'></div>
+
+
+
+.. _sphx_glr_gallery_miscellaneous:
+
+Miscellaneous
+=============
+
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="This example generates the current mpltern logo.">
+
+.. only:: html
+
+    .. figure:: /gallery/miscellaneous/images/thumb/sphx_glr_logos0_thumb.svg
+
+        :ref:`sphx_glr_gallery_miscellaneous_logos0.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /gallery/miscellaneous/logos0
+.. raw:: html
+
+    <div style='clear:both'></div>
+
+
+
+.. only :: html
+
+ .. container:: sphx-glr-footer
+    :class: sphx-glr-footer-gallery
+
+
+  .. container:: sphx-glr-download
+
+    :download:`Download all examples in Python source code: gallery_python.zip <//Users/ikeda/codes/mpltern/docsrc/gallery/gallery_python.zip>`
+
+
+
+  .. container:: sphx-glr-download
+
+    :download:`Download all examples in Jupyter notebooks: gallery_jupyter.zip <//Users/ikeda/codes/mpltern/docsrc/gallery/gallery_jupyter.zip>`
+
+
+.. only:: html
+
+ .. rst-class:: sphx-glr-signature
+
+    `Gallery generated by Sphinx-Gallery <https://sphinx-gallery.github.io>`_

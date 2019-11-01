@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>mpltern &#8212; mpltern 0.3.0+1.g3830ae7.dirty documentation</title>
+    <title>Aims of mpltern &#8212; mpltern 0.3.0+1.g3830ae7.dirty documentation</title>
     <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="_static/gallery.css" />
@@ -39,7 +39,7 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="#">
+        <a class="navbar-brand" href="index.html">
           mpltern</a>
         <span class="navbar-text navbar-version pull-left"><b>0.3.0+1.g3830ae7.dirty</b></span>
       </div>
@@ -57,7 +57,7 @@
      id="dLabelGlobalToc"
      data-toggle="dropdown"
      data-target="#"
-     href="#">Site <b class="caret"></b></a>
+     href="index.html">Site <b class="caret"></b></a>
   <ul class="dropdown-menu globaltoc"
       role="menu"
       aria-labelledby="dLabelGlobalToc"></ul>
@@ -88,67 +88,26 @@
   <div class="row">
     <div class="body col-md-12 content" role="main">
       
-  <div class="section" id="mpltern">
-<h1><a class="reference internal" href="_images/sphx_glr_logos0_0021.svg"><img alt="mpltern" height="50px" src="_images/sphx_glr_logos0_0021.svg" /></a><a class="headerlink" href="#mpltern" title="Permalink to this headline">¶</a></h1>
-<p>Mpltern is a Python plotting library based on <a class="reference external" href="https://matplotlib.org">Matplotlib</a> specifically designed
-for <a class="reference external" href="https://en.wikipedia.org/wiki/Ternary_plot">ternary plots</a>.
-Mpltern is implemented as a new projection for Matplotlib, with introducing
-e.g. new <code class="docutils literal notranslate"><span class="pre">Transform</span></code> classes for ternary plots.
-The followings are the features of mpltern when compared with other
-ternary-plot libraties:</p>
+  <div class="section" id="aims-of-mpltern">
+<h1>Aims of mpltern<a class="headerlink" href="#aims-of-mpltern" title="Permalink to this headline">¶</a></h1>
+<p>Compared with other Python-based implementations for ternary plots,
+mpltern focuses on providing a similar user experience to Matplotlib.
+Practically, this aim is hopefully accomplished by:</p>
 <ul class="simple">
-<li><p>Many things one expects essentially possible using Matplotlib can be done
-also in mpltern, without e.g. ternary-to-Cartesian conversions on the user
-side</p></li>
-<li><p>For the same plotting styles, mpltern offers the same or very similar method
-names as Matplotlib does; you do not need to learn many new commands in
-addition to those for Matplotlib</p></li>
-<li><p>Tick markers, tick labels, and axis labels are automatically positioned with
-reasonable paddings inherited from Matplotlib;
-this allows users e.g. faster production of ternary plots with publication
-quality</p></li>
-<li><p>Easy combination with normal Matplotlib plots</p></li>
-<li><p>Easy application of <a class="reference external" href="https://seaborn.pydata.org">seaborn</a> styles</p></li>
-<li><p>Working also in Matplotlib interactive modes inside e.g. <a class="reference external" href="http://jupyter.org">Jupyter</a> notebooks</p></li>
+<li><dl class="simple">
+<dt>Implementation of <code class="docutils literal notranslate"><span class="pre">TernaryAxes</span></code> inheriting <code class="docutils literal notranslate"><span class="pre">Axes</span></code> of Matplotlib.</dt><dd><ul>
+<li><p>Compoments of <code class="docutils literal notranslate"><span class="pre">Axes</span></code> like <code class="docutils literal notranslate"><span class="pre">Axis</span></code> and <code class="docutils literal notranslate"><span class="pre">Tick</span></code> are also overridden as
+<code class="docutils literal notranslate"><span class="pre">TernaryAxis</span></code> and <code class="docutils literal notranslate"><span class="pre">TernaryTick</span></code>, respectively.</p></li>
 </ul>
-<div class="responsive_screenshots">
-   <a href="gallery/index.html">
-      <div class="responsive_subfig">
-      <img align="middle" src="_images/sphx_glr_with_seaborn_styles_001.svg"
-       border="0" alt="screenshots"/>
-      </div>
-      <div class="responsive_subfig">
-      <img align="middle" src="_images/sphx_glr_05.inset_001.svg"
-       border="0" alt="screenshots"/>
-      </div>
-      <div class="responsive_subfig">
-      <img align="middle" src="_images/basic_2.svg"
-       border="0" alt="screenshots"/>
-      </div>
-      <div class="responsive_subfig">
-      <img align="middle" src="_images/sphx_glr_02.arbitrary_triangle_001.svg"
-       border="0" alt="screenshots"/>
-      </div>
-   </a>
-</div>
-<span class="clear_screenshots"></span><div class="section" id="citing-mpltern">
-<h2>Citing mpltern<a class="headerlink" href="#citing-mpltern" title="Permalink to this headline">¶</a></h2>
-<p>At this moment, the author requests to cite the URL of this page if mpltern
-contributes to a scientific publication.
-Of course, <a class="reference external" href="https://matplotlib.org/citing.html">Matplotlib should be also very much acknowledged</a>
-when using mpltern.</p>
-<div class="section" id="dois">
-<h3>DOIs<a class="headerlink" href="#dois" title="Permalink to this headline">¶</a></h3>
-<p>None yet.</p>
-</div>
-</div>
-<div class="section" id="author">
-<h2>Author<a class="headerlink" href="#author" title="Permalink to this headline">¶</a></h2>
-<p>Yuji Ikeda
-(<a class="reference external" href="https://github.com/yuzie007">Github</a>,
-<a class="reference external" href="https://scholar.google.co.jp/citations?user=2m5dkBwAAAAJ&amp;hl=en">Google Scholar</a>,
-<a class="reference external" href="https://www.researchgate.net/profile/Yuji_Ikeda6">ResearchGate</a>)</p>
-</div>
+</dd>
+</dl>
+</li>
+<li><p>Parameters in <code class="docutils literal notranslate"><span class="pre">rcParams</span></code> of Matplotlib rather than hard-coded defaults.
+This also enables us to use seaborn styles with mpltern.</p></li>
+<li><p>Employments of new <code class="docutils literal notranslate"><span class="pre">transform</span></code> classes useful for ternary plots.
+This particularly makes mpltern work nicely not only in non-interactive modes
+but also in interactive modes.</p></li>
+</ul>
 </div>
 
 

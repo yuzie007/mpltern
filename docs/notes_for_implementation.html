@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Notes for mpltern Implementation &#8212; mpltern 0.3.0+1.g3830ae7.dirty documentation</title>
+    <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/gallery.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mpltern.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js"></script>
+    <script type="text/javascript" src="_static/copybutton.js"></script>
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="_static/bootstrap-sphinx.js "></script>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="index.html">
+          mpltern</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.3.0+1.g3830ae7.dirty</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="installation.html">Installation</a></li>
+                <li><a href="contents.html">Documents</a></li>
+                <li><a href="gallery/index.html">Examples</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"></ul>
+</li>
+              
+            
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="body col-md-12 content" role="main">
+      
+  <div class="section" id="notes-for-mpltern-implementation">
+<h1>Notes for mpltern Implementation<a class="headerlink" href="#notes-for-mpltern-implementation" title="Permalink to this headline">¶</a></h1>
+<p>This page is rather personal notes of the author and summarizes the things
+learned about Matplotlib during the mpltern implementation.</p>
+<div class="section" id="axes">
+<h2><code class="docutils literal notranslate"><span class="pre">Axes</span></code><a class="headerlink" href="#axes" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="axes-plot">
+<h3><code class="docutils literal notranslate"><span class="pre">Axes.plot</span></code><a class="headerlink" href="#axes-plot" title="Permalink to this headline">¶</a></h3>
+<p>The first arguments <code class="docutils literal notranslate"><span class="pre">x</span></code> and <code class="docutils literal notranslate"><span class="pre">y</span></code> are actually positional arguments,
+and therefore their order cannot be exchanged.
+Following this behavior, also in mpltern,
+the order of <code class="docutils literal notranslate"><span class="pre">t</span></code>, <code class="docutils literal notranslate"><span class="pre">l</span></code>, <code class="docutils literal notranslate"><span class="pre">r</span></code> cannot be exchanged.</p>
+<p><code class="docutils literal notranslate"><span class="pre">ax.plot</span></code> can run even without any positional arguments.
+In this case, a list of no length (<code class="docutils literal notranslate"><span class="pre">[]</span></code>)
+is returned.
+(see the implementation of
+<code class="docutils literal notranslate"><span class="pre">matplotlib.axes._base._process_plot_var_args.__call__</span></code>).</p>
+</div>
+<div class="section" id="axessubplot">
+<h3><code class="docutils literal notranslate"><span class="pre">AxesSubplot</span></code><a class="headerlink" href="#axessubplot" title="Permalink to this headline">¶</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">AxesSubplot</span></code> class is <em>dynamically</em> created by
+<code class="docutils literal notranslate"><span class="pre">matplotlib.axes._subplots.subplot_class_factory</span></code>.</p>
+<p>In mpltern, <code class="docutils literal notranslate"><span class="pre">TernaryAxes</span></code> is defined without the suffix <code class="docutils literal notranslate"><span class="pre">Subplot</span></code>,
+similarly to <code class="docutils literal notranslate"><span class="pre">Axes</span></code> in Matplotlib, but if it is created e.g. via
+<code class="docutils literal notranslate"><span class="pre">fig.add_subplot</span></code> it becomes <code class="docutils literal notranslate"><span class="pre">TernaryAxesSubplot</span></code>.</p>
+</div>
+</div>
+<div class="section" id="registration-of-a-new-projection">
+<h2>Registration of a New Projection<a class="headerlink" href="#registration-of-a-new-projection" title="Permalink to this headline">¶</a></h2>
+<p>In Matplotlib, to use <code class="docutils literal notranslate"><span class="pre">Axes3D</span></code> one has to import
+<code class="docutils literal notranslate"><span class="pre">mpl_toolkits.mplot3d.Axes3D</span></code>, as described in the
+<a class="reference external" href="https://matplotlib.org/mpl_toolkits/mplot3d/tutorial.html">Matplotlib mplot3d tutorial</a>.
+In mpltern, however, it is decided NOT to follow this way due to the increase of
+the typing effort.
+Instead, <code class="docutils literal notranslate"><span class="pre">TernaryAxes</span></code> is available by just importing <code class="docutils literal notranslate"><span class="pre">mpltern</span></code>.
+While in most cases mpltern tries to follow the ways of Matplotlib,
+this is one of the exceptions.</p>
+</div>
+<div class="section" id="axis">
+<h2><code class="docutils literal notranslate"><span class="pre">Axis</span></code><a class="headerlink" href="#axis" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="set-ticks-position">
+<h3><code class="docutils literal notranslate"><span class="pre">set_ticks_position</span></code><a class="headerlink" href="#set-ticks-position" title="Permalink to this headline">¶</a></h3>
+<p>In Matplotlib, <code class="docutils literal notranslate"><span class="pre">'default'</span></code> actually does not restore the default positions
+of ticks.
+This may be due to the compatibility with Matplotlib 1.x.
+In mpltern, <code class="docutils literal notranslate"><span class="pre">'default'</span></code> is equivalent to <code class="docutils literal notranslate"><span class="pre">'tick1'</span></code>.</p>
+</div>
+<div class="section" id="offsettext">
+<h3><code class="docutils literal notranslate"><span class="pre">offsetText</span></code><a class="headerlink" href="#offsettext" title="Permalink to this headline">¶</a></h3>
+<p>When, for example, we have a large <em>y</em>-axis values, Matplotlib shows the values
+as the differences from the reference value, which is shown at one end.
+The <code class="docutils literal notranslate"><span class="pre">offsetText</span></code> indicates the text showing this reference value.</p>
+</div>
+<div class="section" id="remove-round-off">
+<h3>Remove round-off<a class="headerlink" href="#remove-round-off" title="Permalink to this headline">¶</a></h3>
+<p>Before Matplotlib 3.1.0, we needed to define <code class="docutils literal notranslate"><span class="pre">_get_pixel_distance_along_axis</span></code>
+was used in <code class="docutils literal notranslate"><span class="pre">Axis</span></code> classes.
+in <code class="docutils literal notranslate"><span class="pre">TernaryAxis</span></code>. also, this method had to be overridden.
+In Matplotlib 3.1.0, this becomes not necessary thanks to the simplification
+and the improvement of consistency
+(<a class="reference external" href="https://github.com/matplotlib/matplotlib/pull/12158">#12158</a> in Matplotlib).</p>
+</div>
+<div class="section" id="ternaryaxis">
+<h3><code class="docutils literal notranslate"><span class="pre">TernaryAxis</span></code><a class="headerlink" href="#ternaryaxis" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><dl class="simple">
+<dt>To be overridden</dt><dd><ul>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">update_label_position</span></code></dt><dd><ul>
+<li><p>The positions of ticks are updated via <code class="docutils literal notranslate"><span class="pre">_update_ticks</span></code>.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+<p>The default <code class="docutils literal notranslate"><span class="pre">verticalaligment</span></code> of axis labels in Matplotlib are:</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">XAxis.label</span></code></dt><dd><ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">'bottom'</span></code>: <code class="docutils literal notranslate"><span class="pre">'top'</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'top'</span></code>: <code class="docutils literal notranslate"><span class="pre">'baseline'</span></code></p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">YAxis.label</span></code></dt><dd><ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">'left'</span></code>: <code class="docutils literal notranslate"><span class="pre">'bottom'</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'right'</span></code>: <code class="docutils literal notranslate"><span class="pre">'top'</span></code></p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+<p>The above gives different spacings between tick labels and the axis labels
+for the <em>x</em> and the <em>y</em> axes when tick labels come below the axis label.
+are inconsistent in the sense that they gives different spacings from their
+tick labels.
+In mpltern, <code class="docutils literal notranslate"><span class="pre">bottom</span></code> is used by default when the tick labels come below the
+axis label.
+This is because <code class="docutils literal notranslate"><span class="pre">baseline</span></code> and <code class="docutils literal notranslate"><span class="pre">top</span></code> look to give different spacings from
+their tick labels if the label text has a descent.</p>
+</div>
+</div>
+<div class="section" id="tick">
+<h2><code class="docutils literal notranslate"><span class="pre">Tick</span></code><a class="headerlink" href="#tick" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="markers">
+<h3>Markers<a class="headerlink" href="#markers" title="Permalink to this headline">¶</a></h3>
+<p>In Matplotlib, ticks are defined as a list of <code class="docutils literal notranslate"><span class="pre">Tick</span></code> instances.
+Each <code class="docutils literal notranslate"><span class="pre">Tick</span></code> corresponds to a value of the corresponding coordinate.
+A <code class="docutils literal notranslate"><span class="pre">Tick</span></code> has three <code class="docutils literal notranslate"><span class="pre">Line2D</span></code> instances to show a tick marker for each side
+and a grid and has two <code class="docutils literal notranslate"><span class="pre">Text</span></code> instances to show tick labels on both sides.</p>
+<p>A tick is shown by a marker.
+By default, the tick-maker in Matplotlib is already scaled as</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">1.0</span> <span class="pre">if</span> <span class="pre">self._tickdir</span> <span class="pre">in</span> <span class="pre">['in',</span> <span class="pre">'out']</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">0.5</span> <span class="pre">if</span> <span class="pre">self._tickdir</span> <span class="pre">in</span> <span class="pre">['inout']</span></code></p></li>
+</ul>
+<p>and is already rotated by 90 degrees for the <code class="docutils literal notranslate"><span class="pre">XTick</span></code>.</p>
+<p>To make a tilted tick marker, mpltern rotates and scales the default one in the
+<code class="docutils literal notranslate"><span class="pre">TernaryTick._tilt_marker</span></code> method.
+When tilting the tick-marker, we must also re-apply the above
+rotation and the scaling to it.</p>
+</div>
+<div class="section" id="radialtick-in-polaraxes">
+<h3><code class="docutils literal notranslate"><span class="pre">RadialTick</span></code> in <code class="docutils literal notranslate"><span class="pre">PolarAxes</span></code><a class="headerlink" href="#radialtick-in-polaraxes" title="Permalink to this headline">¶</a></h3>
+<p>When a circular sector is drawn, the horizontal and the vertical alignments of
+tick labels cannot be modified from outside.</p>
+</div>
+<div class="section" id="ternarytick-in-mpltern">
+<h3><code class="docutils literal notranslate"><span class="pre">TernaryTick</span></code> in mpltern<a class="headerlink" href="#ternarytick-in-mpltern" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><dl class="simple">
+<dt>To be overridden:</dt><dd><ul>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">_get_tick1line</span></code>, <code class="docutils literal notranslate"><span class="pre">_get_tick2line</span></code>, <code class="docutils literal notranslate"><span class="pre">_get_gridline</span></code></dt><dd><ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">transform</span></code> of the line must be overridden by the one suitable for
+the corresponding ternary axis.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">update_position</span></code></dt><dd><ul>
+<li><p>Tick-angles are modified in this method with calling the
+<code class="docutils literal notranslate"><span class="pre">_tilt_marker</span></code> method inside.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="fig-colorbar">
+<h2><code class="docutils literal notranslate"><span class="pre">fig.colorbar</span></code><a class="headerlink" href="#fig-colorbar" title="Permalink to this headline">¶</a></h2>
+<p>In <code class="docutils literal notranslate"><span class="pre">fig.colorbar</span></code> in Matplotlib, the position of the colorbar does not care
+<em>y</em>-ticks at the right side.
+The keywords <code class="docutils literal notranslate"><span class="pre">fraction</span></code> and <code class="docutils literal notranslate"><span class="pre">pad</span></code> determine the position of the colorbar,
+which we specify by hand.
+Following to this behavior, mpltern does NOT automatically position the
+colorbar but requests users to do by hand.</p>
+</div>
+<div class="section" id="interactive-modes">
+<h2>Interactive Modes<a class="headerlink" href="#interactive-modes" title="Permalink to this headline">¶</a></h2>
+<p>The buttons in the interactive mode call the following methods:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Home</span></code>: <code class="docutils literal notranslate"><span class="pre">_set_view</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Pan/Zoom</span></code>: <code class="docutils literal notranslate"><span class="pre">drag_pan</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Zoom-to-rectangle</span></code>: <code class="docutils literal notranslate"><span class="pre">_set_view_from_bbox</span></code></p></li>
+</ul>
+<p>If you want to scale the axes for ternary plots according to the change of
+(<code class="docutils literal notranslate"><span class="pre">xmin</span></code>, <code class="docutils literal notranslate"><span class="pre">ymin</span></code>, <code class="docutils literal notranslate"><span class="pre">xmax</span></code>, <code class="docutils literal notranslate"><span class="pre">ymax</span></code>), these methods should be overridden
+to call the rescaling method for the axes of ternary plots
+(<code class="docutils literal notranslate"><span class="pre">_set_ternary_lim_from_xlim_and_ylim</span></code>).</p>
+<p>If you want to prohibit e.g. <code class="docutils literal notranslate"><span class="pre">Zoom-to-rectanble</span></code>, you need to override e.g.
+<code class="docutils literal notranslate"><span class="pre">can_zoom</span></code> to return <code class="docutils literal notranslate"><span class="pre">False</span></code>. (<code class="docutils literal notranslate"><span class="pre">PolarAxes</span></code> in Matplotlib does this.)</p>
+</div>
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2019, Yuji Ikeda.<br/>
+      Last updated on Nov 01, 2019.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>
