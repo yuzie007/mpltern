@@ -4,7 +4,6 @@
 
 .. title:: mpltern
 
-.. _source code: https://github.com/yuzie007/mpltern
 .. _Matplotlib: https://matplotlib.org
 .. _seaborn: https://seaborn.pydata.org
 .. _Jupyter: http://jupyter.org
@@ -56,19 +55,6 @@ ternary-plot libraties:
       </a>
    </div>
    <span class="clear_screenshots"></span>
-
-Installation
-============
-
-The latest version of mpltern is available from `GitHub <source code_>`_.
-
-.. code-block::
-
-   git clone https://github.com/yuzie007/mpltern.git
-   cd mpltern
-   python setup.py install
-
-Installations via PyPI and Conda are also planned.
 
 Citing mpltern
 ==============

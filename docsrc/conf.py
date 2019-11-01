@@ -131,6 +131,7 @@ html_theme = 'bootstrap'
 html_theme_options = {
     'navbar_links': [
         # ("home", "index"),
+        ("Installation", "installation"),
         ("Documents", "contents"),
         ("Examples", "gallery/index"),
      ],
