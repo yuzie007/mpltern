@@ -2,12 +2,15 @@
 |mpltern|
 #########
 
+.. title:: mpltern
+
 .. _source code: https://github.com/yuzie007/mpltern
 .. _Matplotlib: https://matplotlib.org
 .. _seaborn: https://seaborn.pydata.org
 .. _Jupyter: http://jupyter.org
 
-.. |mpltern| image:: _static/sphx_glr_logos0_003.svg
+.. |mpltern| image:: _static/sphx_glr_logos0_002.svg
+   :height: 50px
 
 Mpltern is a Python plotting library based on Matplotlib_ specifically designed
 for `ternary plots <https://en.wikipedia.org/wiki/Ternary_plot>`_.
