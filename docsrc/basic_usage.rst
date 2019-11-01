@@ -30,6 +30,20 @@ For example:
 
 You may see the following Archimedean spiral in the triangle.
 
-.. image:: basic_usage.svg
+.. image:: basic_1.svg
+
+Contour-like plots are also possible in mpltern.
+
+.. code-block:: python
+
+    ax = plt.subplot(projection='ternary')
+
+    from mpltern.ternary.datasets import get_shanon_entropies
+
+    t, l, r, v = get_shanon_entropies()
+    ax.tricontourf(t, l, r, v)
+    plt.show()
+
+.. image:: basic_2.svg
 
 See also `more examples <gallery/index.html>`_.

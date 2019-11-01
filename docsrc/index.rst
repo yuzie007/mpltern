@@ -22,25 +22,37 @@ ternary-plot libraties:
 - For the same plotting styles, mpltern offers the same or very similar method
   names as Matplotlib does; you do not need to learn many new commands in
   addition to those for Matplotlib
+- Tick markers, tick labels, and axis labels are automatically positioned with
+  reasonable paddings inherited from Matplotlib;
+  this allows users e.g. faster production of ternary plots with publication
+  quality
 - Easy combination with normal Matplotlib plots
 - Easy application of seaborn_ styles
 - Working also in Matplotlib interactive modes inside e.g. Jupyter_ notebooks
 
-At the same time, mpltern manages many cumbersome things like the positioning
-of tick markers, tick labels, and axis labels. This allows users e.g. faster
-production of ternary plots with publication quality.
+.. raw:: html
 
-..
-   .. raw:: html
-
-      <div class="responsive_screenshots">
-         <a href="tutorials/introductory/sample_plots.html">
-            <div class="responsive_subfig">
-            <img align="middle" src="_images/sphx_glr_spans_thumb.svg"
-             border="0" alt="screenshots"/>
-            </div>
-      </div>
-      <span class="clear_screenshots"></span>
+   <div class="responsive_screenshots">
+      <a href="gallery/index.html">
+         <div class="responsive_subfig">
+         <img align="middle" src="_images/sphx_glr_with_seaborn_styles_001.svg"
+          border="0" alt="screenshots"/>
+         </div>
+         <div class="responsive_subfig">
+         <img align="middle" src="_images/sphx_glr_05.inset_001.svg"
+          border="0" alt="screenshots"/>
+         </div>
+         <div class="responsive_subfig">
+         <img align="middle" src="_images/basic_2.svg"
+          border="0" alt="screenshots"/>
+         </div>
+         <div class="responsive_subfig">
+         <img align="middle" src="_images/sphx_glr_02.arbitrary_triangle_001.svg"
+          border="0" alt="screenshots"/>
+         </div>
+      </a>
+   </div>
+   <span class="clear_screenshots"></span>
 
 Installation
 ============
