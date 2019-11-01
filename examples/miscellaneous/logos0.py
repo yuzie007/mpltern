@@ -30,7 +30,6 @@ def create_icon_axes(fig, ax_position, lw_border):
     """
     with plt.rc_context({'axes.linewidth': lw_border}):
         ax = fig.add_axes(ax_position, projection='ternary')
-        ax.set_facecolor((0, 0, 0, 0))
         ax.tick_params(
             tick1On=False, tick2On=False, label1On=False, label2On=False)
 
@@ -45,7 +44,7 @@ def create_icon_axes(fig, ax_position, lw_border):
 
 
 def add_mpltern_text(ax):
-    ax.text(0.95, 0.5, "mpltern", fontsize=65,
+    ax.text(1.0, 0.5, "mpltern", fontsize=128,
             ha='right', va='center', alpha=1.0, transform=ax.transAxes)
 
 
@@ -62,9 +61,9 @@ def make_logo(height_px, lw_border, with_text=False):
     with_text : bool
         Whether to draw only the icon or to include 'mpltern' as text.
     """
-    dpi = 100
+    dpi = 72
     height = height_px / dpi
-    figsize = (4.25 * height, height) if with_text else (height, height)
+    figsize = (5.0 * height, height) if with_text else (height, height)
     fig = plt.figure(figsize=figsize, dpi=dpi)
     fig.patch.set_alpha(0)
 
@@ -82,16 +81,11 @@ def make_logo(height_px, lw_border, with_text=False):
 ##############################################################################
 # A large logo:
 
-make_logo(height_px=110, lw_border=1)
-
-##############################################################################
-# A small 32px logo:
-
-fig, ax = make_logo(height_px=32, lw_border=0.3)
+make_logo(height_px=128, lw_border=3)
 
 ##############################################################################
 # A large logo including text, as used on the mpltern website.
 
-make_logo(height_px=110, lw_border=1, with_text=True)
+make_logo(height_px=128, lw_border=3, with_text=True)
 
 plt.show()
