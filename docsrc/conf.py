@@ -180,7 +180,7 @@ html_last_updated_fmt = '%b %d, %Y'
 html_domain_indices = ["py-modindex"]
 
 # Path to favicon
-html_favicon = '_static/favicon.png'
+html_favicon = '_static/favicon.ico'
 
 # Workaround to remove matplotlib warning based on
 # https://github.com/sphinx-gallery/sphinx-gallery/pull/521
