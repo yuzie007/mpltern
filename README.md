@@ -1,6 +1,7 @@
 # mpltern
 
 [![Build Status](https://travis-ci.org/yuzie007/mpltern.svg?branch=master)](https://travis-ci.org/yuzie007/mpltern)
+[![PyPI version](https://badge.fury.io/py/mpltern.svg)](https://badge.fury.io/py/mpltern)
 
 Mpltern is a Python plotting library based on
 [Matplotlib](https://matplotlib.org), specifically designed for
