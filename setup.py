@@ -122,7 +122,7 @@ setup(
     #
     #   py_modules=["my_module"],
     #
-    packages=['mpltern'],  # Required
+    packages=find_packages(),  # Required
 
     # Specify which Python versions you support. In contrast to the
     # 'Programming Language' classifiers above, 'pip install' will check this
@@ -194,6 +194,6 @@ setup(
         'Bug Reports': 'https://github.com/yuzie007/mpltern/issues',
         # 'Funding': 'https://donate.pypi.org',
         # 'Say Thanks!': 'http://saythanks.io/to/example',
-        # 'Source': 'https://github.com/pypa/sampleproject/',
+        'Source': 'https://github.com/yuzie007/mpltern',
     },
 )
