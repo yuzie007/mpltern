@@ -16,14 +16,14 @@ ternary-plot libraties:
 - For the same plotting styles, mpltern offers the same or very similar method
   names as Matplotlib does; you do not need to learn many new commands in
   addition to those for Matplotlib
+- Tick markers, tick labels, and axis labels are automatically positioned with
+  reasonable paddings inherited from Matplotlib;
+  this allows users e.g. faster production of ternary plots with publication
+  quality
 - Easy combination with normal Matplotlib plots
 - Easy application of [seaborn](https://seaborn.pydata.org) styles
 - Working also in Matplotlib interactive modes inside e.g.
   [Jupyter](http://jupyter.org) notebooks
-
-At the same time, mpltern manages many cumbersome things like the positioning
-of tick markers, tick labels, and axis labels. This allows users e.g. faster
-production of ternary plots with publication quality.
 
 Details of mpltern are found in https://yuzie007.github.io/mpltern.
 
