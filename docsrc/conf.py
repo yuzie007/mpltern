@@ -122,6 +122,9 @@ plot_formats = [('png', 100), ('pdf', 100)]
 
 github_project_url = "https://github.com/yuzie007/mpltern/"
 
+# The name of the Pygments (syntax highlighting) style to use.
+pygments_style = 'sphinx'
+
 # Options for HTML output
 # -----------------------
 html_theme = 'bootstrap'
@@ -141,6 +144,9 @@ html_theme_options = {
     # Location of link to source.
     # Options are "nav" (default), "footer" or anything else to exclude.
     'source_link_position': None,
+
+    # 'bootswatch_theme': "paper",
+    'bootswatch_theme': "sandstone",
 }
 
 # Add any paths that contain custom static files (such as style sheets) here,
