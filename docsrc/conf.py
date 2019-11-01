@@ -145,8 +145,7 @@ html_theme_options = {
     # Options are "nav" (default), "footer" or anything else to exclude.
     'source_link_position': None,
 
-    # 'bootswatch_theme': "paper",
-    'bootswatch_theme': "sandstone",
+    'bootswatch_theme': "paper",
 }
 
 # Add any paths that contain custom static files (such as style sheets) here,
