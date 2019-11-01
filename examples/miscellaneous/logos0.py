@@ -1,9 +1,9 @@
 """
-============
-Mpltern logo
-============
+====
+Logo
+====
 
-This example generates the current Mpltern logo.
+This example generates the current mpltern logo.
 """
 import matplotlib.pyplot as plt
 import mpltern  # noqa: F401
@@ -51,7 +51,7 @@ def add_mpltern_text(ax):
 
 def make_logo(height_px, lw_border, with_text=False):
     """
-    Create a full figure with the Mpltern logo.
+    Create a full figure with the mpltern logo.
 
     Parameters
     ----------
@@ -60,7 +60,7 @@ def make_logo(height_px, lw_border, with_text=False):
     lw_border : float
         The linewidth of icon border.
     with_text : bool
-        Whether to draw only the icon or to include 'Mpltern' as text.
+        Whether to draw only the icon or to include 'mpltern' as text.
     """
     dpi = 100
     height = height_px / dpi

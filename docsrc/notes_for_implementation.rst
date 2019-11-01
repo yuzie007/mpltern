@@ -1,9 +1,9 @@
 ################################
-Notes for Mpltern Implementation
+Notes for mpltern Implementation
 ################################
 
 This page is rather personal notes of the author and summarizes the things
-learned about Matplotlib during the Mpltern implementation.
+learned about Matplotlib during the mpltern implementation.
 
 ``Axes``
 ========
@@ -13,7 +13,7 @@ learned about Matplotlib during the Mpltern implementation.
 
 The first arguments ``x`` and ``y`` are actually positional arguments,
 and therefore their order cannot be exchanged.
-Following this behavior, also in Mpltern,
+Following this behavior, also in mpltern,
 the order of ``t``, ``l``, ``r`` cannot be exchanged.
 
 ``ax.plot`` can run even without any positional arguments.
@@ -28,7 +28,7 @@ is returned.
 The ``AxesSubplot`` class is *dynamically* created by
 ``matplotlib.axes._subplots.subplot_class_factory``.
 
-In Mpltern, ``TernaryAxes`` is defined without the suffix ``Subplot``,
+In mpltern, ``TernaryAxes`` is defined without the suffix ``Subplot``,
 similarly to ``Axes`` in Matplotlib, but if it is created e.g. via
 ``fig.add_subplot`` it becomes ``TernaryAxesSubplot``.
 
@@ -38,10 +38,10 @@ Registration of a New Projection
 In Matplotlib, to use ``Axes3D`` one has to import
 ``mpl_toolkits.mplot3d.Axes3D``, as described in the
 `Matplotlib mplot3d tutorial <https://matplotlib.org/mpl_toolkits/mplot3d/tutorial.html>`_.
-In Mpltern, however, it is decided NOT to follow this way due to the increase of
+In mpltern, however, it is decided NOT to follow this way due to the increase of
 the typing effort.
 Instead, ``TernaryAxes`` is available by just importing ``mpltern``.
-While in most cases Mpltern tries to follow the ways of Matplotlib,
+While in most cases mpltern tries to follow the ways of Matplotlib,
 this is one of the exceptions.
 
 ``Axis``
@@ -53,7 +53,7 @@ this is one of the exceptions.
 In Matplotlib, ``'default'`` actually does not restore the default positions
 of ticks.
 This may be due to the compatibility with Matplotlib 1.x.
-In Mpltern, ``'default'`` is equivalent to ``'tick1'``.
+In mpltern, ``'default'`` is equivalent to ``'tick1'``.
 
 ``offsetText``
 --------------
@@ -92,7 +92,7 @@ The above gives different spacings between tick labels and the axis labels
 for the *x* and the *y* axes when tick labels come below the axis label.
 are inconsistent in the sense that they gives different spacings from their
 tick labels.
-In Mpltern, ``bottom`` is used by default when the tick labels come below the
+In mpltern, ``bottom`` is used by default when the tick labels come below the
 axis label.
 This is because ``baseline`` and ``top`` look to give different spacings from
 their tick labels if the label text has a descent.
@@ -116,7 +116,7 @@ By default, the tick-maker in Matplotlib is already scaled as
 
 and is already rotated by 90 degrees for the ``XTick``.
 
-To make a tilted tick marker, Mpltern rotates and scales the default one in the
+To make a tilted tick marker, mpltern rotates and scales the default one in the
 ``TernaryTick._tilt_marker`` method.
 When tilting the tick-marker, we must also re-apply the above
 rotation and the scaling to it.
@@ -127,7 +127,7 @@ rotation and the scaling to it.
 When a circular sector is drawn, the horizontal and the vertical alignments of
 tick labels cannot be modified from outside.
 
-``TernaryTick`` in Mpltern
+``TernaryTick`` in mpltern
 --------------------------
 
 - To be overridden:
@@ -145,7 +145,7 @@ In ``fig.colorbar`` in Matplotlib, the position of the colorbar does not care
 *y*-ticks at the right side.
 The keywords ``fraction`` and ``pad`` determine the position of the colorbar,
 which we specify by hand.
-Following to this behavior, Mpltern does NOT automatically position the
+Following to this behavior, mpltern does NOT automatically position the
 colorbar but requests users to do by hand.
 
 Interactive Modes

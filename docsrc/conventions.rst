@@ -1,12 +1,12 @@
 ######################
-Conventions in Mpltern
+Conventions in mpltern
 ######################
 
 Axes and Ticks
 ==============
 
 In a ternary plot, three variables which sum to a constant
-``t + l + r = ternary_scale`` (= 1 in Mpltern by default) are projected onto
+``t + l + r = ternary_scale`` (= 1 in mpltern by default) are projected onto
 a two-dimensional triangle.
 Each variable is associated with each corner of the triangle, and the value is
 represented by the scaled distance to the corner from its opposite side.
@@ -17,10 +17,10 @@ There may be two kinds of perspectives to read a ternary plot; the
 In this perspective, each of the three variables is associated with a corner of
 the triangle, and the position in the triangle is given as the scaled distance
 to the corner from its opposite side, as already written above.
-In Mpltern, the order of the variables is ``T (top) → L (left) → R (right)``
+In mpltern, the order of the variables is ``T (top) → L (left) → R (right)``
 (counterclockwise).
 
-In Mpltern, by default, the ticks are shown to the right side of the triangle
+In mpltern, by default, the ticks are shown to the right side of the triangle
 with seeing the corresponding corner upward.
 You can put the ticks to the opposite sides by ``ax.opposite_ticks(True)``.
 Notice that, although the tick positions are changed, still a point in the
@@ -38,7 +38,7 @@ corresponds to different compositions between the clockwise and the
 counterclockwise tick progresses*, which may be confusing (see the red point).
 This also means that a position for a side does not immediately associated with
 the value of the corresponding variable in the "side-based" perspective.
-To avoid such confusions, in Mpltern, the "corner-based" perspective is
+To avoid such confusions, in mpltern, the "corner-based" perspective is
 adopted.
 
 .. image:: side_based_ccw.svg
@@ -85,11 +85,11 @@ Mpltern follows the conventions above.
 Normalization in Ternary Plots
 ==============================
 
-In most plotting methods in Mpltern, the given three variables are
+In most plotting methods in mpltern, the given three variables are
 automatically normalized by ``ternary_scale``.
 By this convention, the three variables can be treated on an equal footing.
 The exceptions are the span-plots like ``ax.axtline``.
 Since in these methods only one of the variables is given, in principle it is
 not possible whether the given value is already normalized or not.
 **To avoid confusions, it is strongly suggested to normalize the three
-variables beforehand outside Mpltern.**
+variables beforehand outside mpltern.**

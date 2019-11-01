@@ -13,20 +13,20 @@ Mpltern is a Python plotting library based on Matplotlib_ specifically designed
 for `ternary plots <https://en.wikipedia.org/wiki/Ternary_plot>`_.
 Mpltern is implemented as a new projection for Matplotlib, with introducing
 e.g. new ``Transform`` classes for ternary plots.
-The followings are the features of Mpltern when compared with other
+The followings are the features of mpltern when compared with other
 ternary-plot libraties:
 
 - Many things one expects essentially possible using Matplotlib can be done
-  also in Mpltern, without e.g. ternary-to-Cartesian conversions on the user
+  also in mpltern, without e.g. ternary-to-Cartesian conversions on the user
   side
-- For the same plotting styles, Mpltern offers the same or very similar method
+- For the same plotting styles, mpltern offers the same or very similar method
   names as Matplotlib does; you do not need to learn many new commands in
   addition to those for Matplotlib
 - Easy combination with normal Matplotlib plots
 - Easy application of seaborn_ styles
 - Working also in Matplotlib interactive modes inside e.g. Jupyter_ notebooks
 
-At the same time, Mpltern manages many cumbersome things like the positioning
+At the same time, mpltern manages many cumbersome things like the positioning
 of tick markers, tick labels, and axis labels. This allows users e.g. faster
 production of ternary plots with publication quality.
 
@@ -45,7 +45,7 @@ production of ternary plots with publication quality.
 Installation
 ============
 
-The latest version of Mpltern is available from `GitHub <source code_>`_.
+The latest version of mpltern is available from `GitHub <source code_>`_.
 
 .. code-block::
 
@@ -55,13 +55,13 @@ The latest version of Mpltern is available from `GitHub <source code_>`_.
 
 Installations via PyPI and Conda are also planned.
 
-Citing Mpltern
+Citing mpltern
 ==============
 
-At this moment, the author requests to cite the URL of this page if Mpltern
+At this moment, the author requests to cite the URL of this page if mpltern
 contributes to a scientific publication.
 Of course, `Matplotlib should be also very much acknowledged <https://matplotlib.org/citing.html>`_
-when using Mpltern.
+when using mpltern.
 
 DOIs
 ----

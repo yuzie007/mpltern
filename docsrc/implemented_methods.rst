@@ -18,7 +18,7 @@ arguments:
 .. Note::
 
     While also available, the followings methods have not well supported yet
-    in Mpltern.
+    in mpltern.
 
         - ``ax.hexbin``
         - ``ax.hist2d``

@@ -105,7 +105,7 @@ source_suffix = '.rst'
 # This is the default encoding, but it doesn't hurt to be explicit
 source_encoding = "utf-8"
 
-project = 'Mpltern'
+project = 'mpltern'
 copyright = '2019, Yuji Ikeda'
 author = 'Yuji Ikeda'
 

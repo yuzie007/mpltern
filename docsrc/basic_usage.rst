@@ -2,7 +2,7 @@
 Basic Usage
 ###########
 
-To use Mpltern functionalities, one first needs to import Mpltern as well
+To use mpltern functionalities, one first needs to import mpltern as well
 as Matplotlib as:
 
 .. code-block:: python

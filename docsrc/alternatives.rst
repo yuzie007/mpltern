@@ -1,7 +1,7 @@
 Alternatives for Ternary Plots
 ==============================
 
-If Mpltern does not satisfy your demands for ternary plots, one can think about
+If mpltern does not satisfy your demands for ternary plots, one can think about
 the following alternatives.
 
 .. _ggtern: http://www.ggtern.com

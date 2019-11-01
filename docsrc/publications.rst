@@ -1,5 +1,5 @@
 ##########################
-Publications Using Mpltern
+Publications Using mpltern
 ##########################
 
 2018

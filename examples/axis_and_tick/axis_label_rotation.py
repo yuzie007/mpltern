@@ -13,7 +13,7 @@ Axis-label rotation can be controlled via e.g.
     The ``'manual'`` option is also provided. In this mode, it becomes possible
     to specify the ``Text`` properties like ``horizontalalignment``,
     ``verticalalignment``, and ``rotation`` of axis labels directly,
-    which are anymore never modified automatically by Mpltern.
+    which are anymore never modified automatically by mpltern.
 """
 import matplotlib.pyplot as plt
 from mpltern.ternary.datasets import get_spiral

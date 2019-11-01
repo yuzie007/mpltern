@@ -3,7 +3,7 @@
 With normal Matplotlib plots
 ============================
 
-Ternary plots of Mpltern can be combined with normal Matplotlib plots very
+Ternary plots of mpltern can be combined with normal Matplotlib plots very
 straightforwardly.
 """
 import matplotlib.pyplot as plt

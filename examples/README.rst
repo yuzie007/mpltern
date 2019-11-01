@@ -6,4 +6,4 @@
 Gallery
 #######
 
-This gallery contains examples of Mpltern.
+This gallery contains examples of mpltern.
