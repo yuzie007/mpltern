@@ -10,21 +10,26 @@ PyPI
 
 The latest released version is avaiable from `PyPI <pypi_>`_.
 
-.. code-block::
+.. code-block:: console
 
    python -m pip install -U mpltern
 
 Conda
 =====
 
-Under preparation.
+The latest released version is avaiable from conda-forge.
+
+.. code-block:: console
+
+   conda config --add channels conda-forge
+   conda install mpltern
 
 Github
 ======
 
 The development version is available from `GitHub <github_>`_.
 
-.. code-block::
+.. code-block:: connsole
 
    git clone https://github.com/yuzie007/mpltern.git
    cd mpltern
