@@ -29,7 +29,7 @@ Github
 
 The development version is available from `GitHub <github_>`_.
 
-.. code-block:: connsole
+.. code-block:: console
 
    git clone https://github.com/yuzie007/mpltern.git
    cd mpltern
