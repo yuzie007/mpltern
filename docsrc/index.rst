@@ -59,15 +59,16 @@ ternary-plot libraties:
 Citing mpltern
 ==============
 
-At this moment, the author requests to cite the URL of this page if mpltern
-contributes to a scientific publication.
+The author requests to cite mpltern via the DOIs below if mpltern contributes
+to a scientific publication.
 Of course, `Matplotlib should be also very much acknowledged <https://matplotlib.org/citing.html>`_
 when using mpltern.
 
 DOIs
 ----
-
-None yet.
+0.3.0
+   .. image:: https://zenodo.org/badge/DOI/10.5281/zenodo.3528355.svg
+      :target: https://doi.org/10.5281/zenodo.3528355
 
 Author
 ======
