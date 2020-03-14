@@ -1,15 +1,12 @@
-#########
-|mpltern|
-#########
+######################################
+mpltern: Ternary plots with Matplotlib
+######################################
 
 .. title:: mpltern
 
 .. _Matplotlib: https://matplotlib.org
 .. _seaborn: https://seaborn.pydata.org
 .. _Jupyter: http://jupyter.org
-
-.. |mpltern| image:: _static/sphx_glr_logos0_002.svg
-   :height: 50px
 
 Mpltern is a Python plotting library based on Matplotlib_ specifically designed
 for `ternary plots <https://en.wikipedia.org/wiki/Ternary_plot>`_.
@@ -77,3 +74,19 @@ Yuji Ikeda
 (`Github <https://github.com/yuzie007>`_,
 `Google Scholar <https://scholar.google.co.jp/citations?user=2m5dkBwAAAAJ&hl=en>`_,
 `ResearchGate <https://www.researchgate.net/profile/Yuji_Ikeda6>`_)
+
+.. toctree::
+   :hidden:
+   :maxdepth: 2
+
+   supported_matplotlib.rst
+   installation.rst
+   basic_usage.rst
+   implemented_methods.rst
+   gallery/index.rst
+   conventions.rst
+   aims.rst
+   publications.rst
+   alternatives.rst
+   notes_for_implementation.rst
+   TODO.rst

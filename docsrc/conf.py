@@ -14,7 +14,6 @@ import os
 import shutil
 
 import mpltern
-import sphinx_bootstrap_theme
 
 
 # General configuration
@@ -105,8 +104,11 @@ source_suffix = '.rst'
 # This is the default encoding, but it doesn't hurt to be explicit
 source_encoding = "utf-8"
 
+# The master toctree document.
+master_doc = 'index'  # default: 'contents'
+
 project = 'mpltern'
-copyright = '2019, Yuji Ikeda'
+copyright = '2019-2020, Yuji Ikeda'
 author = 'Yuji Ikeda'
 
 version = mpltern.__version__
@@ -125,63 +127,26 @@ github_project_url = "https://github.com/yuzie007/mpltern/"
 # The name of the Pygments (syntax highlighting) style to use.
 pygments_style = 'sphinx'
 
-# Options for HTML output
-# -----------------------
-html_theme = 'bootstrap'
-html_theme_options = {
-    'navbar_links': [
-        # ("home", "index"),
-        ("Installation", "installation"),
-        ("Documentation", "contents"),
-        ("Examples", "gallery/index"),
-     ],
+# -- Options for HTML output -------------------------------------------------
 
-    # Render the next and previous page links in navbar. (Default: true)
-    'navbar_sidebarrel': False,
-
-    # Render the current pages TOC in the navbar. (Default: true)
-    'navbar_pagenav': False,
-
-    # Location of link to source.
-    # Options are "nav" (default), "footer" or anything else to exclude.
-    'source_link_position': None,
-
-    'bootswatch_theme': "paper",
-}
+# The theme to use for HTML and HTML Help pages.  See the documentation for
+# a list of builtin themes.
+#
+# html_theme = 'alabaster'
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
 
-
-def setup(app):
-    app.add_stylesheet("mpltern.css")
-
-
-# If nonempty, this is the file name suffix for generated HTML files.  The
-# default is ``".html"``.
-html_file_suffix = '.html'
-
-# If not '', a 'Last updated on:' timestamp is inserted at every page bottom,
-# using the given strftime format.
-html_last_updated_fmt = '%b %d, %Y'
-
-# Custom sidebar templates, maps document names to template names.
-# html_sidebars = {}
-
-# # Custom sidebar templates, maps page names to templates.
-# html_sidebars = {
-#     '**': ['searchbox.html', 'localtoc.html', 'relations.html',
-#            'pagesource.html']
-# }
-
-# If false, no module index is generated.
-# html_use_modindex = True
-html_domain_indices = ["py-modindex"]
+html_theme_options = {
+    'includehidden': True,
+}
 
 # Path to favicon
 html_favicon = '_static/favicon.ico'
+
+html_logo = '_static/sphx_glr_logos0_002.svg'
 
 # Workaround to remove matplotlib warning based on
 # https://github.com/sphinx-gallery/sphinx-gallery/pull/521

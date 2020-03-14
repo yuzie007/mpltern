@@ -1,2 +1,6 @@
 mpltern
-sphinx_bootstrap_theme
+colorspacious
+ipython
+numpydoc
+sphinx_copybutton
+sphinx_gallery
