@@ -17,7 +17,7 @@ def test_plot():
 
 
 # In Matplotlib, it is NOT allowed to exchange `x` and `y` in `ax.plot` even
-# when specifying them as keyward arguments. Following this behavior, in
+# when specifying them as keyword arguments. Following this behavior, in
 # `mpltern`, the order of `t`, `l`, `r` must not be able to exchange.
 # The following tests must, therefore, return errors.
 
@@ -70,7 +70,7 @@ class TestArguments:
         fig = plt.figure()
         ax = fig.add_subplot(projection='ternary')
         t, l, r = get_spiral()
-        lines = ax.plot(t, l, r, l, r, t)
+        ax.plot(t, l, r, l, r, t)
 
     @image_comparison(baseline_images=['arguments_7'], extensions=['pdf'],
                       style='mpl20')
@@ -78,7 +78,7 @@ class TestArguments:
         fig = plt.figure()
         ax = fig.add_subplot(projection='ternary')
         t, l, r = get_spiral()
-        lines = ax.plot(t, l, r, 'C3:', l, r, t)
+        ax.plot(t, l, r, 'C3:', l, r, t)
 
     def test_no_arguments(self):
         # In Matplotlib, `ax.plot()` without any arguments returns an empty
@@ -100,6 +100,7 @@ class TestTransform:
         ax.plot([0, 1], [0, 1], transform=ax.transAxes)
 
 
+@pytest.mark.usefixtures('mpltern_test_settings')
 class TestAxisLabelPosition:
     positions = ['corner', 'tick1', 'tick2']
     baseline_images_list = [
@@ -121,10 +122,12 @@ class TestAxisLabelPosition:
         ax.raxis.set_label_position(position)
 
 
+@pytest.mark.usefixtures('mpltern_test_settings')
 @image_comparison(baseline_images=['aspect'], extensions=['pdf'],
                   style='mpl20')
 def test_aspect():
-    ax = plt.subplot(projection='ternary')
+    fig = plt.figure()
+    ax = fig.add_subplot(projection='ternary')
     ax.plot(*get_spiral())
 
     ax.set_aspect(1.5)
@@ -134,23 +137,7 @@ def test_aspect():
     ax.set_rlabel('Right')
 
 
-@image_comparison(baseline_images=['opposite_ticks'], extensions=['pdf'],
-                  style='mpl20')
-def test_opposite_ticks():
-    # This changes only tick & label positions but does not change data
-    # visualizations.
-    # Check if the tick-markers, tick-labels, and axis-labels are shown as
-    # expected.
-    fig = plt.figure()
-    ax = fig.add_subplot(projection='ternary')
-
-    ax.opposite_ticks(True)
-
-    ax.set_tlabel('Top')
-    ax.set_llabel('Left')
-    ax.set_rlabel('Right')
-
-
+@pytest.mark.usefixtures('mpltern_test_settings')
 @image_comparison(baseline_images=['tick_labels_inside_triangle'],
                   extensions=['pdf'], style='mpl20')
 def test_tick_labels_inside_triangle():
@@ -166,14 +153,15 @@ def test_tick_labels_inside_triangle():
 
     ax.tick_params(tick1On=False, tick2On=False)
 
-    # By setting ``labelrotation='manual'``, automatic rotation and alignment for
-    # tick labels are prohibited.
+    # By setting ``labelrotation='manual'``, automatic rotation and alignment
+    # for tick labels are prohibited.
     ax.taxis.set_tick_params(labelrotation=('manual',   0.0))
     ax.laxis.set_tick_params(labelrotation=('manual', -60.0))
     ax.raxis.set_tick_params(labelrotation=('manual',  60.0))
 
     # Then, ``Text`` properties you like can be passed directly by ``update``.
-    kwargs = {'y': 0.5, 'ha': 'center', 'va': 'center', 'rotation_mode': 'anchor'}
+    kwargs = {
+        'y': 0.5, 'ha': 'center', 'va': 'center', 'rotation_mode': 'anchor'}
     tkwargs = {'transform': ax.get_taxis_transform()}
     lkwargs = {'transform': ax.get_laxis_transform()}
     rkwargs = {'transform': ax.get_raxis_transform()}
@@ -185,37 +173,56 @@ def test_tick_labels_inside_triangle():
     [text.update(rkwargs) for text in ax.raxis.get_ticklabels()]
 
 
-@image_comparison(baseline_images=['negative_ticks'],
-                  extensions=['pdf'], style='mpl20')
-def test_negative_ticks():
-    """
-    The previous algorithm for tick-marker rotations did not work as expected
-    because it relied on the data coordinates while the sign change of x-
-    and/or y-coordinates happened when changing the view limits.
-    This should be now fixed by relying not on the data coordiantes but on the
-    axes coordinates, and hence it should pass this test.
-    """
-    ax = plt.subplot(projection='ternary')
-    ax.set_ternary_min(0, 3, -3)
+@pytest.mark.usefixtures('mpltern_test_settings')
+class TestTicks:
+    @image_comparison(baseline_images=['opposite_ticks'], extensions=['pdf'],
+                      style='mpl20')
+    def test_opposite_ticks(self):
+        # This changes only tick & label positions but does not change data
+        # visualizations.
+        # Check if the tick-markers, tick-labels, and axis-labels are shown as
+        # expected.
+        fig = plt.figure()
+        ax = fig.add_subplot(projection='ternary')
 
+        ax.opposite_ticks(True)
 
-@image_comparison(baseline_images=['manual_ticks'],
-                  extensions=['pdf'], style='mpl20')
-def test_manual_ticks():
-    ax = plt.subplot(projection='ternary')
+        ax.set_tlabel('Top')
+        ax.set_llabel('Left')
+        ax.set_rlabel('Right')
 
-    ax.plot(*get_spiral())
+    @image_comparison(baseline_images=['negative_ticks'],
+                      extensions=['pdf'], style='mpl20')
+    def test_negative_ticks(self):
+        """
+        The previous algorithm for tick-marker rotations did not work as
+        expected because it relied on the data coordinates while the sign
+        change of x- and/or y-coordinates happened when changing the view
+        limits. This should be now fixed by relying not on the data coordiantes
+        but on the axes coordinates, and hence it should pass this test.
+        """
+        fig = plt.figure()
+        ax = fig.add_subplot(projection='ternary')
+        ax.set_ternary_min(0, 3, -3)
 
-    ax.grid()
+    @image_comparison(baseline_images=['manual_ticks'],
+                      extensions=['pdf'], style='mpl20')
+    def test_manual_ticks(self):
+        fig = plt.figure()
+        ax = fig.add_subplot(projection='ternary')
 
-    ax.set_tlabel('Top')
-    ax.set_llabel('Left')
-    ax.set_rlabel('Right')
+        ax.plot(*get_spiral())
 
-    # Specify tick positions manually.
-    ax.taxis.set_ticks([0.2, 0.4, 0.6, 0.8, 1.0])
-    ax.laxis.set_ticks([0.2, 0.4, 0.6, 0.8, 1.0])
-    ax.raxis.set_ticks([0.2, 0.4, 0.6, 0.8, 1.0])
+        ax.grid()
+
+        ax.set_tlabel('Top')
+        ax.set_llabel('Left')
+        ax.set_rlabel('Right')
+
+        # Specify tick positions manually.
+        ax.taxis.set_ticks([0.2, 0.4, 0.6, 0.8, 1.0])
+        ax.laxis.set_ticks([0.2, 0.4, 0.6, 0.8, 1.0])
+        ax.raxis.set_ticks([0.2, 0.4, 0.6, 0.8, 1.0])
 
 
 @check_figures_equal()
@@ -256,9 +263,10 @@ def set_spans(ax):
     ax.axrline(0.4, c='C2', clip_on=False)  # line for equi-r values
 
     # "clip_on=False" is just for testing purpose
-    ax.axtspan(0.3, 0.4, fc='C0', alpha=0.2, clip_on=False)  # region sandwiched by tmin and tmax
-    ax.axlspan(0.4, 0.5, fc='C1', alpha=0.2, clip_on=False)  # region sandwiched by lmin and lmax
-    ax.axrspan(0.5, 0.6, fc='C2', alpha=0.2, clip_on=False)  # region sandwiched by rmin and rmax
+    kwargs = dict(alpha=0.2, clip_on=False)
+    ax.axtspan(0.3, 0.4, fc='C0', **kwargs)  # region between tmin and tmax
+    ax.axlspan(0.4, 0.5, fc='C1', **kwargs)  # region between lmin and lmax
+    ax.axrspan(0.5, 0.6, fc='C2', **kwargs)  # region between rmin and rmax
 
 
 class TestTickDirection:
@@ -283,6 +291,7 @@ def test_text():
     ax.text(v, v, v, 'center', ha='center', va='center')
 
 
+@pytest.mark.usefixtures('mpltern_test_settings')
 class TestScatter:
     @image_comparison(baseline_images=['scatter'], extensions=['pdf'],
                       style='mpl20')
@@ -343,6 +352,7 @@ class TestArrow:
         ax.arrow(0.2, 0.2, 0.6, 0.6, transform=ax.transAxes)
 
 
+@pytest.mark.usefixtures('mpltern_test_settings')
 class TestQuiver:
     @image_comparison(baseline_images=['quiver'], extensions=['pdf'],
                       style='mpl20')
@@ -405,7 +415,8 @@ class TestQuiver:
 @image_comparison(baseline_images=['legend'], extensions=['pdf'],
                   style='mpl20')
 def test_legend():
-    ax = plt.subplot(projection='ternary')
+    fig = plt.figure()
+    ax = fig.add_subplot(projection='ternary')
 
     for seed in [1, 9, 6, 8]:
         ax.scatter(*get_scatter_points(11, seed=seed), alpha=0.5, label=seed)

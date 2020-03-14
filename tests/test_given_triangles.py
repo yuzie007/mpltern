@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 from mpltern.ternary.datasets import get_spiral
 
 
+@pytest.mark.usefixtures('mpltern_test_settings')
 class TestGivenTriangles:
     labelrotations = ['tick', 'axis', 'horizontal']
     rotations = range(0, 360, 90)
@@ -31,5 +32,3 @@ class TestGivenTriangles:
         ax.tick_params(labelrotation=labelrotation)
 
         ax.grid()
-
-
