@@ -2,6 +2,13 @@
 Publications Using mpltern
 ##########################
 
+2020
+====
+
+- X. Wu, Z. Li, Z. Rao, Y. Ikeda, B. Dutta, F. Körmann, J. Neugebauer, and D. Raabe,
+  *Role of magnetic ordering for the design of quinary TWIP-TRIP high entropy alloys*,
+  Phys. Rev. Mater. **4**, 33601 (2020). https://doi.org/10.1103/PhysRevMaterials.4.033601
+
 2018
 ====
 
