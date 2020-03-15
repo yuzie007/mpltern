@@ -1,4 +1,4 @@
-mpltern
+git+git://github.com/yuzie007/mpltern#egg=mpltern
 colorspacious
 ipython
 numpydoc
