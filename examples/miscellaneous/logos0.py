@@ -44,7 +44,7 @@ def create_icon_axes(fig, ax_position, lw_border):
 
 
 def add_mpltern_text(ax):
-    ax.text(1.0, 0.5, "mpltern", fontsize=128,
+    ax.text(0.995, 0.5, "mpltern", fontsize=128,
             ha='right', va='center', alpha=1.0, transform=ax.transAxes)
 
 
@@ -70,9 +70,9 @@ def make_logo(height_px, lw_border, with_text=False):
     if with_text:
         ax = fig.add_axes([0., 0., 1., 1.])
         add_mpltern_text(ax)
-        ax.axis('off')
+        # ax.axis('off')
 
-    ax_pos = (0.025, 0.075, 0.2, 0.85) if with_text else (0.1, 0.1, 0.8, 0.8)
+    ax_pos = (0.02, 0.075, 0.2, 0.85) if with_text else (0.1, 0.1, 0.8, 0.8)
     ax = create_icon_axes(fig, ax_pos, lw_border)
 
     return fig, ax
