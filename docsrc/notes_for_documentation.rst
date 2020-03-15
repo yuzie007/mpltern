@@ -7,6 +7,14 @@ about `Sphinx <https://www.sphinx-doc.org/en/master/>`_ and
 `Read the Docs <https://docs.readthedocs.io/en/stable/>`_ during the
 documentation of mpltern 0.3.1+.
 
+How to redirect to Read the Docs
+================================
+
+The website https://yuzie007.github.io/mpltern is now redirected to
+https://mpltern.readthedocs.io following the way in
+https://gist.github.com/domenic/1f286d415559b56d725bee51a62c24a7.
+
+
 How the table of contents displays
 ==================================
 
