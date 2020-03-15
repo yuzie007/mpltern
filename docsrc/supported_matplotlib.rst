@@ -4,8 +4,8 @@ Supported Matplotlib
 
 - mpltern 0.3.0: Matplotlib 3.1.1+
 
-The tick-label rotation in mpltern rely on the rotation of the ``Text`` object
-in Matplotlib.
+The tick-label rotation in mpltern relies on the rotation of the ``Text``
+object in Matplotlib.
 In Matplotlib 3.0 or lower, however, there was a bug for the ``Text`` rotation
 in case ``va=='center_baseline'`` and ``rotation_mode=='anchor'``
 (https://github.com/matplotlib/matplotlib/issues/13028).
