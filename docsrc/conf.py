@@ -139,6 +139,11 @@ pygments_style = 'sphinx'
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
 
+
+def setup(app):
+    app.add_stylesheet("screenshots.css")
+
+
 html_theme_options = {
     'includehidden': True,
 }

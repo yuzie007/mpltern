@@ -1,0 +1,36 @@
+div.responsive_screenshots {
+    /* Horizontally centered */
+    display: block;
+    margin: auto;
+
+    /* Do not go beyond 1:1 scale (and ensure a 1x4 tight layout) */
+    max-width: 640px;  /* at most 4 x 1:1 subfig width  */
+    max-height: 120px; /* at most 1 x 1:1 subfig height */
+}
+
+/* To avoid subfigure parts outside of the responsive_screenshots  */
+/* element (see: https://stackoverflow.com/questions/2062258/      */
+/* floating-stuff-within-a-div-floats-outside-of-div-why)          */
+span.clear_screenshots { clear: left; display: block; }
+
+div.responsive_subfig{
+    float: left;
+    width: 25%;  /* we want 4 subfigs in a row */
+
+    /* Include content, padding and border in width. This should */
+    /* avoid having to use tricks like "width: 24.9999%"         */
+    box-sizing: border-box;
+}
+
+div.responsive_subfig img {
+    /* Horizontally centered */
+    display: block;
+    margin: auto;
+
+    /* Possible downscaling */
+    max-width: 162px;  /* at most 1 x 1:1 subfig width  */
+    max-height: 139px; /* at most 1 x 1:1 subfig height */
+
+    width: 100%;
+}
+
