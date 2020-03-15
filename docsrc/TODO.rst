@@ -5,10 +5,6 @@ TODO
 High
 ====
 
-- Documentation
-- PyPI uploading
-- Zenodo DOI
-
 Medium
 ======
 
