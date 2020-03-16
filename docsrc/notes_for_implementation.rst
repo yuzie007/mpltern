@@ -164,3 +164,11 @@ to call the rescaling method for the axes of ternary plots
 
 If you want to prohibit e.g. ``Zoom-to-rectanble``, you need to override e.g.
 ``can_zoom`` to return ``False``. (``PolarAxes`` in Matplotlib does this.)
+
+Versioning
+==========
+
+The versioning is automatically done using ``versioneer.py``.
+To make ``mpltern.__version__`` available, ``versionfile_build`` must be
+specified in ``setup.cfg``. Details are found in
+https://github.com/warner/python-versioneer/blob/master/INSTALL.md.
