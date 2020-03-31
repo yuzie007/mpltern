@@ -32,10 +32,10 @@ ternary-plot libraries:
 
 Details of mpltern are found in https://yuzie007.github.io/mpltern.
 
-[<img src="docs/_images/sphx_glr_with_seaborn_styles_001.svg" width="162"/>](https://yuzie007.github.io/mpltern/gallery/index.html)
-[<img src="docs/_images/sphx_glr_05.inset_001.svg" width="162"/>](https://yuzie007.github.io/mpltern/gallery/index.html)
-[<img src="docs/_images/basic_2.svg" width="162"/>](https://yuzie007.github.io/mpltern/gallery/index.html)
-[<img src="docs/_images/sphx_glr_02.arbitrary_triangle_001.svg" width="162"/>](https://yuzie007.github.io/mpltern/gallery/index.html)
+[<img src="https://mpltern.readthedocs.io/en/latest/_images/sphx_glr_with_seaborn_styles_001.svg" width="162"/>](https://yuzie007.github.io/mpltern/gallery/index.html)
+[<img src="https://mpltern.readthedocs.io/en/latest/_images/sphx_glr_05.inset_001.svg" width="162"/>](https://yuzie007.github.io/mpltern/gallery/index.html)
+[<img src="https://mpltern.readthedocs.io/en/latest/_images/basic_2.svg" width="162"/>](https://yuzie007.github.io/mpltern/gallery/index.html)
+[<img src="https://mpltern.readthedocs.io/en/latest/_images/sphx_glr_02.arbitrary_triangle_001.svg" width="162"/>](https://yuzie007.github.io/mpltern/gallery/index.html)
 
 ## Author
 
