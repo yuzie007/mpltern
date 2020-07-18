@@ -4,7 +4,6 @@ import numpy as np
 
 from matplotlib.axis import XAxis
 import matplotlib as mpl
-from matplotlib import rcParams
 import matplotlib.font_manager as font_manager
 import matplotlib.text as mtext
 import matplotlib.ticker as mticker
@@ -67,9 +66,9 @@ class TernaryAxis(XAxis):
         self.label_position = 'corner'
         label = mtext.Text(x=0.5, y=0.0,
                            fontproperties=font_manager.FontProperties(
-                               size=rcParams['axes.labelsize'],
-                               weight=rcParams['axes.labelweight']),
-                           color=rcParams['axes.labelcolor'],
+                               size=mpl.rcParams['axes.labelsize'],
+                               weight=mpl.rcParams['axes.labelweight']),
+                           color=mpl.rcParams['axes.labelcolor'],
                            verticalalignment='top',
                            horizontalalignment='center',
                            rotation=0,
