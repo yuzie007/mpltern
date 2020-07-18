@@ -4,7 +4,6 @@ import numpy as np
 
 from matplotlib.axis import XAxis
 import matplotlib as mpl
-import matplotlib.font_manager as font_manager
 import matplotlib.text as mtext
 import matplotlib.ticker as mticker
 from matplotlib.transforms import Affine2D
