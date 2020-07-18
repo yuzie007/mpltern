@@ -15,7 +15,18 @@ from mpltern.ternary.tick import TTick, LTick, RTick
 class TernaryAxis(XAxis):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.label = self._get_label()
+        # x : data coordinates in the axis direction
+        # y : display (pixel) coordinates in the direction vertical to the
+        #     axis direction, updated when drawn in `_update_label_positions`
+        trans = {
+            't': self.axes.get_taxis_transform(which='label'),
+            'l': self.axes.get_laxis_transform(which='label'),
+            'r': self.axes.get_raxis_transform(which='label'),
+        }[self.axis_name]
+        self.label.set_rotation(0)
+        self.label.set_rotation_mode('anchor')
+        self.label.set_transform(trans)
+        self.label_position = 'corner'
         self._label_rotation_mode = 'axis'
 
     def _copy_tick_props(self, src, dest):
@@ -53,35 +64,6 @@ class TernaryAxis(XAxis):
             return tick(self.axes, 0, '', major=major, **tick_kw)
         else:
             return tick(self.axes, 0, major=major, **tick_kw)
-
-    def _get_label(self):
-        """
-
-        Notes
-        -----
-        x : data coordinates in the axis direction
-        y : display (pixel) coordinates in the direction vertical to the
-            axis direction, updated when drawn in `_update_label_positions`
-        """
-        self.label_position = 'corner'
-        label = mtext.Text(x=0.5, y=0.0,
-                           fontproperties=font_manager.FontProperties(
-                               size=mpl.rcParams['axes.labelsize'],
-                               weight=mpl.rcParams['axes.labelweight']),
-                           color=mpl.rcParams['axes.labelcolor'],
-                           verticalalignment='top',
-                           horizontalalignment='center',
-                           rotation=0,
-                           rotation_mode='anchor')
-        trans = {
-            't': self.axes.get_taxis_transform(which='label'),
-            'l': self.axes.get_laxis_transform(which='label'),
-            'r': self.axes.get_raxis_transform(which='label'),
-        }[self.axis_name]
-        label.set_transform(trans)
-
-        self._set_artist_props(label)
-        return label
 
     def set_label_position(self, position):
         """
