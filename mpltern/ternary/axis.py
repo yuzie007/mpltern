@@ -16,6 +16,7 @@ from mpltern.ternary.tick import TTick, LTick, RTick
 class TernaryAxis(XAxis):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.label = self._get_label()
         self._label_rotation_mode = 'axis'
 
     def _copy_tick_props(self, src, dest):
