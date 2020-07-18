@@ -225,7 +225,7 @@ class TestTicks:
         ax.raxis.set_ticks([0.2, 0.4, 0.6, 0.8, 1.0])
 
 
-@check_figures_equal()
+@check_figures_equal(extensions=('pdf',))
 def test_ternary_lim(fig_test, fig_ref):
     """
     Check that the order of `plot` and `set_ternary_lim` does not affect
