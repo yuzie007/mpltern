@@ -1,6 +1,9 @@
+from packaging import version
+
 import numpy as np
 
 from matplotlib.axis import XAxis
+import matplotlib as mpl
 from matplotlib import rcParams
 import matplotlib.font_manager as font_manager
 import matplotlib.text as mtext
@@ -41,11 +44,15 @@ class TernaryAxis(XAxis):
             tick_kw = self._major_tick_kw
         else:
             tick_kw = self._minor_tick_kw
-        return {
+        tick = {
             't': TTick,
             'l': LTick,
             'r': RTick,
-        }[self.axis_name](self.axes, 0, '', major=major, **tick_kw)
+        }[self.axis_name]
+        if version.parse(mpl.__version__) < version.parse('3.3.0'):
+            return tick(self.axes, 0, '', major=major, **tick_kw)
+        else:
+            return tick(self.axes, 0, major=major, **tick_kw)
 
     def _get_label(self):
         """
