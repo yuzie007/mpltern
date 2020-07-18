@@ -413,7 +413,7 @@ class TestQuiver:
 
 
 @image_comparison(baseline_images=['legend'], extensions=['pdf'],
-                  style='mpl20')
+                  tol=0.3, style='mpl20')
 def test_legend():
     fig = plt.figure()
     ax = fig.add_subplot(projection='ternary')
