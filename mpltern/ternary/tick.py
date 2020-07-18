@@ -6,6 +6,12 @@ import mpltern.cbook as cbook
 
 
 class TernaryTick(XTick):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.tick1line.set_transform(self._get_axis_transform(which='tick1'))
+        self.tick2line.set_transform(self._get_axis_transform(which='tick2'))
+        self.gridline.set_transform(self._get_axis_transform(which='grid'))
+
     def _set_labelrotation(self, labelrotation):
         # Overridden to accept `tick` and `axis` as *mode*
         # for the tick-label rotation behavior
@@ -42,21 +48,6 @@ class TernaryTick(XTick):
             'ltick': self.axes.get_laxis_transform,
             'rtick': self.axes.get_raxis_transform,
         }[self.tick_name](which=which)
-
-    def _get_tick1line(self):
-        l = super()._get_tick1line()
-        l.set_transform(self._get_axis_transform(which='tick1'))
-        return l
-
-    def _get_tick2line(self):
-        l = super()._get_tick2line()
-        l.set_transform(self._get_axis_transform(which='tick2'))
-        return l
-
-    def _get_gridline(self):
-        l = super()._get_gridline()
-        l.set_transform(self._get_axis_transform(which='grid'))
-        return l
 
     def _determine_anchor(self, mode, axis_angle, tick_angle):
         """Determine tick-label alignments.
