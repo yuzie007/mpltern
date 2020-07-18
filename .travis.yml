@@ -11,7 +11,8 @@ before_install:
 
 install:
   - python -mpip install matplotlib==$MATPLOTLIB_VERSION
-  - python -mpip install pytest pytest-cov
+  - python -mpip install pytest>=4.6
+  - python -mpip install pytest-cov
   - python -mpip install codecov coverage
 script: python -mpytest -ra --cov=./ --log-level=DEBUG
 after_success:
