@@ -1,9 +1,6 @@
-from packaging import version
-
 import numpy as np
 
 from matplotlib.axis import XAxis
-import matplotlib as mpl
 import matplotlib.text as mtext
 import matplotlib.ticker as mticker
 from matplotlib.transforms import Affine2D
@@ -59,10 +56,10 @@ class TernaryAxis(XAxis):
             'l': LTick,
             'r': RTick,
         }[self.axis_name]
-        if version.parse(mpl.__version__) < version.parse('3.3.0'):
-            return tick(self.axes, 0, '', major=major, **tick_kw)
-        else:
+        try:
             return tick(self.axes, 0, major=major, **tick_kw)
+        except TypeError:  # matplotlib<=3.3.2
+            return tick(self.axes, 0, '', major=major, **tick_kw)
 
     def set_label_position(self, position):
         """
