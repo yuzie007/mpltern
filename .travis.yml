@@ -5,7 +5,6 @@ env:
   - MATPLOTLIB_VERSION=3.1.1
   - MATPLOTLIB_VERSION=3.2.0
   - MATPLOTLIB_VERSION=3.3.0
-  - MATPLOTLIB_VERSION=3.3.2
 
 before_install:
   - sudo apt-get -y install ghostscript inkscape
