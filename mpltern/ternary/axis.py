@@ -58,7 +58,7 @@ class TernaryAxis(XAxis):
         }[self.axis_name]
         try:
             return tick(self.axes, 0, major=major, **tick_kw)
-        except TypeError:  # matplotlib<=3.3.2
+        except TypeError:  # matplotlib<=3.2.2
             return tick(self.axes, 0, '', major=major, **tick_kw)
 
     def set_label_position(self, position):
