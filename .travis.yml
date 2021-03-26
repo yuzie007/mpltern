@@ -1,4 +1,6 @@
 language: python
+python:
+  - "3.7"
 
 env:
   # - MATPLOTLIB_VERSION=3.0.3  # This version has a bug for text rotations.
