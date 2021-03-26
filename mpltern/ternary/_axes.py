@@ -70,6 +70,12 @@ class TernaryAxesBase(Axes):
     def _get_axis_list(self):
         return (self.taxis, self.laxis, self.raxis)
 
+    def _get_axis_map(self):
+        # workaround for matplotlib>=3.4.0
+        d = super()._get_axis_map()
+        d.update({'x': d['t'], 'y': d['t']})
+        return d
+
     def _init_axis(self):
         self.xaxis = maxis.XAxis(self)
         self.yaxis = maxis.YAxis(self)
