@@ -302,7 +302,7 @@ class TestScatter:
         ax.scatter(t, l, r)
 
     @image_comparison(baseline_images=['scatter_color'], extensions=['pdf'],
-                      style='mpl20')
+                      tol=0.3, style='mpl20')
     def test_scatter_color(self):
         t, l, r = get_scatter_points()
         fig = plt.figure()
@@ -366,7 +366,7 @@ class TestQuiver:
         ax.quiver(t, l, r, dt, dl, dr)
 
     @image_comparison(baseline_images=['quiver_color'], extensions=['pdf'],
-                      style='mpl20')
+                      tol=0.3, style='mpl20')
     def test_quiver_color(self):
         t, l, r = get_triangular_grid()
         dt = 1.0 / 3.0 - t
