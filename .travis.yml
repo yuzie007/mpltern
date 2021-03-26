@@ -11,6 +11,7 @@ before_install:
   - sudo apt-get -y install ghostscript inkscape
 
 install:
+  - python -mpip install --upgrade pip
   - python -mpip install matplotlib==$MATPLOTLIB_VERSION
   - python -mpip install pytest>=4.6
   - python -mpip install pytest-cov
