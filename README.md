@@ -1,10 +1,13 @@
 # mpltern
 
-[![Build Status](https://travis-ci.org/yuzie007/mpltern.svg?branch=master)](https://travis-ci.org/yuzie007/mpltern)
 [![PyPI version](https://badge.fury.io/py/mpltern.svg)](https://badge.fury.io/py/mpltern)
 [![PyPI](https://img.shields.io/pypi/dm/mpltern.svg)](https://pypi.python.org/pypi/mpltern)
 [![Conda Version](https://img.shields.io/conda/vn/conda-forge/mpltern.svg)](https://anaconda.org/conda-forge/mpltern)
 [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/mpltern.svg)](https://anaconda.org/conda-forge/mpltern)
+
+[![GitHubActions](https://github.com/yuzie007/mpltern/actions/workflows/tests.yml/badge.svg)](https://github.com/yuzie007/mpltern/actions?query=workflow%3ATests)
+[![Build Status](https://travis-ci.org/yuzie007/mpltern.svg?branch=master)](https://travis-ci.org/yuzie007/mpltern)
+
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3528355.svg)](https://doi.org/10.5281/zenodo.3528355)
 
 Mpltern is a Python plotting library based on
