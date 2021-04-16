@@ -3,3 +3,4 @@ ipython
 numpydoc
 sphinx_copybutton
 sphinx_gallery
+seaborn
