@@ -73,19 +73,18 @@ the following alternatives.
         - vcd_
     - `JavaScript <https://developer.mozilla.org/en-US/docs/Web/JavaScript>`__
         - Plotly_
-        - d3-ternary_ (CoffeeScript)
+        - `d3-ternary (TypeScript) <https://github.com/davenquinn/d3-ternary>`__
     - `LaTeX <https://www.latex-project.org>`_
         - PGFPlots_
     - GUI
         - Veusz_
     - Online
-        - ternaryplot.com_ (based on d3-ternary)
+        - `ternaryplot.com <https://ternaryplot.com>`_ (based on d3-ternary)
 - Proprietary
     - `MATLAB <https://www.mathworks.com/products/matlab.html>`_
         - ternary-plots_
         - alcheyst-ternplot_
     - GUI
-        - `Delta Plotware <https://www.deltaplotware.com>`_
         - `DPlot <https://www.dplot.com/index.htm>`_
         - JMP_
         - Origin_
