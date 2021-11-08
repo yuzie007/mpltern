@@ -1,5 +1,6 @@
 from matplotlib.projections import register_projection
 from mpltern.ternary import TernaryAxes
+from mpltern.ternary3d import TernaryAxes3D
 
 try:  # py38 or later
     from importlib.metadata import version, PackageNotFoundError
@@ -17,3 +18,4 @@ except ImportError:  # py36, py37
         pass
 
 register_projection(TernaryAxes)
+register_projection(TernaryAxes3D)
