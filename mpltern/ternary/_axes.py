@@ -72,7 +72,11 @@ class TernaryAxesBase(Axes):
 
     def _get_axis_map(self):
         # workaround for matplotlib>=3.4.0
-        d = super()._get_axis_map()
+        d = {}
+        axis_list = self._get_axis_list()
+        for k, v in vars(self).items():
+            if k.endswith("axis") and v in axis_list:
+                d[k[:-len("axis")]] = v
         d.update({'x': d['t'], 'y': d['t']})
         return d
 
