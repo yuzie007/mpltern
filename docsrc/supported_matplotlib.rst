@@ -17,3 +17,8 @@ I however also have to note that Matplotlib 3.1 may also have other serious
 bugs (e.g. https://github.com/matplotlib/matplotlib/issues/14751).
 Until the versions where both the bugs are fixed, the users of mpltern have to
 compromise with these issues.
+
+- mpltern 0.3.4: Matplotlib 3.2.0+
+
+  While essentially mpltern still works with Matplotlib 3.1.1, I got difficulty
+  to make it pass the tests and therefore dropped the support.
