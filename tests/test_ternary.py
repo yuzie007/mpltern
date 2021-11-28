@@ -8,6 +8,14 @@ from mpltern.ternary.datasets import (
     get_spiral, get_scatter_points, get_triangular_grid)
 
 
+def fix_text_kerning_factor():
+    # `text.kerning_factor` introduced since Matplotlib 3.2.0, changes default
+    # text positions. To be compatible with baseline_images, the old behavior
+    # is restored.
+    if 'text.kerning_factor' in plt.rcParams:
+        plt.rcParams['text.kerning_factor'] = 6
+
+
 @image_comparison(baseline_images=['plot'], extensions=['pdf'], style='mpl20')
 def test_plot():
     fig = plt.figure()
@@ -100,7 +108,6 @@ class TestTransform:
         ax.plot([0, 1], [0, 1], transform=ax.transAxes)
 
 
-@pytest.mark.usefixtures('mpltern_test_settings')
 class TestAxisLabelPosition:
     positions = ['corner', 'tick1', 'tick2']
     baseline_images_list = [
@@ -110,6 +117,8 @@ class TestAxisLabelPosition:
                              zip(positions, baseline_images_list))
     @image_comparison(baseline_images=None, extensions=['pdf'], style='mpl20')
     def test_axis_label_position(self, position, baseline_images):
+        fix_text_kerning_factor()
+
         fig = plt.figure()
         ax = fig.add_subplot(projection='ternary')
 
@@ -122,10 +131,11 @@ class TestAxisLabelPosition:
         ax.raxis.set_label_position(position)
 
 
-@pytest.mark.usefixtures('mpltern_test_settings')
 @image_comparison(baseline_images=['aspect'], extensions=['pdf'],
                   style='mpl20')
 def test_aspect():
+    fix_text_kerning_factor()
+
     fig = plt.figure()
     ax = fig.add_subplot(projection='ternary')
     ax.plot(*get_spiral())
@@ -137,10 +147,10 @@ def test_aspect():
     ax.set_rlabel('Right')
 
 
-@pytest.mark.usefixtures('mpltern_test_settings')
 @image_comparison(baseline_images=['tick_labels_inside_triangle'],
                   extensions=['pdf'], style='mpl20')
 def test_tick_labels_inside_triangle():
+    fix_text_kerning_factor()
 
     fig = plt.figure()
     ax = fig.add_subplot(projection='ternary')
@@ -173,7 +183,6 @@ def test_tick_labels_inside_triangle():
     [text.update(rkwargs) for text in ax.raxis.get_ticklabels()]
 
 
-@pytest.mark.usefixtures('mpltern_test_settings')
 class TestTicks:
     @image_comparison(baseline_images=['opposite_ticks'], extensions=['pdf'],
                       style='mpl20')
@@ -182,6 +191,8 @@ class TestTicks:
         # visualizations.
         # Check if the tick-markers, tick-labels, and axis-labels are shown as
         # expected.
+        fix_text_kerning_factor()
+
         fig = plt.figure()
         ax = fig.add_subplot(projection='ternary')
 
@@ -208,6 +219,8 @@ class TestTicks:
     @image_comparison(baseline_images=['manual_ticks'],
                       extensions=['pdf'], style='mpl20')
     def test_manual_ticks(self):
+        fix_text_kerning_factor()
+
         fig = plt.figure()
         ax = fig.add_subplot(projection='ternary')
 
@@ -291,7 +304,6 @@ def test_text():
     ax.text(v, v, v, 'center', ha='center', va='center')
 
 
-@pytest.mark.usefixtures('mpltern_test_settings')
 class TestScatter:
     @image_comparison(baseline_images=['scatter'], extensions=['pdf'],
                       style='mpl20')
@@ -304,6 +316,8 @@ class TestScatter:
     @image_comparison(baseline_images=['scatter_color'], extensions=['pdf'],
                       tol=0.3, style='mpl20')
     def test_scatter_color(self):
+        fix_text_kerning_factor()
+
         t, l, r = get_scatter_points()
         fig = plt.figure()
         fig.subplots_adjust(left=0.075, right=0.85)
@@ -352,7 +366,6 @@ class TestArrow:
         ax.arrow(0.2, 0.2, 0.6, 0.6, transform=ax.transAxes)
 
 
-@pytest.mark.usefixtures('mpltern_test_settings')
 class TestQuiver:
     @image_comparison(baseline_images=['quiver'], extensions=['pdf'],
                       style='mpl20')
@@ -368,6 +381,8 @@ class TestQuiver:
     @image_comparison(baseline_images=['quiver_color'], extensions=['pdf'],
                       tol=0.3, style='mpl20')
     def test_quiver_color(self):
+        fix_text_kerning_factor()
+
         t, l, r = get_triangular_grid()
         dt = 1.0 / 3.0 - t
         dl = 1.0 / 3.0 - l

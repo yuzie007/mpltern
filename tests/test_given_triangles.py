@@ -5,7 +5,6 @@ import matplotlib.pyplot as plt
 from mpltern.ternary.datasets import get_spiral
 
 
-@pytest.mark.usefixtures('mpltern_test_settings')
 class TestGivenTriangles:
     labelrotations = ['tick', 'axis', 'horizontal']
     rotations = range(0, 360, 90)
@@ -18,6 +17,9 @@ class TestGivenTriangles:
     def test_given_triangles(self, labelrotation, rotation, baseline_images):
         # Check if the tick-markers, tick-labels, and axis-labels are shown as
         # expected.
+        if 'text.kerning_factor' in plt.rcParams:
+            plt.rcParams['text.kerning_factor'] = 6
+
         fig = plt.figure()
         corners = ((0.5, 0.0), (1.0, 0.5), (0.0, 1.0))
         ax = fig.add_subplot(
