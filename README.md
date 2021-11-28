@@ -6,7 +6,7 @@
 [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/mpltern.svg)](https://anaconda.org/conda-forge/mpltern)
 
 [![GitHubActions](https://github.com/yuzie007/mpltern/actions/workflows/tests.yml/badge.svg)](https://github.com/yuzie007/mpltern/actions?query=workflow%3ATests)
-[![Build Status](https://travis-ci.org/yuzie007/mpltern.svg?branch=master)](https://travis-ci.org/yuzie007/mpltern)
+[![CircleCI](https://circleci.com/gh/yuzie007/mpltern/tree/master.svg?style=shield)](https://circleci.com/gh/yuzie007/mpltern/tree/master)
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3528355.svg)](https://doi.org/10.5281/zenodo.3528355)
 
