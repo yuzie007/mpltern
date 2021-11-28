@@ -2,21 +2,12 @@
 # See: https://circleci.com/docs/2.0/configuration-reference
 version: 2.1
 
-# Orbs are reusable packages of CircleCI configuration that you may share across projects, enabling you to create encapsulated, parameterized commands, jobs, and executors that can be used across multiple projects.
-# See: https://circleci.com/docs/2.0/orb-intro/
-orbs:
-  # The python orb contains a set of prepackaged CircleCI configuration you can use repeatedly in your configuration files
-  # Orb commands and jobs help you with common scripting around a language/tool
-  # so you dont have to copy and paste it everywhere.
-  # See the orb documentation here: https://circleci.com/developer/orbs/orb/circleci/python
-  python: circleci/python@1.2
-
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/2.0/configuration-reference/#jobs
 jobs:
   build-and-test: # This is the name of the job, feel free to change it to better match what you're trying to do!
     parameters:
-      version:
+      matplotlib-version:
         type: string
     # These next lines defines a Docker executors: https://circleci.com/docs/2.0/executor-types/
     # You can specify an image from Dockerhub or use one of the convenience images from CircleCI's Developer Hub
@@ -41,7 +32,7 @@ jobs:
           name: Install dependencies
           command: |
             python -m pip install --upgrade pip
-            python -m pip install matplotlib==<< parameters.version >>
+            python -m pip install matplotlib==<< parameters.matplotlib-version >>
             python -m pip install pytest>=4.6
             python -m pip install pytest-cov
             python -m pip install codecov coverage
@@ -59,4 +50,4 @@ workflows:
       - build-and-test:
           matrix:
             parameters:
-              version: [3.1.1, 3.2.0, 3.3.0, 3.4.0, 3.5.0]
+              matplotlib-version: [3.1.1, 3.2.0, 3.3.0, 3.4.0, 3.5.0]
