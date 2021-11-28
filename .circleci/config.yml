@@ -2,6 +2,17 @@
 # See: https://circleci.com/docs/2.0/configuration-reference
 version: 2.1
 
+commands:
+  pip-install:
+    description: Upgrade pip and setuptools and wheel to get as clean an install as possible
+    steps:
+      - run:
+          name: Upgrade pip, setuptools, wheel
+          command: |
+            python -m pip install --upgrade --user pip
+            python -m pip install --upgrade --user wheel
+            python -m pip install --upgrade --user setuptools
+
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/2.0/configuration-reference/#jobs
 jobs:
@@ -28,10 +39,10 @@ jobs:
           command: |
             sudo apt -qq update
             sudo apt-get -y install ghostscript inkscape
+      - pip-install
       - run:
           name: Install dependencies
           command: |
-            python -m pip install --upgrade pip
             python -m pip install matplotlib==<< parameters.matplotlib-version >>
             python -m pip install pytest>=4.6
             python -m pip install pytest-cov
