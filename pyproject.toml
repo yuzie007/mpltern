@@ -2,3 +2,5 @@
 requires = ["setuptools>=45", "wheel", "setuptools_scm>=6.2"]
 
 [tool.setuptools_scm]
+version_scheme = "no-guess-dev"
+local_scheme = "no-local-version"
