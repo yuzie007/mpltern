@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import mpltern
 
 
-def test_3d():
-    """Test if TernaryAxes3D can be initialized."""
-    plt.figure().add_subplot(projection='ternary3d')
+def test_plot():
+    """Test if `plot` works as expected."""
+    ax = plt.figure().add_subplot(projection='ternary3d')
+    ax.plot([1, 0, 0, 1], [0, 1, 0, 0], [0, 0, 1, 0], zs=0.0)
