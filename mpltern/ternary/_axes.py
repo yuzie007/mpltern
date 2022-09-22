@@ -2,6 +2,7 @@ from collections import OrderedDict
 
 import numpy as np
 
+import matplotlib as mpl
 from matplotlib.axes import Axes
 import matplotlib.lines as mlines
 import matplotlib.patches as mpatches
@@ -211,15 +212,21 @@ class TernaryAxesBase(Axes):
         """Return the RAxis instance"""
         return self.raxis
 
-    def cla(self):
+    def clear(self):
         self.set_tlim(0.0, self.ternary_scale)
         self.set_llim(0.0, self.ternary_scale)
         self.set_rlim(0.0, self.ternary_scale)
-        super().cla()
+        if tuple(int(_) for _ in mpl.__version__.split('.'))[:2] < (3, 6):
+            super().cla()
+        else:
+            super().clear()
         xmin = -1.0 / np.sqrt(3.0)
         xmax = +1.0 / np.sqrt(3.0)
         self.set_xlim(xmin, xmax)
         self.set_ylim(0.0, 1.0)
+
+    if tuple(int(_) for _ in mpl.__version__.split('.'))[:2] < (3, 6):
+        cla = clear
 
     def grid(self, b=None, which='major', axis='both', **kwargs):
         """
