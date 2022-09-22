@@ -8,7 +8,7 @@
 [![GitHubActions](https://github.com/yuzie007/mpltern/actions/workflows/tests.yml/badge.svg)](https://github.com/yuzie007/mpltern/actions?query=workflow%3ATests)
 [![CircleCI](https://circleci.com/gh/yuzie007/mpltern.svg?style=shield)](https://circleci.com/gh/yuzie007/mpltern)
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3528355.svg)](https://doi.org/10.5281/zenodo.3528355)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3528354.svg)](https://doi.org/10.5281/zenodo.3528354)
 
 Mpltern is a Python plotting library based on
 [Matplotlib](https://matplotlib.org), specifically designed for

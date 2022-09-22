@@ -63,9 +63,9 @@ when using mpltern.
 
 DOIs
 ----
-0.3.0
-   .. image:: https://zenodo.org/badge/DOI/10.5281/zenodo.3528355.svg
-      :target: https://doi.org/10.5281/zenodo.3528355
+
+.. image:: https://zenodo.org/badge/DOI/10.5281/zenodo.3528354.svg
+   :target: https://doi.org/10.5281/zenodo.3528354
 
 Author
 ======
