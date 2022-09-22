@@ -33,6 +33,7 @@ jobs:
           name: Install dependencies
           command: |
             python -m pip install --upgrade pip
+            python -m pip install pillow==9.0
             python -m pip install matplotlib==<< parameters.matplotlib-version >>
             python -m pip install pytest>=4.6
             python -m pip install pytest-cov
@@ -51,4 +52,4 @@ workflows:
       - build-and-test:
           matrix:
             parameters:
-              matplotlib-version: [3.2.0, 3.3.0, 3.4.0, 3.5.0]
+              matplotlib-version: [3.2.0, 3.3.0, 3.4.0, 3.5.0, 3.6.0]
