@@ -93,7 +93,7 @@ sphinx_gallery_conf = {
     'image_scrapers': (matplotlib_svg_scraper(),),
 }
 
-plot_gallery = 'True'
+plot_gallery = True
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -141,12 +141,8 @@ html_static_path = ['_static']
 
 
 def setup(app):
-    app.add_stylesheet("screenshots.css")
+    app.add_css_file("screenshots.css")
 
-
-html_theme_options = {
-    'includehidden': True,
-}
 
 # Path to favicon
 html_favicon = '_static/favicon.ico'
