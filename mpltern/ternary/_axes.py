@@ -3,6 +3,7 @@ from collections import OrderedDict
 import numpy as np
 
 import matplotlib as mpl
+from matplotlib import _api, cbook
 from matplotlib.axes import Axes
 import matplotlib.lines as mlines
 import matplotlib.patches as mpatches
@@ -12,7 +13,6 @@ from mpltern.ternary.spines import Spine
 from mpltern.ternary.transforms import (
     TernaryTransform, TernaryPerpendicularTransform,
     BarycentricTransform, TernaryScaleTransform, TernaryShift)
-from mpltern import cbook
 from mpltern.ternary.axis import TAxis, LAxis, RAxis
 from mpltern.ternary.ternary_parser import (
     _parse_ternary_single, _parse_ternary_multiple,
@@ -45,8 +45,16 @@ def _create_corners(corners=None, rotation=None):
 
 
 class TernaryAxesBase(Axes):
+    _axis_names = ("x", "y", "t", "l", "r")
+    _shared_axes = {name: cbook.Grouper() for name in _axis_names}
+
     def __init__(self, *args, ternary_scale=1.0, corners=None, rotation=None,
                  **kwargs):
+        # workaround for matplotlib>=3.6.0
+        self._sharet = None
+        self._sharel = None
+        self._sharer = None
+
         # Triangle corners in the original data coordinates
         self.corners_data = _create_corners(corners, rotation)
         sx = np.sqrt(3.0) * 0.5  # Scale for x
@@ -62,6 +70,18 @@ class TernaryAxesBase(Axes):
         self.set_ternary_lim(
             0.0, ternary_scale, 0.0, ternary_scale, 0.0, ternary_scale)
 
+    @property
+    def callbacks(self):
+        if tuple(int(_) for _ in mpl.__version__.split('.'))[:2] < (3, 6):
+            return cbook.CallbackRegistry()
+        else:
+            return cbook.CallbackRegistry(
+               signals=[f"{name}lim_changed" for name in self._axis_names])
+
+    @callbacks.setter
+    def callbacks(self, value):
+        pass
+
     def set_figure(self, fig):
         self.viewTLim = mtransforms.Bbox.unit()
         self.viewLLim = mtransforms.Bbox.unit()
@@ -69,7 +89,7 @@ class TernaryAxesBase(Axes):
         super().set_figure(fig)
 
     def _get_axis_list(self):
-        return (self.taxis, self.laxis, self.raxis)
+        return tuple(getattr(self, f"{name}axis") for name in self._axis_names)
 
     def _get_axis_map(self):
         # workaround for matplotlib>=3.4.0
@@ -228,6 +248,9 @@ class TernaryAxesBase(Axes):
     if tuple(int(_) for _ in mpl.__version__.split('.'))[:2] < (3, 6):
         cla = clear
 
+    def autoscale_view(self, *args, **kwargs):
+        pass
+
     def grid(self, b=None, which='major', axis='both', **kwargs):
         """
         Configure the grid lines.
@@ -266,7 +289,7 @@ class TernaryAxesBase(Axes):
         """
         if len(kwargs):
             b = True
-        cbook._check_in_list(['t', 'l', 'r', 'both'], axis=axis)
+        _api.check_in_list(['t', 'l', 'r', 'both'], axis=axis)
         if axis in ['t', 'both']:
             self.taxis.grid(b, which=which, **kwargs)
         if axis in ['l', 'both']:
@@ -275,7 +298,7 @@ class TernaryAxesBase(Axes):
             self.raxis.grid(b, which=which, **kwargs)
 
     def tick_params(self, axis='both', **kwargs):
-        cbook._check_in_list(['t', 'l', 'r', 'both'], axis=axis)
+        _api.check_in_list(['t', 'l', 'r', 'both'], axis=axis)
         if axis in ['t', 'both']:
             bkw = dict(kwargs)
             bkw.pop('left', None)
@@ -403,13 +426,9 @@ class TernaryAxesBase(Axes):
         self._set_ternary_lim_from_xlim_and_ylim()
 
     def get_children(self):
-        from matplotlib import __version__ as mversion
         children = super().get_children()
-        major, minor, patch = [int(_) for _ in mversion.split('.')]
-        if (major, minor) <= (3, 0):
-            children.remove(self.xaxis)
-            children.remove(self.yaxis)
-            children.extend(self._get_axis_list())
+        children.remove(self.xaxis)
+        children.remove(self.yaxis)
         return children
 
     def _set_ternary_lim_from_xlim_and_ylim(self):

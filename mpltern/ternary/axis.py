@@ -171,6 +171,8 @@ class TernaryAxis(XAxis):
         ticks = []
         # Only ticks to draw are added.
         for axis in self.axes._get_axis_list():
+            if axis in [self.axes.xaxis, self.axes.yaxis]:
+                continue
             try:
                 ticks.extend(axis._update_ticks())
             except TypeError:  # For Matplotlib 3.0.3
