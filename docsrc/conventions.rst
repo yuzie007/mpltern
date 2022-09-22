@@ -36,7 +36,7 @@ in a clockwise or a counterclockwise manner.
 *Be careful that, in the "side-based" perspective, a point in the triangle
 corresponds to different compositions between the clockwise and the
 counterclockwise tick progresses*, which may be confusing (see the red point).
-This also means that a position for a side does not immediately associated with
+This also means that a position for a side is not immediately associated with
 the value of the corresponding variable in the "side-based" perspective.
 To avoid such confusions, in mpltern, the "corner-based" perspective is
 adopted.

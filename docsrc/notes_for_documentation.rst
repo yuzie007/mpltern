@@ -18,9 +18,9 @@ https://gist.github.com/domenic/1f286d415559b56d725bee51a62c24a7.
 How the table of contents displays
 ==================================
 
-In Sphinx version 2.0+, the TOC taken from "contants" by default.
+In Sphinx version 2.0+, the TOC taken from "contents" by default.
 Read the Docs, in contrast, the home page, which is "index" by default, is
 supposed to have ``toctree``, from which the TOC is created.
 What I wanted to do is to set "index" as the home page without showing the TOC
-expicitly. This can be actually achieved by following
+explicitly. This can be actually achieved by following
 https://sphinx-rtd-theme.readthedocs.io/en/stable/configuring.html#how-the-table-of-contents-displays.

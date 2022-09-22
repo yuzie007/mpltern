@@ -7,7 +7,7 @@ mpltern focuses on providing a similar user experience to Matplotlib.
 Practically, this aim is hopefully accomplished by:
 
 - Implementation of ``TernaryAxes`` inheriting ``Axes`` of Matplotlib.
-    - Compoments of ``Axes`` like ``Axis`` and ``Tick`` are also overridden as
+    - Components of ``Axes`` like ``Axis`` and ``Tick`` are also overridden as
       ``TernaryAxis`` and ``TernaryTick``, respectively.
 - Parameters in ``rcParams`` of Matplotlib rather than hard-coded defaults.
   This also enables us to use seaborn styles with mpltern.

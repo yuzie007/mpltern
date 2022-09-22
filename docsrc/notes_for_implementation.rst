@@ -65,9 +65,9 @@ The ``offsetText`` indicates the text showing this reference value.
 Remove round-off
 ----------------
 
-Before Matplotlib 3.1.0, we needed to define ``_get_pixel_distance_along_axis``
-was used in ``Axis`` classes.
-in ``TernaryAxis``. also, this method had to be overridden.
+Before Matplotlib 3.1.0, ``_get_pixel_distance_along_axis`` was used in
+``Axis`` classes.
+In ``TernaryAxis``, this method had to be overridden.
 In Matplotlib 3.1.0, this becomes not necessary thanks to the simplification
 and the improvement of consistency
 (`#12158 <https://github.com/matplotlib/matplotlib/pull/12158>`_ in Matplotlib).
@@ -88,13 +88,11 @@ The default ``verticalaligment`` of axis labels in Matplotlib are:
     - ``'left'``: ``'bottom'``
     - ``'right'``: ``'top'``
 
-The above gives different spacings between tick labels and the axis labels
+The above gives different spaces between tick labels and the axis labels
 for the *x* and the *y* axes when tick labels come below the axis label.
-are inconsistent in the sense that they gives different spacings from their
-tick labels.
 In mpltern, ``bottom`` is used by default when the tick labels come below the
 axis label.
-This is because ``baseline`` and ``top`` look to give different spacings from
+This is because ``baseline`` and ``top`` apparently give different spaces to
 their tick labels if the label text has a descent.
 
 ``Tick``
@@ -142,7 +140,7 @@ tick labels cannot be modified from outside.
 ================
 
 In ``fig.colorbar`` in Matplotlib, the position of the colorbar does not care
-*y*-ticks at the right side.
+*y*-ticks on the right.
 The keywords ``fraction`` and ``pad`` determine the position of the colorbar,
 which we specify by hand.
 Following to this behavior, mpltern does NOT automatically position the

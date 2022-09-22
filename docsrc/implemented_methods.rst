@@ -17,7 +17,7 @@ arguments:
 
 .. Note::
 
-    While also available, the followings methods have not well supported yet
+    While also available, the followings methods have not supported well yet
     in mpltern.
 
         - ``ax.hexbin``

@@ -13,7 +13,7 @@ for `ternary plots <https://en.wikipedia.org/wiki/Ternary_plot>`_.
 Mpltern is implemented as a new projection for Matplotlib, with introducing
 e.g. new ``Transform`` classes for ternary plots.
 The followings are the features of mpltern when compared with other
-ternary-plot libraties:
+ternary-plot libraries:
 
 - Many things one expects essentially possible using Matplotlib can be done
   also in mpltern, without e.g. ternary-to-Cartesian conversions on the user

@@ -8,7 +8,7 @@ Installation
 PyPI
 ====
 
-The latest released version is avaiable from `PyPI <pypi_>`_.
+The latest released version is available from `PyPI <pypi_>`_.
 
 .. code-block:: console
 
@@ -17,7 +17,7 @@ The latest released version is avaiable from `PyPI <pypi_>`_.
 Conda
 =====
 
-The latest released version is avaiable from conda-forge.
+The latest released version is available from conda-forge.
 
 .. code-block:: console
 
