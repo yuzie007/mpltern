@@ -4,6 +4,7 @@ Installation
 
 .. _pypi: https://pypi.org/project/mpltern
 .. _github: https://github.com/yuzie007/mpltern
+.. _conda-forge: https://anaconda.org/conda-forge/mpltern
 
 PyPI
 ====
@@ -17,7 +18,7 @@ The latest released version is available from `PyPI <pypi_>`_.
 Conda
 =====
 
-The latest released version is available from conda-forge.
+The latest released version is available from `conda-forge <conda-forge_>`_.
 
 .. code-block:: console
 
