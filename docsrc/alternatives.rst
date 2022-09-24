@@ -79,7 +79,7 @@ the following alternatives.
     - GUI
         - Veusz_
     - Online
-        - `ternaryplot.com <https://ternaryplot.com>`_ (based on d3-ternary)
+        - ternaryplot.com_ (based on d3-ternary)
 - Proprietary
     - `MATLAB <https://www.mathworks.com/products/matlab.html>`_
         - ternary-plots_
