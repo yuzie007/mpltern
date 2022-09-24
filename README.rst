@@ -2,8 +2,6 @@
 mpltern: Ternary plots with Matplotlib
 ######################################
 
-.. title:: mpltern
-
 .. |PyPI version| image:: https://badge.fury.io/py/mpltern.svg
    :target: https://badge.fury.io/py/mpltern
 .. |PyPI| image:: https://img.shields.io/pypi/dm/mpltern.svg
