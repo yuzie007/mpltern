@@ -150,11 +150,22 @@ class ReplaceMyBase(SphinxTransform):
 
     def apply(self):
         from docutils.nodes import reference, Text
+        basetext = lambda o: (
+            isinstance(o, Text) and o.startswith(self.prefix))
+
+        baseref = lambda o: (
+            isinstance(o, reference) and
+            o.get('uri', '').startswith(self.prefix))
+        for node in self.document.traverse(baseref):
+            target = node['uri'].replace(self.prefix, '', 1)
+            node.replace_attr('uri', target)
+            for t in node.traverse(basetext):
+                t1 = Text(t.replace(self.prefix, '', 1), t.rawsource)
+                t.parent.replace(t, t1)
+
         baseref = lambda o: (
             isinstance(o, reference) and
             o.get('refuri', '').startswith(self.prefix))
-        basetext = lambda o: (
-            isinstance(o, Text) and o.startswith(self.prefix))
         for node in self.document.traverse(baseref):
             target = node['refuri'].replace(self.prefix, '', 1)
             node.replace_attr('refuri', target)
