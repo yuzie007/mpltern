@@ -3,9 +3,11 @@ from collections import OrderedDict
 import numpy as np
 
 import matplotlib as mpl
-from matplotlib import cbook
+import matplotlib.cbook as cbook
 if tuple(int(_) for _ in mpl.__version__.split('.'))[:2] >= (3, 4):
-    from matplotlib import _api
+    from matplotlib._api import check_in_list
+else:
+    from matplotlib.cbook import _check_in_list as check_in_list
 from matplotlib.axes import Axes
 import matplotlib.lines as mlines
 import matplotlib.patches as mpatches
@@ -291,10 +293,7 @@ class TernaryAxesBase(Axes):
         """
         if len(kwargs):
             b = True
-        if tuple(int(_) for _ in mpl.__version__.split('.'))[:2] >= (3, 4):
-            _api.check_in_list(['t', 'l', 'r', 'both'], axis=axis)
-        else:
-            cbook._check_in_list(['t', 'l', 'r', 'both'], axis=axis)
+        check_in_list(['t', 'l', 'r', 'both'], axis=axis)
         if axis in ['t', 'both']:
             self.taxis.grid(b, which=which, **kwargs)
         if axis in ['l', 'both']:
@@ -303,10 +302,7 @@ class TernaryAxesBase(Axes):
             self.raxis.grid(b, which=which, **kwargs)
 
     def tick_params(self, axis='both', **kwargs):
-        if tuple(int(_) for _ in mpl.__version__.split('.'))[:2] >= (3, 4):
-            _api.check_in_list(['t', 'l', 'r', 'both'], axis=axis)
-        else:
-            cbook._check_in_list(['t', 'l', 'r', 'both'], axis=axis)
+        check_in_list(['t', 'l', 'r', 'both'], axis=axis)
         if axis in ['t', 'both']:
             bkw = dict(kwargs)
             bkw.pop('left', None)

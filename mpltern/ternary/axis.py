@@ -1,10 +1,15 @@
 import numpy as np
 
+import matplotlib as mpl
+import matplotlib.cbook as cbook
+if tuple(int(_) for _ in mpl.__version__.split('.'))[:2] >= (3, 4):
+    from matplotlib._api import check_in_list
+else:
+    from matplotlib.cbook import _check_in_list as check_in_list
 from matplotlib.axis import XAxis
 import matplotlib.text as mtext
 import matplotlib.ticker as mticker
 from matplotlib.transforms import Affine2D
-import mpltern.cbook as cbook
 from mpltern.ternary.tick import TTick, LTick, RTick
 
 
@@ -69,7 +74,7 @@ class TernaryAxis(XAxis):
         ----------
         position : {'corner', 'tick1', 'tick2'}
         """
-        cbook._check_in_list(['corner', 'tick1', 'tick2'], position=position)
+        check_in_list(['corner', 'tick1', 'tick2'], position=position)
         self.label_position = position
         self.stale = True
 
@@ -195,7 +200,7 @@ class TernaryAxis(XAxis):
         ----------
         mode : {'axis', 'horizontal', 'manual'}
         """
-        cbook._check_in_list(['axis', 'horizontal', 'manual'], mode=mode)
+        check_in_list(['axis', 'horizontal', 'manual'], mode=mode)
         self._label_rotation_mode = mode
 
     def _get_label_rotation(self):

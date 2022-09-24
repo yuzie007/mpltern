@@ -1,8 +1,13 @@
 import numpy as np
 
+import matplotlib as mpl
+import matplotlib.cbook as cbook
+if tuple(int(_) for _ in mpl.__version__.split('.'))[:2] >= (3, 4):
+    from matplotlib._api import check_in_list
+else:
+    from matplotlib.cbook import _check_in_list as check_in_list
 import matplotlib.transforms as mtransforms
 from matplotlib.axis import XTick
-import mpltern.cbook as cbook
 
 
 class TernaryTick(XTick):
@@ -23,7 +28,7 @@ class TernaryTick(XTick):
         else:
             mode = 'tick'
             angle = labelrotation
-        cbook._check_in_list(['tick', 'axis', 'horizontal', 'manual'],
+        check_in_list(['tick', 'axis', 'horizontal', 'manual'],
                              labelrotation=mode)
         self._labelrotation = (mode, angle)
 
