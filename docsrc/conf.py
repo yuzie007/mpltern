@@ -176,7 +176,7 @@ class ReplaceMyBase(SphinxTransform):
 
 
 def setup(app):
-    app.add_css_file("screenshots.css")
+    # app.add_css_file("screenshots.css")
     app.add_transform(ReplaceMyBase)
 
 
