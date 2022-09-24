@@ -64,7 +64,7 @@ setup(
     #
     # This field corresponds to the "Description-Content-Type" metadata field:
     # https://packaging.python.org/specifications/core-metadata/#description-content-type-optional
-    long_description_content_type='text/markdown',  # Optional (see note above)
+    long_description_content_type='text/x-rst',  # Optional (see note above)
 
     # This should be a valid link to your project's main homepage.
     #
