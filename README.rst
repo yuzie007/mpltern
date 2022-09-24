@@ -4,28 +4,24 @@ mpltern: Ternary plots with Matplotlib
 
 .. title:: mpltern
 
-.. _Matplotlib: https://matplotlib.org
-.. _seaborn: https://seaborn.pydata.org
-.. _Jupyter: http://jupyter.org
-
-.. |PyPI version| image:: https://badge.fury.io/py/mpltern.svg
+.. image:: https://badge.fury.io/py/mpltern.svg
    :target: https://badge.fury.io/py/mpltern
-.. |PyPI| image:: https://img.shields.io/pypi/dm/mpltern.svg
+.. image:: https://img.shields.io/pypi/dm/mpltern.svg
    :target: https://pypi.python.org/pypi/mpltern
-.. |Conda Version| image:: https://img.shields.io/conda/vn/conda-forge/mpltern.svg
+.. image:: https://img.shields.io/conda/vn/conda-forge/mpltern.svg
    :target: https://anaconda.org/conda-forge/mpltern
-.. |Conda Downloads| image:: https://img.shields.io/conda/dn/conda-forge/mpltern.svg
+.. image:: https://img.shields.io/conda/dn/conda-forge/mpltern.svg
    :target: https://anaconda.org/conda-forge/mpltern
-.. |GitHubActions| image:: https://github.com/yuzie007/mpltern/actions/workflows/tests.yml/badge.svg
+
+.. image:: https://github.com/yuzie007/mpltern/actions/workflows/tests.yml/badge.svg
    :target: https://github.com/yuzie007/mpltern/actions?query=workflow%3ATests
-.. |CircleCI| image:: https://circleci.com/gh/yuzie007/mpltern.svg?style=shield
+.. image:: https://circleci.com/gh/yuzie007/mpltern.svg?style=shield
    :target: https://circleci.com/gh/yuzie007/mpltern
 
-|PyPI version| |PyPI| |Conda Version| |Conda Downloads|
+.. image:: https://zenodo.org/badge/DOI/10.5281/zenodo.3528354.svg
+   :target: https://doi.org/10.5281/zenodo.3528354
 
-|GitHubActions| |CircleCI|
-
-Mpltern is a Python plotting library based on Matplotlib_ specifically designed
+Mpltern is a Python plotting library based on `Matplotlib <https://matplotlib.org>`__ specifically designed
 for `ternary plots <https://en.wikipedia.org/wiki/Ternary_plot>`_.
 Mpltern is implemented as a new projection for Matplotlib, with introducing
 e.g. new ``Transform`` classes for ternary plots.
@@ -43,8 +39,9 @@ ternary-plot libraries:
   this allows users e.g. faster production of ternary plots with publication
   quality
 - Easy combination with normal Matplotlib plots
-- Easy application of seaborn_ styles
-- Working also in Matplotlib interactive modes inside e.g. Jupyter_ notebooks
+- Easy application of `seaborn <https://seaborn.pydata.org>`__ styles
+- Working also in Matplotlib interactive modes inside e.g.
+  `Jupyter <http://jupyter.org>`__ notebooks
 
 Details of mpltern are found in https://yuzie007.github.io/mpltern.
 
@@ -62,24 +59,49 @@ Details of mpltern are found in https://yuzie007.github.io/mpltern.
      - .. image:: https://mpltern.readthedocs.io/en/latest/_images/sphx_glr_02.arbitrary_triangle_001.svg
           :target: https://mpltern.readthedocs.io/en/latest/gallery/index.html
 
+Installation
+============
+
+PyPI
+----
+
+The latest released version is available from `PyPI <https://pypi.org/project/mpltern>`__.
+
+.. code-block:: console
+
+   python -m pip install -U mpltern
+
+Conda
+-----
+
+The latest released version is available from `conda-forge <https://anaconda.org/conda-forge/mpltern>`__.
+
+.. code-block:: console
+
+   conda config --add channels conda-forge
+   conda install mpltern
+
+GitHub
+------
+
+The development version is available from `GitHub <https://github.com/yuzie007/mpltern>`__.
+
+.. code-block:: console
+
+   python -m pip install -U git+https://github.com/yuzie007/mpltern.git
+
 Citing mpltern
 ==============
 
-The author requests to cite mpltern via the DOIs below if mpltern contributes
+The author requests to cite mpltern via the DOI above if mpltern contributes
 to a scientific publication.
 Of course, `Matplotlib should be also very much acknowledged <https://matplotlib.org/citing.html>`_
 when using mpltern.
-
-DOIs
-----
-
-.. image:: https://zenodo.org/badge/DOI/10.5281/zenodo.3528354.svg
-   :target: https://doi.org/10.5281/zenodo.3528354
 
 Author
 ======
 
 Yuji Ikeda
-(`Github <https://github.com/yuzie007>`_,
-`Google Scholar <https://scholar.google.co.jp/citations?user=2m5dkBwAAAAJ&hl=en>`_,
-`ResearchGate <https://www.researchgate.net/profile/Yuji_Ikeda6>`_)
+(`Github <https://github.com/yuzie007>`__,
+`Google Scholar <https://scholar.google.co.jp/citations?user=2m5dkBwAAAAJ&hl=en>`__,
+`ResearchGate <https://www.researchgate.net/profile/Yuji_Ikeda6>`__)
