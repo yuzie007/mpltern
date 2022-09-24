@@ -13,6 +13,8 @@
 import os
 import shutil
 
+from sphinx.transforms import SphinxTransform
+
 import mpltern
 
 
@@ -140,8 +142,31 @@ pygments_style = 'sphinx'
 html_static_path = ['_static']
 
 
+# https://stackoverflow.com/a/52998585
+class ReplaceMyBase(SphinxTransform):
+
+    default_priority = 750
+    prefix = "https://mpltern.readthedocs.io/en/latest/"
+
+    def apply(self):
+        from docutils.nodes import reference, Text
+        baseref = lambda o: (
+            isinstance(o, reference) and
+            o.get('refuri', '').startswith(self.prefix))
+        basetext = lambda o: (
+            isinstance(o, Text) and o.startswith(self.prefix))
+        for node in self.document.traverse(baseref):
+            target = node['refuri'].replace(self.prefix, '', 1)
+            node.replace_attr('refuri', target)
+            for t in node.traverse(basetext):
+                t1 = Text(t.replace(self.prefix, '', 1), t.rawsource)
+                t.parent.replace(t, t1)
+        return
+
+
 def setup(app):
     app.add_css_file("screenshots.css")
+    app.add_transform(ReplaceMyBase)
 
 
 # Path to favicon
