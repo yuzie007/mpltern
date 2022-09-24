@@ -50,17 +50,17 @@ ternary-plot libraries:
 
 .. rst-class:: special
 
-.. list-table::
-   :widths: auto
+   .. list-table::
+      :widths: auto
 
-   * - .. image:: https://mpltern.readthedocs.io/en/latest/_images/sphx_glr_with_seaborn_styles_001.svg
-          :target: https://mpltern.readthedocs.io/en/latest/gallery/index.html
-     - .. image:: https://mpltern.readthedocs.io/en/latest/_images/sphx_glr_05.inset_001.svg
-          :target: https://mpltern.readthedocs.io/en/latest/gallery/index.html
-     - .. image:: https://mpltern.readthedocs.io/en/latest/_images/basic_2.svg
-          :target: https://mpltern.readthedocs.io/en/latest/gallery/index.html
-     - .. image:: https://mpltern.readthedocs.io/en/latest/_images/sphx_glr_02.arbitrary_triangle_001.svg
-          :target: https://mpltern.readthedocs.io/en/latest/gallery/index.html
+      * - .. image:: https://mpltern.readthedocs.io/en/latest/_images/sphx_glr_with_seaborn_styles_001.svg
+             :target: https://mpltern.readthedocs.io/en/latest/gallery/index.html
+        - .. image:: https://mpltern.readthedocs.io/en/latest/_images/sphx_glr_05.inset_001.svg
+             :target: https://mpltern.readthedocs.io/en/latest/gallery/index.html
+        - .. image:: https://mpltern.readthedocs.io/en/latest/_images/basic_2.svg
+             :target: https://mpltern.readthedocs.io/en/latest/gallery/index.html
+        - .. image:: https://mpltern.readthedocs.io/en/latest/_images/sphx_glr_02.arbitrary_triangle_001.svg
+             :target: https://mpltern.readthedocs.io/en/latest/gallery/index.html
 
 Installation
 ============
