@@ -31,19 +31,24 @@ e.g. new ``Transform`` classes for ternary plots.
 The followings are the features of mpltern when compared with other
 ternary-plot libraries:
 
-* Many things one expects essentially possible using Matplotlib can be done
+- Many things one expects essentially possible using Matplotlib can be done
   also in mpltern, without e.g. ternary-to-Cartesian conversions on the user
   side
-* For the same plotting styles, mpltern offers the same or very similar method
+
+- For the same plotting styles, mpltern offers the same or very similar method
   names as Matplotlib does; you do not need to learn many new commands in
   addition to those for Matplotlib
-* Tick markers, tick labels, and axis labels are automatically positioned with
+
+- Tick markers, tick labels, and axis labels are automatically positioned with
   reasonable paddings inherited from Matplotlib;
   this allows users e.g. faster production of ternary plots with publication
   quality
-* Easy combination with normal Matplotlib plots
-* Easy application of `seaborn <https://seaborn.pydata.org>`__ styles
-* Working also in Matplotlib interactive modes inside e.g.
+
+- Easy combination with normal Matplotlib plots
+
+- Easy application of `seaborn <https://seaborn.pydata.org>`__ styles
+
+- Working also in Matplotlib interactive modes inside e.g.
   `Jupyter <http://jupyter.org>`__ notebooks
 
 .. list-table::
