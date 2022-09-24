@@ -25,7 +25,8 @@ mpltern: Ternary plots with Matplotlib
 
 |DOI|
 
-Mpltern is a Python plotting library based on `Matplotlib <https://matplotlib.org>`__ specifically designed
+Mpltern (https://yuzie007.github.io/mpltern) is a Python plotting library based
+on `Matplotlib <https://matplotlib.org>`__ specifically designed
 for `ternary plots <https://en.wikipedia.org/wiki/Ternary_plot>`_.
 Mpltern is implemented as a new projection for Matplotlib, with introducing
 e.g. new ``Transform`` classes for ternary plots.
@@ -46,8 +47,6 @@ ternary-plot libraries:
 - Easy application of `seaborn <https://seaborn.pydata.org>`__ styles
 - Working also in Matplotlib interactive modes inside e.g.
   `Jupyter <http://jupyter.org>`__ notebooks
-
-Details of mpltern are found in https://yuzie007.github.io/mpltern.
 
 .. rst-class:: special
 
