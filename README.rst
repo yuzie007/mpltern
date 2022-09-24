@@ -4,22 +4,26 @@ mpltern: Ternary plots with Matplotlib
 
 .. title:: mpltern
 
-.. image:: https://badge.fury.io/py/mpltern.svg
+.. |PyPI version| image:: https://badge.fury.io/py/mpltern.svg
    :target: https://badge.fury.io/py/mpltern
-.. image:: https://img.shields.io/pypi/dm/mpltern.svg
+.. |PyPI| image:: https://img.shields.io/pypi/dm/mpltern.svg
    :target: https://pypi.python.org/pypi/mpltern
-.. image:: https://img.shields.io/conda/vn/conda-forge/mpltern.svg
+.. |Conda Version| image:: https://img.shields.io/conda/vn/conda-forge/mpltern.svg
    :target: https://anaconda.org/conda-forge/mpltern
-.. image:: https://img.shields.io/conda/dn/conda-forge/mpltern.svg
+.. |Conda Downloads| image:: https://img.shields.io/conda/dn/conda-forge/mpltern.svg
    :target: https://anaconda.org/conda-forge/mpltern
-
-.. image:: https://github.com/yuzie007/mpltern/actions/workflows/tests.yml/badge.svg
+.. |GitHubActions| image:: https://github.com/yuzie007/mpltern/actions/workflows/tests.yml/badge.svg
    :target: https://github.com/yuzie007/mpltern/actions?query=workflow%3ATests
-.. image:: https://circleci.com/gh/yuzie007/mpltern.svg?style=shield
+.. |CircleCI| image:: https://circleci.com/gh/yuzie007/mpltern.svg?style=shield
    :target: https://circleci.com/gh/yuzie007/mpltern
+.. |DOI| image:: https://zenodo.org/badge/DOI/10.5281/zenodo.3528355.svg
+   :target: https://doi.org/10.5281/zenodo.3528355
 
-.. image:: https://zenodo.org/badge/DOI/10.5281/zenodo.3528354.svg
-   :target: https://doi.org/10.5281/zenodo.3528354
+|PyPI version| |PyPI| |Conda Version| |Conda Downloads|
+
+|GitHubActions| |CircleCI|
+
+|DOI|
 
 Mpltern is a Python plotting library based on `Matplotlib <https://matplotlib.org>`__ specifically designed
 for `ternary plots <https://en.wikipedia.org/wiki/Ternary_plot>`_.
@@ -90,8 +94,58 @@ The development version is available from `GitHub <https://github.com/yuzie007/m
 
    python -m pip install -U git+https://github.com/yuzie007/mpltern.git
 
-Citing mpltern
-==============
+Basic Usage
+===========
+
+Import mpltern as well as Matplotlib as:
+
+.. code-block:: python
+
+    import matplotlib.pyplot as plt
+    import mpltern
+
+By ``import mpltern``, a Matplotlib projection ``'ternary'`` is
+registered inside.
+
+Then, make ``TernaryAxes`` e.g. as:
+
+.. code-block:: python
+
+    ax = plt.subplot(projection='ternary')
+
+It is already possible to create ternary plots using the methods in ``ax``.
+For example:
+
+.. code-block:: python
+
+    from mpltern.ternary.datasets import get_spiral
+
+    t, l, r = mpltern.datasets.get_spiral()
+    ax.plot(t, l, r)
+    plt.show()
+
+You may see the following Archimedean spiral in the triangle.
+
+.. image:: https://mpltern.readthedocs.io/en/latest/_images/basic_1.svg
+
+Contour-like plots are also possible in mpltern.
+
+.. code-block:: python
+
+    ax = plt.subplot(projection='ternary')
+
+    from mpltern.ternary.datasets import get_shanon_entropies
+
+    t, l, r, v = get_shanon_entropies()
+    ax.tricontourf(t, l, r, v)
+    plt.show()
+
+.. image:: https://mpltern.readthedocs.io/en/latest/_images/basic_2.svg
+
+See `more examples <https://mpltern.readthedocs.io/en/latest/gallery/index.html>`__.
+
+How to Cite mpltern
+===================
 
 The author requests to cite mpltern via the DOI above if mpltern contributes
 to a scientific publication.
