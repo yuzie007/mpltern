@@ -14,8 +14,8 @@ mpltern: Ternary plots with Matplotlib
    :target: https://github.com/yuzie007/mpltern/actions?query=workflow%3ATests
 .. |CircleCI| image:: https://circleci.com/gh/yuzie007/mpltern.svg?style=shield
    :target: https://circleci.com/gh/yuzie007/mpltern
-.. |DOI| image:: https://zenodo.org/badge/DOI/10.5281/zenodo.3528355.svg
-   :target: https://doi.org/10.5281/zenodo.3528355
+.. |DOI| image:: https://zenodo.org/badge/DOI/10.5281/zenodo.3528354.svg
+   :target: https://doi.org/10.5281/zenodo.3528354
 
 |PyPI version| |PyPI| |Conda Version| |Conda Downloads|
 
