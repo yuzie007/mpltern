@@ -5,6 +5,8 @@
    :maxdepth: 2
 
    supported_matplotlib.rst
+   installation.rst
+   basic_usage.rst
    implemented_methods.rst
    gallery/index.rst
    conventions.rst
