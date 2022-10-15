@@ -135,16 +135,21 @@ class TernaryAxis(XAxis):
 
     def set_ticks_position(self, position):
         """
-        Set the ticks position (tick1, tick2, both, default or none)
-        'both' sets the ticks to appear on both positions, but does not
-        change the tick labels.
-        'none' can be used if you don't want any ticks.
-        'none' and 'both' affect only the ticks, not the labels.
+        Set the ticks position.
 
         Parameters
         ----------
         position : {'tick1', 'tick2', 'both', 'default', 'none'}
+            'both' sets the ticks to appear on both positions, but does not
+            change the tick labels.  'default' resets the tick positions to
+            the default.                                             'none'
+            can be used if you don't want any ticks. 'none' and 'both'
+            affect only the ticks, not the labels.
         """
+        check_in_list(
+            ['tick1', 'tick2', 'both', 'default', 'none'],
+            position=position,
+        )
         if position in ['tick1', 'default']:
             self.set_tick_params(which='both', tick1On=True, label1On=True,
                                  tick2On=False, label2On=False)
@@ -158,7 +163,7 @@ class TernaryAxis(XAxis):
             self.set_tick_params(which='both', tick1On=False,
                                  tick2On=False)
         else:
-            raise ValueError("invalid position: %s" % position)
+            assert False, "unhandled parameter not caught by _check_in_list"
         self.stale = True
 
     def get_view_interval(self):
