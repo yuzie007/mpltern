@@ -75,13 +75,13 @@ Installation
 ============
 
 See the `install
-documentation <https://mpltern.readthedocs.io/en/latest/installation.html>__`.
+documentation <https://mpltern.readthedocs.io/en/latest/installation.html>`__.
 
 Basic Usage
 ===========
 
 See the `basic usage
-documentation <https://mpltern.readthedocs.io/en/latest/basic_usage.html>__`.
+documentation <https://mpltern.readthedocs.io/en/latest/basic_usage.html>`__.
 
 See `more examples in the gallery
 <https://mpltern.readthedocs.io/en/latest/gallery/index.html>`__.
