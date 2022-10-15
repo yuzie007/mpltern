@@ -55,13 +55,21 @@ ternary-plot libraries:
    :widths: auto
 
    * - .. image:: https://mpltern.readthedocs.io/en/latest/_images/sphx_glr_with_seaborn_styles_001.svg
-          :target: https://mpltern.readthedocs.io/en/latest/gallery/index.html
+          :target: https://mpltern.readthedocs.io/en/latest/gallery/intermediate/with_seaborn_styles.html
      - .. image:: https://mpltern.readthedocs.io/en/latest/_images/sphx_glr_05.inset_001.svg
-          :target: https://mpltern.readthedocs.io/en/latest/gallery/index.html
-     - .. image:: https://mpltern.readthedocs.io/en/latest/_images/basic_2.svg
-          :target: https://mpltern.readthedocs.io/en/latest/gallery/index.html
+          :target: https://mpltern.readthedocs.io/en/latest/gallery/advanced/05.inset.html
+     - .. image:: https://mpltern.readthedocs.io/en/latest/_images/sphx_glr_07.polygon_001.svg
+          :target: https://mpltern.readthedocs.io/en/latest/gallery/introductory/07.polygon.html
      - .. image:: https://mpltern.readthedocs.io/en/latest/_images/sphx_glr_02.arbitrary_triangle_001.svg
-          :target: https://mpltern.readthedocs.io/en/latest/gallery/index.html
+          :target: https://mpltern.readthedocs.io/en/latest/gallery/triangle/02.arbitrary_triangle.html
+
+.. list-table::
+   :widths: auto
+
+   * - .. image:: https://mpltern.readthedocs.io/en/latest/_images/sphx_glr_02.contour_001.svg
+          :target: https://mpltern.readthedocs.io/en/latest/gallery/introductory/02.contour.html
+     - .. image:: https://mpltern.readthedocs.io/en/latest/_images/sphx_glr_03.pseudocolor_001.svg
+          :target: https://mpltern.readthedocs.io/en/latest/gallery/introductory/03.pseudocolor.html
 
 Installation
 ============
