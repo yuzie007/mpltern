@@ -98,6 +98,6 @@ Author
 ======
 
 Yuji Ikeda
-(`Github <https://github.com/yuzie007>`__,
+(`GitHub <https://github.com/yuzie007>`__,
 `Google Scholar <https://scholar.google.co.jp/citations?user=2m5dkBwAAAAJ&hl=en>`__,
 `ResearchGate <https://www.researchgate.net/profile/Yuji_Ikeda6>`__)
