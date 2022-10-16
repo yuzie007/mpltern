@@ -3,21 +3,27 @@
 Tick position
 =============
 
-Tick position can be changed via ``ax.opposite_ticks``.
+Tick position can be controlled via e.g.
+``ax.taxis.set_ticks_position``.
+
+- ``'tick1'``: side for tick1
+- ``'tick2'``: side for tick2
+- ``'both'``: both side
+
+When the axis labels are on the sides, e.g. ``ax.taxis.set_label_position``
+should also be used.
 """
 import matplotlib.pyplot as plt
 from mpltern.ternary.datasets import get_spiral
 
-
-pad = 42
 
 t, l, r = get_spiral()
 
 fig = plt.figure(figsize=(10.8, 4.8))
 fig.subplots_adjust(wspace=0.3)
 
-bs = [False, True]
-for i, b in enumerate(bs):
+positions = ['tick1', 'tick2']
+for i, position in enumerate(positions):
     ax = fig.add_subplot(1, 2, i + 1, projection='ternary')
 
     ax.plot(t, l, r)
@@ -26,8 +32,14 @@ for i, b in enumerate(bs):
     ax.set_llabel('Left')
     ax.set_rlabel('Right')
 
-    ax.opposite_ticks(b)
+    ax.taxis.set_ticks_position(position)
+    ax.laxis.set_ticks_position(position)
+    ax.raxis.set_ticks_position(position)
 
-    ax.set_title("opposite_ticks({})".format(b), pad=pad)
+    ax.taxis.set_label_position(position)
+    ax.laxis.set_label_position(position)
+    ax.raxis.set_label_position(position)
+
+    ax.set_title(f"{position=}", pad=42)
 
 plt.show()
