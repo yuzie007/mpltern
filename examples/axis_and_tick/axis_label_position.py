@@ -33,6 +33,6 @@ for i, position in enumerate(positions):
     ax.laxis.set_label_position(position)
     ax.raxis.set_label_position(position)
 
-    ax.set_title(f"{position=}", pad=42)
+    ax.set_title(f"position='{position}'", pad=42)
 
 plt.show()
