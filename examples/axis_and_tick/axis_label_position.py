@@ -14,8 +14,6 @@ import matplotlib.pyplot as plt
 from mpltern.ternary.datasets import get_spiral
 
 
-pad = 42
-
 t, l, r = get_spiral()
 
 fig = plt.figure(figsize=(10.8, 4.8))
@@ -35,6 +33,6 @@ for i, position in enumerate(positions):
     ax.laxis.set_label_position(position)
     ax.raxis.set_label_position(position)
 
-    ax.set_title("label_position='{}'".format(position), pad=pad)
+    ax.set_title(f"{position=}", pad=42)
 
 plt.show()
