@@ -1,8 +1,15 @@
+##############################
 Alternatives for Ternary Plots
-==============================
+##############################
 
-If mpltern does not satisfy your demands for ternary plots, one can think about
+If mpltern does not satisfy your demands for ternary plots, think of
 the following alternatives.
+
+.. _Python: https://www.python.org
+.. _R: https://www.r-project.org
+.. _JavaScript: https://developer.mozilla.org/en-US/docs/Web/JavaScript
+.. _LaTeX: https://www.latex-project.org
+.. _MATLAB: https://www.mathworks.com/products/matlab.html
 
 .. _ggtern: http://www.ggtern.com
 .. Errorbars
@@ -62,29 +69,48 @@ the following alternatives.
 .. _Statgraphics: http://www.statgraphics.com
 .. Ternary plots are not documented very much.
 
-- Open-source
-    - `Python <https://www.python.org>`__
+Open-source
+===========
+
+Python_
+-------
         - `Plotly <https://plot.ly/python>`__
         - `python-ternary <https://github.com/marcharper/python-ternary>`_
-    - `R <https://www.r-project.org>`_
+
+R_
+--
         - `Plotly <https://plot.ly/r>`__
         - ggtern_
         - Ternary_
         - vcd_
-    - `JavaScript <https://developer.mozilla.org/en-US/docs/Web/JavaScript>`__
+
+JavaScript_
+-----------
         - Plotly_
         - `d3-ternary (TypeScript) <https://github.com/davenquinn/d3-ternary>`__
-    - `LaTeX <https://www.latex-project.org>`_
+
+LaTeX_
+------
         - PGFPlots_
-    - GUI
+
+GUI
+---
         - Veusz_
-    - Online
+
+Online
+------
         - ternaryplot.com_ (based on d3-ternary)
-- Proprietary
-    - `MATLAB <https://www.mathworks.com/products/matlab.html>`_
+
+Proprietary
+===========
+
+MATLAB_
+-------
         - ternary-plots_
         - alcheyst-ternplot_
-    - GUI
+
+GUI
+---
         - `DPlot <https://www.dplot.com/index.htm>`_
         - JMP_
         - Origin_
