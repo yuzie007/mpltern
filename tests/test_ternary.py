@@ -1,11 +1,21 @@
 import numpy as np
 
 import pytest
+import matplotlib as mpl
 from matplotlib.testing.decorators import (
     image_comparison, check_figures_equal)
 import matplotlib.pyplot as plt
 from mpltern.ternary.datasets import (
     get_spiral, get_scatter_points, get_triangular_grid)
+
+is_older_than_33 = pytest.mark.skipif(
+    tuple(int(_) for _ in mpl.__version__.split('.'))[:2] < (3, 3),
+    reason="Matplotlib>=3.3 is required",
+)
+is_older_than_34 = pytest.mark.skipif(
+    tuple(int(_) for _ in mpl.__version__.split('.'))[:2] < (3, 4),
+    reason="Matplotlib>=3.4 is required",
+)
 
 
 def fix_text_kerning_factor():
@@ -294,6 +304,70 @@ class TestTickDirection:
         fig = plt.figure()
         ax = fig.add_subplot(projection='ternary')
         ax.tick_params(direction=direction)
+
+
+@is_older_than_33
+class TestAxLine:
+    @check_figures_equal(extensions=('pdf',))
+    def test_axline(self, fig_test, fig_ref):
+        ax = fig_test.add_subplot(projection='ternary')
+        ax.axline((1.0, 0.0, 0.0), (0.0, 0.5, 0.5))
+
+        ax = fig_ref.add_subplot(projection='ternary')
+        ax.plot([1.0, 0.0], [0.0, 0.5], [0.0, 0.5])
+
+    @check_figures_equal(extensions=('pdf',))
+    def test_axline_slope(self, fig_test, fig_ref):
+        ax = fig_test.add_subplot(projection='ternary')
+        ax.axline((1.0, 0.0, 0.0), slope=(-1.0, 0.5, 0.5))
+
+        ax = fig_ref.add_subplot(projection='ternary')
+        ax.plot([1.0, 0.0], [0.0, 0.5], [0.0, 0.5])
+
+    @is_older_than_34
+    @check_figures_equal(extensions=('pdf',))
+    def test_axline_axes(self, fig_test, fig_ref):
+        ax = fig_test.add_subplot(projection='ternary')
+        ax.set_ternary_min(0.1, 0.2, 0.3)
+        ax.axline(
+            (1.0, 0.0, 0.0),
+            (0.0, 0.5, 0.5),
+            transform=ax.transTernaryAxes,
+        )
+
+        ax = fig_ref.add_subplot(projection='ternary')
+        ax.set_ternary_min(0.1, 0.2, 0.3)
+        ax.plot([0.5, 0.1], [0.2, 0.4], [0.3, 0.5])
+
+    @is_older_than_34
+    @check_figures_equal(extensions=('pdf',))
+    def test_axline_axes_slope(self, fig_test, fig_ref):
+        ax = fig_test.add_subplot(projection='ternary')
+        ax.set_ternary_min(0.1, 0.2, 0.3)
+        ax.axline(
+            (1.0, 0.0, 0.0),
+            slope=(-1.0, 0.5, 0.5),
+            transform=ax.transTernaryAxes,
+        )
+
+        ax = fig_ref.add_subplot(projection='ternary')
+        ax.set_ternary_min(0.1, 0.2, 0.3)
+        ax.plot([0.5, 0.1], [0.2, 0.4], [0.3, 0.5])
+
+    def test_axline_args(self):
+        fig = plt.figure()
+        ax = fig.add_subplot(projection='ternary')
+        with pytest.raises(TypeError):
+            ax.axline((1, 0, 0))  # missing second parameter
+        with pytest.raises(TypeError):
+            # redundant parameters
+            ax.axline((1.0, 0.0, 0.0), (0.0, 0.5, 0.5), slope=(-1.0, 0.5, 0.5))
+        with pytest.raises(ValueError):
+            ax.axline((1, 0, 0), slope=1)
+        with pytest.raises(ValueError):
+            # two identical points are not allowed
+            ax.axline((1, 0, 0), (1, 0, 0))
+            plt.draw()
 
 
 @image_comparison(baseline_images=['text'], extensions=['pdf'], style='mpl20')

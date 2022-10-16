@@ -655,6 +655,41 @@ class TernaryAxes(TernaryAxesBase):
         self.add_line(l)
         return l
 
+    def axline(self, xy1, xy2=None, *, slope=None, **kwargs):
+        k = 'transform'
+        if k in kwargs and kwargs[k].input_dims == 2:
+            return super().axline(xy1, xy2, slope=slope, **kwargs)
+
+        if k in kwargs and kwargs[k] == self.transTernaryAxes:
+            trans = self.transAxesProjection
+            trans_xy = self.transAxes
+        else:
+            trans = self.transProjection
+            trans_xy = None
+
+        tlr1 = xy1
+        tlr2 = xy2
+
+        xy1 = trans.transform(tlr1)
+        if xy2 is not None:
+            xy2 = trans.transform(tlr2)
+        if slope is not None:
+            slope = np.asarray(slope)
+            if slope.size != 3:
+                raise ValueError("'slope' must be of length 3")
+            xy3 = trans.transform(tlr1 + np.asarray(slope))
+            dx = xy3[0] - xy1[0]
+            dy = xy3[1] - xy1[1]
+            if np.allclose(dx, 0.0):
+                slope = np.inf
+            else:
+                slope = dy / dx
+
+        if k in kwargs:
+            kwargs['transform'] = trans_xy
+
+        return super().axline(xy1, xy2, slope=slope, **kwargs)
+
     def axtspan(self, xmin, xmax, ymin=0, ymax=1, **kwargs):
         """
         Add a span for the bottom coordinate.
