@@ -70,17 +70,16 @@ plots give the following orders by default:
  ternaryplot.com ``T → L → R`` (CCW)       CW
  Delta Plotware  ``T → R → L`` (CW)        CCW
  Dplot           ``R → T → L`` (CW)        CW
+ Grapher         ``R → T → L`` (CCW)       CCW
  JMP             ``L → T → R`` (CW)        CW
  Origin          ``R → T → L`` (CCW)       CCW
  Statgraphics    ``T → L → R`` (CCW)       CCW
 ================ ========================= =========
 
-As found, the majority is
+In mpltern by default:
 
 - ``T → L → R`` (CCW) for the order of triangle corners
 - CCW for the ticks progress
-
-Mpltern follows the conventions above.
 
 Normalization in Ternary Plots
 ==============================

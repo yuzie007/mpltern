@@ -58,6 +58,8 @@ the following alternatives.
 .. _alcheyst-ternplot: https://www.mathworks.com/matlabcentral/fileexchange/2299-alchemyst-ternplot
 .. Ternary plots are not documented very much.
 
+.. _Grapher: https://www.goldensoftware.com/products/grapher
+
 .. _JMP: https://www.jmp.com/de_de/home.html
 .. Ternary plots are not documented very much.
 
@@ -112,6 +114,7 @@ MATLAB_
 GUI
 ---
         - `DPlot <https://www.dplot.com/index.htm>`_
+        - Grapher_
         - JMP_
         - Origin_
         - Statgraphics_
