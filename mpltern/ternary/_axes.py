@@ -525,28 +525,6 @@ class TernaryAxesBase(Axes):
         self.set_llim(lmin, lmax)
         self.set_rlim(rmin, rmax)
 
-    def opposite_ticks(self, b=None):
-        if b:
-            if self.taxis.get_label_position() != 'corner':
-                self.taxis.set_label_position('tick2')
-            if self.laxis.get_label_position() != 'corner':
-                self.laxis.set_label_position('tick2')
-            if self.raxis.get_label_position() != 'corner':
-                self.raxis.set_label_position('tick2')
-            self.taxis.set_ticks_position('tick2')
-            self.laxis.set_ticks_position('tick2')
-            self.raxis.set_ticks_position('tick2')
-        else:
-            if self.taxis.get_label_position() != 'corner':
-                self.taxis.set_label_position('tick1')
-            if self.laxis.get_label_position() != 'corner':
-                self.laxis.set_label_position('tick1')
-            if self.raxis.get_label_position() != 'corner':
-                self.raxis.set_label_position('tick1')
-            self.taxis.set_ticks_position('tick1')
-            self.laxis.set_ticks_position('tick1')
-            self.raxis.set_ticks_position('tick1')
-
 
 class TernaryAxes(TernaryAxesBase):
     """

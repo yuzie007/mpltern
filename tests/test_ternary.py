@@ -221,7 +221,9 @@ class TestTicks:
         fig = plt.figure()
         ax = fig.add_subplot(projection='ternary')
 
-        ax.opposite_ticks(True)
+        ax.taxis.set_ticks_position('tick2')
+        ax.laxis.set_ticks_position('tick2')
+        ax.raxis.set_ticks_position('tick2')
 
         ax.set_tlabel('Top')
         ax.set_llabel('Left')

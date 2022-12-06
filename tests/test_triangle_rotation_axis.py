@@ -36,4 +36,7 @@ def test_triangle_rotation(corner_label, b, rotation, baseline_images):
 
     ax.tick_params(labelrotation='axis')
 
-    ax.opposite_ticks(b)
+    if b:
+        ax.taxis.set_ticks_position('tick2')
+        ax.laxis.set_ticks_position('tick2')
+        ax.raxis.set_ticks_position('tick2')
