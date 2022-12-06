@@ -141,6 +141,21 @@ class TestAxisLabelPosition:
         ax.raxis.set_label_position(position)
 
 
+class TestTitle:
+    locs = ['center', 'left', 'right']
+    baseline_images_list = [[f'titie_{loc}'] for loc in locs]
+
+    @pytest.mark.parametrize('loc, baseline_images',
+                             zip(locs, baseline_images_list),)
+    @image_comparison(baseline_images=None, extensions=['pdf'], style='mpl20')
+    def test_tick_direction(self, loc, baseline_images):
+        fix_text_kerning_factor()
+
+        fig = plt.figure()
+        ax = fig.add_subplot(projection='ternary')
+        ax.set_title("Title", loc=loc)
+
+
 @image_comparison(baseline_images=['aspect'], extensions=['pdf'],
                   style='mpl20')
 def test_aspect():
