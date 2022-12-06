@@ -4,7 +4,7 @@
    :hidden:
    :maxdepth: 2
 
-   supported_matplotlib.rst
+   release_notes.rst
    installation.rst
    basic_usage.rst
    implemented_methods.rst
