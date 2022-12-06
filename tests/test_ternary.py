@@ -380,7 +380,7 @@ def test_text():
 
 class TestScatter:
     @image_comparison(baseline_images=['scatter'], extensions=['pdf'],
-                      style='mpl20')
+                      tol=1.0, style='mpl20')
     def test_scatter(self):
         t, l, r = get_scatter_points()
         fig = plt.figure()
@@ -388,7 +388,7 @@ class TestScatter:
         ax.scatter(t, l, r)
 
     @image_comparison(baseline_images=['scatter_color'], extensions=['pdf'],
-                      tol=0.3, style='mpl20')
+                      tol=1.0, style='mpl20')
     def test_scatter_color(self):
         fix_text_kerning_factor()
 
