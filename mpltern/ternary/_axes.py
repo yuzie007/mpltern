@@ -109,6 +109,9 @@ class TernaryAxesBase(Axes):
         self.xaxis = maxis.XAxis(self)
         self.yaxis = maxis.YAxis(self)
 
+        self.xaxis.set_visible(False)
+        self.yaxis.set_visible(False)
+
         self.taxis = TAxis(self)
         self.laxis = LAxis(self)
         self.raxis = RAxis(self)
@@ -428,12 +431,6 @@ class TernaryAxesBase(Axes):
     def drag_pan(self, *args, **kwargs):
         super().drag_pan(*args, **kwargs)
         self._set_ternary_lim_from_xlim_and_ylim()
-
-    def get_children(self):
-        children = super().get_children()
-        children.remove(self.xaxis)
-        children.remove(self.yaxis)
-        return children
 
     def _set_ternary_lim_from_xlim_and_ylim(self):
         """Set ternary lim from xlim and ylim in the interactive mode.
