@@ -10,17 +10,14 @@ on:
 jobs:
   build-n-publish:
     name: Build and publish Python 🐍 distributions 📦 to PyPI and TestPyPI
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@master
+    - name: Set up Python 3.10
+      uses: actions/setup-python@v3
       with:
-        fetch-depth: 0
-    - name: Set up Python 3.9
-      uses: actions/setup-python@v1
-      with:
-        python-version: 3.9
-
+        python-version: "3.10"
     - name: Install pypa/build
       run: >-
         python -m
@@ -35,7 +32,7 @@ jobs:
         --wheel
         --outdir dist/
         .
-
+    # Actually publish to PyPI/TestPyPI
     - name: Publish distribution 📦 to Test PyPI
       uses: pypa/gh-action-pypi-publish@release/v1
       with:
