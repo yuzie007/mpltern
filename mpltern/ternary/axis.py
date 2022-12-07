@@ -1,11 +1,8 @@
 import numpy as np
 
 import matplotlib as mpl
+from matplotlib import _api
 import matplotlib.cbook as cbook
-if tuple(int(_) for _ in mpl.__version__.split('.'))[:2] >= (3, 4):
-    from matplotlib._api import check_in_list
-else:
-    from matplotlib.cbook import _check_in_list as check_in_list
 from matplotlib.axis import XAxis
 import matplotlib.text as mtext
 import matplotlib.ticker as mticker
@@ -74,7 +71,7 @@ class TernaryAxis(XAxis):
         ----------
         position : {'corner', 'tick1', 'tick2'}
         """
-        check_in_list(['corner', 'tick1', 'tick2'], position=position)
+        _api.check_in_list(['corner', 'tick1', 'tick2'], position=position)
         self.label_position = position
         self.stale = True
 
@@ -146,7 +143,7 @@ class TernaryAxis(XAxis):
             can be used if you don't want any ticks. 'none' and 'both'
             affect only the ticks, not the labels.
         """
-        check_in_list(
+        _api.check_in_list(
             ['tick1', 'tick2', 'both', 'default', 'none'],
             position=position,
         )
@@ -205,7 +202,7 @@ class TernaryAxis(XAxis):
         ----------
         mode : {'axis', 'horizontal', 'manual'}
         """
-        check_in_list(['axis', 'horizontal', 'manual'], mode=mode)
+        _api.check_in_list(['axis', 'horizontal', 'manual'], mode=mode)
         self._label_rotation_mode = mode
 
     def _get_label_rotation(self):

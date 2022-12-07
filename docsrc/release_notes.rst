@@ -5,7 +5,7 @@ Release notes
 mpltern 0.4.0
 =============
 
-**Matplotlib 3.2.0-3.6.x**
+**Matplotlib 3.4.0-3.6.x**
 
 ``ax.axline``
 -------------
@@ -36,6 +36,12 @@ Removal of ``opposite_ticks``
 Instead, ``ax.taxis.set_ticks_position`` and ``ax.taxis.set_label_position``
 etc. should be used explicitly.
 See `gallery <https://mpltern.readthedocs.io/en/latest/gallery/axis_and_tick/tick_position.html>`__.
+
+Drop support of ``python<3.7`` and ``matplotlib<3.4.0``
+-------------------------------------------------------
+
+Python 3.6 is not maintained anymore.
+With Python 3.7, Matplotlib 3.4.0 is available.
 
 mpltern 0.3.5
 =============

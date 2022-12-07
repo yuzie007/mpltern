@@ -8,15 +8,6 @@ import matplotlib.pyplot as plt
 from mpltern.ternary.datasets import (
     get_spiral, get_scatter_points, get_triangular_grid)
 
-is_older_than_33 = pytest.mark.skipif(
-    tuple(int(_) for _ in mpl.__version__.split('.'))[:2] < (3, 3),
-    reason="Matplotlib>=3.3 is required",
-)
-is_older_than_34 = pytest.mark.skipif(
-    tuple(int(_) for _ in mpl.__version__.split('.'))[:2] < (3, 4),
-    reason="Matplotlib>=3.4 is required",
-)
-
 
 def fix_text_kerning_factor():
     # `text.kerning_factor` introduced since Matplotlib 3.2.0, changes default
@@ -323,7 +314,6 @@ class TestTickDirection:
         ax.tick_params(direction=direction)
 
 
-@is_older_than_33
 class TestAxLine:
     @check_figures_equal(extensions=('pdf',))
     def test_axline(self, fig_test, fig_ref):
@@ -341,7 +331,6 @@ class TestAxLine:
         ax = fig_ref.add_subplot(projection='ternary')
         ax.plot([1.0, 0.0], [0.0, 0.5], [0.0, 0.5])
 
-    @is_older_than_34
     @check_figures_equal(extensions=('pdf',))
     def test_axline_axes(self, fig_test, fig_ref):
         ax = fig_test.add_subplot(projection='ternary')
@@ -356,7 +345,6 @@ class TestAxLine:
         ax.set_ternary_min(0.1, 0.2, 0.3)
         ax.plot([0.5, 0.1], [0.2, 0.4], [0.3, 0.5])
 
-    @is_older_than_34
     @check_figures_equal(extensions=('pdf',))
     def test_axline_axes_slope(self, fig_test, fig_ref):
         ax = fig_test.add_subplot(projection='ternary')
