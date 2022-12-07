@@ -44,6 +44,8 @@ ternary-plot libraries:
   this allows users e.g. faster production of ternary plots with publication
   quality
 
+- ``tight_layout`` and ``constrained_layout``
+
 - Easy combination with normal Matplotlib plots
 
 - Easy application of `seaborn <https://seaborn.pydata.org>`__ styles
@@ -62,6 +64,14 @@ ternary-plot libraries:
           :target: https://mpltern.readthedocs.io/en/latest/gallery/introductory/07.polygon.html
      - .. image:: https://mpltern.readthedocs.io/en/latest/_images/sphx_glr_02.arbitrary_triangle_001.svg
           :target: https://mpltern.readthedocs.io/en/latest/gallery/triangle/02.arbitrary_triangle.html
+
+.. list-table::
+   :widths: auto
+
+   * - .. image:: https://mpltern.readthedocs.io/en/latest/_images/sphx_glr_01.scatter_001.svg
+          :target: https://mpltern.readthedocs.io/en/latest/gallery/introductory/01.scatter.html
+     - .. image:: https://mpltern.readthedocs.io/en/latest/_images/sphx_glr_08.quiver_001.svg
+          :target: https://mpltern.readthedocs.io/en/latest/gallery/introductory/08.quiver.html
 
 .. list-table::
    :widths: auto
