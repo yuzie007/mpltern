@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [3.10]
+        python-version: ["3.10"]
         matplotlib-version: [3.2.0, 3.3.0, 3.4.0, 3.5.0, 3.6.0, 3.6.2]
 
     steps:
