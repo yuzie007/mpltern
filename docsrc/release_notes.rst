@@ -17,7 +17,25 @@ mpltern 0.4.0
 .. _matplotlib330: https://matplotlib.org/stable/users/prev_whats_new/whats_new_3.3.0.html#new-axes-axline-method
 
 |ax.axline|_ can now be used for |matplotlib330|_ and mpltern.
-See `gallery <https://mpltern.readthedocs.io/en/latest/gallery/intermediate/axline.html>`_.
+See `gallery <https://mpltern.readthedocs.io/en/latest/gallery/intermediate/axline.html>`__.
+
+``tight_layout`` and ``constrained_layout``
+-------------------------------------------
+
+Previously ``tight_layout`` and ``constrained_layout`` did not work as
+expected, which is fixed in mpltern 0.4.0.
+
+No overlaps between titles and ternary axes
+-------------------------------------------
+
+As done in Matplotlib.
+
+Removal of ``opposite_ticks``
+-----------------------------
+
+Instead, ``ax.taxis.set_ticks_position`` and ``ax.taxis.set_label_position``
+etc. should be used explicitly.
+See `gallery <https://mpltern.readthedocs.io/en/latest/gallery/axis_and_tick/tick_position.html>`__.
 
 mpltern 0.3.5
 =============
