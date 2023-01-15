@@ -1,6 +1,7 @@
-import numpy as np
-
 import itertools
+from math import gamma
+
+import numpy as np
 
 
 def get_spiral(ternary_scale=1.0):
@@ -21,7 +22,7 @@ def get_scatter_points(n=201, seed=19680801):
     t = np.random.rand(n)
     l = np.random.rand(n)
     r = np.random.rand(n)
-    s = (t + l + r)
+    s = t + l + r
     t /= s
     l /= s
     r /= s
@@ -35,12 +36,33 @@ def get_triangular_grid(n=11, prec=1e-6):
         if abs(sum(tmp) - 1.0) > prec:
             continue
         ps.append(tmp)
-    ps = np.asarray(ps)
+    ps = np.array(ps)
     return ps[:, 0], ps[:, 1], ps[:, 2]
 
 
 def get_shanon_entropies(n=11, prec=1e-6):
     t, l, r = get_triangular_grid(n, prec)
     # The following works even when y == 0.
-    v = -1.0 * (np.log(t ** t) + np.log(l ** l) + np.log(r ** r))
+    v = -1.0 * (np.log(t**t) + np.log(l**l) + np.log(r**r))
+    return t, l, r, v
+
+
+def get_dirichlet_pdfs(n=61, alpha=(1.0, 1.0, 1.0), prec=1e-6):
+    """Probability density function of the Dirichlet distribution
+
+    https://en.wikipedia.org/wiki/Dirichlet_distribution
+
+    Parameters
+    ----------
+    n : int
+        Number of points for each coordinate, by default 61
+    alpha : by default (1.0, 1.0, 1.0)
+    prec : float
+        Tolerance for triangular points, by default 1e-6
+    """
+    t, l, r = get_triangular_grid(n, prec)
+    x = np.stack((t, l, r), axis=-1)
+    alpha = np.array(alpha)
+    c = gamma(np.sum(alpha)) / np.prod([gamma(_) for _ in alpha])
+    v = c * np.prod(x ** (alpha - 1.0), axis=1)
     return t, l, r, v
