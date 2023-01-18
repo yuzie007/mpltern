@@ -30,7 +30,22 @@ def get_scatter_points(n=201, seed=19680801):
 
 
 def get_triangular_grid(n=11, prec=1e-6):
-    t = np.linspace(0, 1, n)
+    """Triangular grid
+
+    Parameters
+    ----------
+    n : int, optional
+        Number of grid points along one ternary axis, by default 11
+    prec : float, optional
+        Tolerance for triangular points, by default 1e-6
+
+    Returns
+    -------
+    (t, l, r) : tuple[np.ndarray]
+        Ternary coordinates.
+    """
+    # top axis in descending order to start from the top point
+    t = np.linspace(1, 0, n)
     ps = []
     for tmp in itertools.product(t, repeat=3):
         if abs(sum(tmp) - 1.0) > prec:
