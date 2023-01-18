@@ -4,12 +4,15 @@ import logging
 import numpy as np
 
 import matplotlib as mpl
-from matplotlib import _api, cbook
-from matplotlib.axes import Axes
+import matplotlib.cbook as cbook
+import matplotlib.collections as mcoll
+import matplotlib.colors as mcolors
 import matplotlib.lines as mlines
 import matplotlib.patches as mpatches
 import matplotlib.transforms as mtransforms
 import matplotlib.axis as maxis
+from matplotlib.axes import Axes
+from matplotlib import _api
 from mpltern.ternary.spines import Spine
 from mpltern.ternary.transforms import (
     TernaryTransform, TernaryPerpendicularTransform,
@@ -18,6 +21,10 @@ from mpltern.ternary.axis import TAxis, LAxis, RAxis
 from mpltern.ternary.ternary_parser import (
     _parse_ternary_single, _parse_ternary_multiple,
     _parse_ternary_vector, _parse_ternary_vector_field)
+from mpltern.hexbin_helpers import (
+    calc_serial_index_of_hexagons,
+    calc_ternary_indices_of_hexagons,
+)
 
 _log = logging.getLogger(__name__)
 
@@ -855,9 +862,249 @@ class TernaryAxes(TernaryAxesBase):
     def scatter(self, *args, **kwargs):
         return super().scatter(*args, **kwargs)
 
-    @_parse_ternary_single
-    def hexbin(self, *args, **kwargs):
-        return super().hexbin(*args, **kwargs)
+    def hexbin(self, t, l, r, C=None, gridsize=100, bins=None,
+               xscale='linear', yscale='linear', extent=None,
+               cmap=None, norm=None, vmin=None, vmax=None,
+               alpha=None, linewidths=None, edgecolors='face',
+               reduce_C_function=np.mean, mincnt=None, marginals=False,
+               **kwargs):
+        """
+        Make a 2D hexagonal binning plot of points *t*, *l*, *r*.
+
+        If *C* is *None*, the value of the hexagon is determined by the number
+        of points in the hexagon. Otherwise, *C* specifies values at the
+        coordinate (x[i], y[i]). For each hexagon, these values are reduced
+        using *reduce_C_function*.
+
+        Parameters
+        ----------
+        t, l, r : array-like
+            The data positions. *t*, *l*, and *r* must be of the same length.
+
+        C : array-like, optional
+            If given, these values are accumulated in the bins. Otherwise,
+            every point has a value of 1. Must be of the same length as *t*,
+            *l*, and *r*.
+
+        gridsize : int, default: 100
+            Number of hexagons in one direction between min and max.
+            In mpltern, all the three directions have the same gridsize.
+
+        bins : 'log' or int or sequence, default: None
+            Discretization of the hexagon values.
+
+            - If *None*, no binning is applied; the color of each hexagon
+              directly corresponds to its count value.
+            - If 'log', use a logarithmic scale for the colormap.
+              Internally, :math:`log_{10}(i+1)` is used to determine the
+              hexagon color. This is equivalent to ``norm=LogNorm()``.
+            - If an integer, divide the counts in the specified number
+              of bins, and color the hexagons accordingly.
+            - If a sequence of values, the values of the lower bound of
+              the bins to be used.
+
+        xscale : {'linear', 'log'}, default: 'linear'
+            Ignored in mpltern and always linear scales on all three axes.
+
+        yscale : {'linear', 'log'}, default: 'linear'
+            Ignored in mpltern and always linear scales on all three axes.
+
+        mincnt : int > 0, default: *None*
+            If not *None*, only display cells with more than *mincnt*
+            number of points in the cell.
+
+        marginals : bool, default: *False*
+            Ignored in mpltern.
+
+        extent : 6-tuple of float, default: *None*
+            The limits of the bins (tmin, tmax, lmin, lmax, rmin, rmax).
+            The default assigns the limits based on *tlim*, *llim*, *rlim*.
+
+        Returns
+        -------
+        `~matplotlib.collections.PolyCollection`
+            A `.PolyCollection` defining the hexagonal bins.
+
+            - `.PolyCollection.get_offsets` contains a Mx2 array containing
+              the x, y positions of the M hexagon centers.
+            - `.PolyCollection.get_array` contains the values of the M
+              hexagons.
+
+        Other Parameters
+        ----------------
+        %(cmap_doc)s
+
+        %(norm_doc)s
+
+        %(vmin_vmax_doc)s
+
+        alpha : float between 0 and 1, optional
+            The alpha blending value, between 0 (transparent) and 1 (opaque).
+
+        linewidths : float, default: *None*
+            If *None*, defaults to 1.0.
+
+        edgecolors : {'face', 'none', *None*} or color, default: 'face'
+            The color of the hexagon edges. Possible values are:
+
+            - 'face': Draw the edges in the same color as the fill color.
+            - 'none': No edges are drawn. This can sometimes lead to unsightly
+              unpainted pixels between the hexagons.
+            - *None*: Draw outlines in the default color.
+            - An explicit color.
+
+        reduce_C_function : callable, default: `numpy.mean`
+            The function to aggregate *C* within the bins. It is ignored if
+            *C* is not given. This must have the signature::
+
+                def reduce_C_function(C: array) -> float
+
+            Commonly used functions are:
+
+            - `numpy.mean`: average of the points
+            - `numpy.sum`: integral of the point values
+            - `numpy.amax`: value taken from the largest point
+
+        data : indexable object, optional
+            DATA_PARAMETER_PLACEHOLDER
+
+        **kwargs : `~matplotlib.collections.PolyCollection` properties
+            All other keyword arguments are passed on to `.PolyCollection`:
+
+            %(PolyCollection:kwdoc)s
+        """
+        self._process_unit_info([("t", t), ("l", l), ("r", r)], kwargs, convert=False)
+
+        t, l, r, C = cbook.delete_masked_points(t, l, r, C)
+
+        # Set the size of the hexagon grid
+        g = gridsize
+        # Count the number of data in each hexagon
+        t = np.asarray(t, float)
+        l = np.asarray(l, float)
+        r = np.asarray(r, float)
+
+        if extent is not None:
+            tmin, tmax, lmin, lmax, rmin, rmax = extent
+        else:
+            tmin, tmax = self.get_tlim()
+            lmin, lmax = self.get_llim()
+            rmin, rmax = self.get_rlim()
+
+        # number of hexagons
+        n = (g + 1) * (g + 2) // 2
+
+        st = (tmax - tmin) / g  # side length along t
+        sl = (lmax - lmin) / g  # side length along l
+        sr = (rmax - rmin) / g  # side length along r
+        ft = (t - tmin) / st
+        fl = (l - lmin) / sl
+        fr = (r - rmin) / sr
+        # Positions in hexagon index coordinates.
+        it0 = np.rint(ft).astype(int)
+        il0 = np.rint(fl).astype(int)
+        ir0 = np.rint(fr).astype(int)
+        dt = ft - it0
+        dl = fl - il0
+        dr = fr - ir0
+        # https://www.redblobgames.com/grids/hexagons/#rounding
+        # https://stackoverflow.com/a/37205672
+        b0 = (it0 + il0 + ir0 == g)
+        i0 = np.stack((abs(dt), abs(dl), abs(dr)), 0).argmax(0)
+        it = np.where(b0, it0, np.where(i0 == 0, g - (il0 + ir0), it0))
+        il = np.where(b0, il0, np.where(i0 == 1, g - (ir0 + it0), il0))
+        ir = np.where(b0, ir0, np.where(i0 == 2, g - (it0 + il0), ir0))
+        # flat indices, plus one so that out-of-range points go to position 0.
+        indices = calc_serial_index_of_hexagons(g, it, il, ir) + 1
+
+        if C is None:  # [1:] drops out-of-range points.
+            counts = np.bincount(indices, minlength=1 + n)[1:]
+            accum = counts.astype(float)
+            if mincnt is not None:
+                accum[accum < mincnt] = np.nan
+        else:
+            # store the C values in a list per hexagon index
+            Cs = [[] for _ in range(1 + n)]
+            for i in range(len(C)):
+                Cs[indices[i]].append(C[i])
+            if mincnt is None:
+                mincnt = 0
+            accum = np.array(
+                [reduce_C_function(acc) if len(acc) > mincnt else np.nan
+                 for acc in Cs[1:]],  # [1:] drops out-of-range points.
+                float)
+
+        good_idxs = ~np.isnan(accum)
+
+        _ = calc_ternary_indices_of_hexagons(g, np.arange(n))
+        offsets = np.array(_).T.astype(float)
+        offsets *= (st, sl, sr)
+
+        # remove accumulation bins with no data
+        offsets = offsets[good_idxs, :]
+        accum = accum[good_idxs]
+
+        tlr = (tmax, lmin, rmin)
+        x, y = self.transProjection.transform(tlr)
+
+        polygon = [st, sl, sr] * np.array([
+            [-1.0 / 3, -1.0 / 3, +2.0 / 3],
+            [+1.0 / 3, -2.0 / 3, +1.0 / 3],
+            [+2.0 / 3, -1.0 / 3, -1.0 / 3],
+            [+1.0 / 3, +1.0 / 3, -2.0 / 3],
+            [-1.0 / 3, +2.0 / 3, -1.0 / 3],
+            [-2.0 / 3, +1.0 / 3, +1.0 / 3],
+        ]) + tlr
+
+        if linewidths is None:
+            linewidths = [1.0]
+
+        polygon = self.transProjection.transform(polygon)
+        offsets = self.transProjection.transform(offsets) - (x, y)
+
+        if True:
+            collection = mcoll.PolyCollection(
+            [polygon],
+            edgecolors=edgecolors,
+            linewidths=linewidths,
+            offsets=offsets,
+            offset_transform=mtransforms.AffineDeltaTransform(
+                self.transData),
+        )
+
+        # Set normalizer if bins is 'log'
+        if bins == 'log':
+            if norm is not None:
+                _api.warn_external("Only one of 'bins' and 'norm' arguments "
+                                   f"can be supplied, ignoring bins={bins}")
+            else:
+                norm = mcolors.LogNorm(vmin=vmin, vmax=vmax)
+                vmin = vmax = None
+            bins = None
+
+        # autoscale the norm with current accum values if it hasn't been set
+        if norm is not None:
+            if norm.vmin is None and norm.vmax is None:
+                norm.autoscale(accum)
+
+        if bins is not None:
+            if not np.iterable(bins):
+                minimum, maximum = min(accum), max(accum)
+                bins -= 1  # one less edge than bins
+                bins = minimum + (maximum - minimum) * np.arange(bins) / bins
+            bins = np.sort(bins)
+            accum = bins.searchsorted(accum)
+
+        collection.set_array(accum)
+        collection.set_cmap(cmap)
+        collection.set_norm(norm)
+        collection.set_alpha(alpha)
+        collection._internal_update(kwargs)
+        collection._scale_norm(norm, vmin, vmax)
+
+        # add the collection last
+        self.add_collection(collection, autolim=False)
+        return collection
 
     @_parse_ternary_vector
     def arrow(self, *args, **kwargs):
