@@ -2,12 +2,55 @@ import numpy as np
 from typing import Tuple
 
 
-def calc_serial_index_of_hexagons(g: int, it: int, il: int, ir: int) -> int:
-    """Calculate serial index of hexagons from ternary indices.
+def calc_ternary_indices(t, l, r, gridsize: int, extent: Tuple[float]):
+    tmin, tmax, lmin, lmax, rmin, rmax = extent
+
+    # side lengths along ternary axes
+    st = (tmax - tmin) / gridsize
+    sl = (lmax - lmin) / gridsize
+    sr = (rmax - rmin) / gridsize
+
+    # ternary coordinates in fraction of (st, sl, sr)
+    ft = (t - tmin) / st
+    fl = (l - lmin) / sl
+    fr = (r - rmin) / sr
+
+    # first rounding
+    it0 = np.rint(ft).astype(int)
+    il0 = np.rint(fl).astype(int)
+    ir0 = np.rint(fr).astype(int)
+
+    # When the point is close to a corner of a hexagon, it0 + il0 + ir0 does
+    # not agree with gridsize. In such a case, the ternary coordinate that is
+    # the furthest from the first rounded integer should be corrected.
+    # https://www.redblobgames.com/grids/hexagons/#rounding
+    # https://stackoverflow.com/a/37205672
+
+    # check if the point is close to a corner of a hexagon
+    b0 = it0 + il0 + ir0 == gridsize
+
+    # differences from the first rounded values
+    dt = ft - it0
+    dl = fl - il0
+    dr = fr - ir0
+
+    # which axis shows the largest difference from the first rounded value
+    i0 = np.stack((abs(dt), abs(dl), abs(dr)), axis=0).argmax(axis=0)
+
+    # last rounding
+    it = np.where(b0, it0, np.where(i0 == 0, gridsize - (il0 + ir0), it0))
+    il = np.where(b0, il0, np.where(i0 == 1, gridsize - (ir0 + it0), il0))
+    ir = np.where(b0, ir0, np.where(i0 == 2, gridsize - (it0 + il0), ir0))
+
+    return st, sl, sr, it, il, ir
+
+
+def ternary_to_serial(gridsize: int, it: int, il: int, ir: int) -> int:
+    """Convert serial index of hexagons from ternary indices.
 
     Parameters
     ----------
-    g : int
+    gridsize : int
         Grid size.
     it : int
         Index for the t axis.
@@ -42,19 +85,20 @@ def calc_serial_index_of_hexagons(g: int, it: int, il: int, ir: int) -> int:
     | ``(0, 0, 3)``    | ``9`` |
     +------------------+-------+
     """
-    tmpt = (0 <= it) & (it <= g)
-    tmpl = (0 <= il) & (il <= g)
-    tmpr = (0 <= ir) & (ir <= g)
+    tmpt = (0 <= it) & (it <= gridsize)
+    tmpl = (0 <= il) & (il <= gridsize)
+    tmpr = (0 <= ir) & (ir <= gridsize)
     is_inside = tmpt & tmpl & tmpr
-    return np.where(is_inside, (g - it) * (g - it + 1) // 2 + ir, -1)
+    i = (gridsize - it) * (gridsize - it + 1) // 2 + ir
+    return np.where(is_inside, i, -1)
 
 
-def calc_ternary_indices_of_hexagons(g: int, i: int) -> Tuple[int]:
-    """Calculate ternary indices of hexagons from serial index.
+def serial_to_ternary(gridsize: int, i: int) -> Tuple[int]:
+    """Convert ternary indices of hexagons to serial index.
 
     Parameters
     ----------
-    g : int
+    gridsize : int
         Grid size.
     i : int
         Serial index of hexagons from ``0`` to ``(g + 1) * (g + 2) // 2``.
@@ -66,7 +110,7 @@ def calc_ternary_indices_of_hexagons(g: int, i: int) -> Tuple[int]:
 
         https://en.wikipedia.org/wiki/Triangular_number#Triangular_roots_and_tests_for_triangular_numbers
     """
-    it = g - (np.floor(np.sqrt(8 * i + 1)).astype(int) - 1) // 2
-    ir = i - (g - it) * (g - it + 1) // 2
-    il = g - (it + ir)
+    it = gridsize - (np.floor(np.sqrt(8 * i + 1)).astype(int) - 1) // 2
+    ir = i - (gridsize - it) * (gridsize - it + 1) // 2
+    il = gridsize - (it + ir)
     return it, il, ir

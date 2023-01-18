@@ -21,10 +21,7 @@ from mpltern.ternary.axis import TAxis, LAxis, RAxis
 from mpltern.ternary.ternary_parser import (
     _parse_ternary_single, _parse_ternary_multiple,
     _parse_ternary_vector, _parse_ternary_vector_field)
-from mpltern.hexbin_helpers import (
-    calc_serial_index_of_hexagons,
-    calc_ternary_indices_of_hexagons,
-)
+from mpltern import hexbin_helpers
 
 _log = logging.getLogger(__name__)
 
@@ -977,8 +974,6 @@ class TernaryAxes(TernaryAxesBase):
 
         t, l, r, C = cbook.delete_masked_points(t, l, r, C)
 
-        # Set the size of the hexagon grid
-        g = gridsize
         # Count the number of data in each hexagon
         t = np.asarray(t, float)
         l = np.asarray(l, float)
@@ -992,30 +987,13 @@ class TernaryAxes(TernaryAxesBase):
             rmin, rmax = self.get_rlim()
 
         # number of hexagons
-        n = (g + 1) * (g + 2) // 2
+        n = (gridsize + 1) * (gridsize + 2) // 2
 
-        st = (tmax - tmin) / g  # side length along t
-        sl = (lmax - lmin) / g  # side length along l
-        sr = (rmax - rmin) / g  # side length along r
-        ft = (t - tmin) / st
-        fl = (l - lmin) / sl
-        fr = (r - rmin) / sr
-        # Positions in hexagon index coordinates.
-        it0 = np.rint(ft).astype(int)
-        il0 = np.rint(fl).astype(int)
-        ir0 = np.rint(fr).astype(int)
-        dt = ft - it0
-        dl = fl - il0
-        dr = fr - ir0
-        # https://www.redblobgames.com/grids/hexagons/#rounding
-        # https://stackoverflow.com/a/37205672
-        b0 = (it0 + il0 + ir0 == g)
-        i0 = np.stack((abs(dt), abs(dl), abs(dr)), 0).argmax(0)
-        it = np.where(b0, it0, np.where(i0 == 0, g - (il0 + ir0), it0))
-        il = np.where(b0, il0, np.where(i0 == 1, g - (ir0 + it0), il0))
-        ir = np.where(b0, ir0, np.where(i0 == 2, g - (it0 + il0), ir0))
+        st, sl, sr, it, il, ir = hexbin_helpers.calc_ternary_indices(
+            t, l, r, gridsize, (tmin, tmax, lmin, lmax, rmin, rmax))
+
         # flat indices, plus one so that out-of-range points go to position 0.
-        indices = calc_serial_index_of_hexagons(g, it, il, ir) + 1
+        indices = hexbin_helpers.ternary_to_serial(gridsize, it, il, ir) + 1
 
         if C is None:  # [1:] drops out-of-range points.
             counts = np.bincount(indices, minlength=1 + n)[1:]
@@ -1036,7 +1014,7 @@ class TernaryAxes(TernaryAxesBase):
 
         good_idxs = ~np.isnan(accum)
 
-        _ = calc_ternary_indices_of_hexagons(g, np.arange(n))
+        _ = hexbin_helpers.serial_to_ternary(gridsize, np.arange(n))
         offsets = np.array(_).T.astype(float)
         offsets *= (st, sl, sr)
 
