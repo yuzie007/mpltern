@@ -1,3 +1,11 @@
+"""
+Transforms used for ternary plots.
+
+Notes
+-----
+Inside ``Transform.transform`` of Matplotlib, the last dimension of the input
+values are forced to be the same as ``input_dims``.
+"""
 import numpy as np
 
 from matplotlib.transforms import Transform, ScaledTranslation
