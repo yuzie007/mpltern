@@ -4,16 +4,14 @@ from matplotlib.transforms import Transform, ScaledTranslation
 
 
 class TernaryTransform(Transform):
-    """Transform convenient for TernaryAxis.
+    """Transform convenient for ticks in TernaryAxis.
 
-    Input
-    -----
-    0 <= x <= 1, 0 <= y <= 1.
-    x == 0 corresponds to ternary min.
-    x == 1 corresponds to ternary max.
-    Output
-    ------
-    (x, y) in the "original" Axes coordinates
+    Parameters
+    ----------
+    corners : (3, 2) array_like
+        Corners of the triangle in Cartesian coordinates.
+    index : int
+        Index of the axis; t: 0, l: 1, r: 2.
     """
     input_dims = 2
     output_dims = 2
@@ -25,6 +23,23 @@ class TernaryTransform(Transform):
         self.index = index
 
     def transform_non_affine(self, points):
+        """Transform ternary-axis to Cartesian coordinates
+
+        Parameters
+        ----------
+        points : (N, 2) array_like
+            ``s, p == points[:, 0], points[:, 1]``
+            ``s`` : ternary coordinate of the given axis.
+            ``s == 0`` : ternary min.
+            ``s == 1`` : ternary max.
+            ``p`` : coordinate ``perpendicular`` to the given axis.
+            ``p == 0`` : on the edge for tick1.
+            ``p == 1`` : on the edge for tick2.
+
+        Returns
+        -------
+        (x, y) : Cartesian coordinates
+        """
         c0 = self.corners[(self.index + 0) % 3]
         c1 = self.corners[(self.index + 1) % 3]
         c2 = self.corners[(self.index + 2) % 3]
@@ -88,7 +103,7 @@ class TernaryShift(_TernaryShiftBase):
     """Shift of tick labels from tick points
 
     This is essentially a wrapper of ScaledTranslation, but the direction to
-    pad it determined on the fly when drawing.
+    pad is determined on the fly when drawing.
     """
     def transform_non_affine(self, values):
         x, y = self._get_translation()
@@ -114,19 +129,14 @@ class InvertedTernaryShift(_TernaryShiftBase):
 class TernaryPerpendicularTransform(Transform):
     """Transform convenient for axis-labels in TernaryAxis.
 
-    Input
-    -----
-    0 <= x <= 1
-    x == 0 corresponds to ternary min.
-    x == 1 corresponds to ternary max.
-
-    y : float
-        Vertical shift from the ternary axis in the `display`
-        coordinate system.
-
-    Output
-    ------
-    Coordinates in pixels.
+    Parameters
+    ----------
+    trans : ``Transform``
+        ``Axes.transAxes`` is supposed to be given.
+    corners : (3, 2) array_like
+        Corners of the triangle in Cartesian coordinates.
+    index : int
+        Index of the axis; t: 0, l: 1, r: 2.
     """
     input_dims = 2
     output_dims = 2
@@ -139,6 +149,23 @@ class TernaryPerpendicularTransform(Transform):
         self.index = index
 
     def transform_non_affine(self, points):
+        """Transform axis-label to Cartesian (likely `display`) coordinates
+
+        Parameters
+        ----------
+        points : (N, 2) array_like
+            ``s, p == points[:, 0], points[:, 1]``
+            ``s`` : ternary coordinate of the given axis.
+            ``s == 0`` : ternary min.
+            ``s == 1`` : ternary max.
+            ``p`` : Vertical shift from the ternary axis in the `display`
+            coordinate system. ``p > 0`` and ``p < 0`` are towards the inside
+            and the outside of the triangle.
+
+        Returns
+        -------
+        (x, y) : Coordinates in the `display` (pixel) coordinates.
+        """
         corners = self.trans.transform(self.corners)
         c0 = corners[(self.index + 0) % 3]
         c1 = corners[(self.index + 1) % 3]
@@ -189,10 +216,16 @@ class InvertedTernaryPerpendicularTransform(Transform):
 
 
 class BarycentricTransform(Transform):
-    """
-    This transforms the points in the barycentric coordinates to the original
-    ones. If `corners` are in the `Axes` coordinates, this returns the points
-    in the `Axes` coordinates.
+    """Transform from the barycentric to Cartesian coordinates.
+
+    https://en.wikipedia.org/wiki/Barycentric_coordinate_system
+
+    Parameters
+    ----------
+    corners : (3, 2) array_like
+        Corners of the triangle in Cartesian coordinates.
+        If `corners` are in the `Axes` coordinates, this can be the transform
+        for the `Axes` coordinates.
     """
     input_dims = 3
     output_dims = 2
@@ -203,6 +236,17 @@ class BarycentricTransform(Transform):
         self.corners = np.asarray(corners, float)
 
     def transform_non_affine(self, points):
+        """Transform ternary-axis to Cartesian coordinates
+
+        Parameters
+        ----------
+        points : (N, 3) array_like
+            Points in the barycentric coordinates.
+
+        Returns
+        -------
+        (x, y) : Cartesian coordinates
+        """
         points = np.asarray(points, float)
         points /= np.sum(points, axis=1)[:, np.newaxis]
         return np.dot(points, self.corners)
