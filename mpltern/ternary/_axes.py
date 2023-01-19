@@ -1041,13 +1041,15 @@ class TernaryAxes(TernaryAxesBase):
         offsets = self.transProjection.transform(offsets) - (x, y)
 
         if True:
+            # While `offset_transform` is introduced since `matplotlib>=3.6.0`,
+            # here an alias `transOffset` is used for backword compatibility.
+            # see matplotlib/matplotlib#21965
             collection = mcoll.PolyCollection(
             [polygon],
             edgecolors=edgecolors,
             linewidths=linewidths,
             offsets=offsets,
-            offset_transform=mtransforms.AffineDeltaTransform(
-                self.transData),
+            transOffset=mtransforms.AffineDeltaTransform(self.transData),
         )
 
         # Set normalizer if bins is 'log'
@@ -1077,7 +1079,7 @@ class TernaryAxes(TernaryAxesBase):
         collection.set_cmap(cmap)
         collection.set_norm(norm)
         collection.set_alpha(alpha)
-        collection._internal_update(kwargs)
+        collection.update(kwargs)  # matplotlib/matplotlib#22451
         collection._scale_norm(norm, vmin, vmax)
 
         # add the collection last
