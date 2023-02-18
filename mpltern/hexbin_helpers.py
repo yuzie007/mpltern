@@ -62,7 +62,7 @@ def ternary_to_serial(gridsize: int, it: int, il: int, ir: int) -> int:
     Returns
     -------
     i : int
-        Serial index of hexagons from ``0`` to ``(g + 1) * (g + 1) // 2``.
+        Serial index of hexagons from ``0`` to ``(g + 1) * (g + 2) // 2 - 1``.
         If (``it``, ``il``, ``ir``) is out of the triangle with the grid size,
         ``i == -1``.
 
@@ -101,7 +101,7 @@ def serial_to_ternary(gridsize: int, i: int) -> Tuple[int]:
     gridsize : int
         Grid size.
     i : int
-        Serial index of hexagons from ``0`` to ``(g + 1) * (g + 2) // 2``.
+        Serial index of hexagons from ``0`` to ``(g + 1) * (g + 2) // 2 - 1``.
 
     Returns
     -------
