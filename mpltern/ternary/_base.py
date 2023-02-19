@@ -319,17 +319,17 @@ class TernaryAxesBase(Axes):
             x, _ = title.get_position()
             title.set_position((x, ymax))
 
-    def grid(self, b=None, which='major', axis='both', **kwargs):
+    def grid(self, visible=None, which='major', axis='both', **kwargs):
         """
         Configure the grid lines.
 
         Parameters
         ----------
-        b : bool or None, optional
-            Whether to show the grid lines. If any *kwargs* are supplied,
-            it is assumed you want the grid on and *b* will be set to True.
+        visible : bool or None, optional
+            Whether to show the grid lines.  If any *kwargs* are supplied, it
+            is assumed you want the grid on and *visible* will be set to True.
 
-            If *b* is *None* and there are no *kwargs*, this toggles the
+            If *visible* is *None* and there are no *kwargs*, this toggles the
             visibility of the lines.
 
         which : {'major', 'minor', 'both'}, optional
@@ -343,9 +343,9 @@ class TernaryAxesBase(Axes):
 
                 grid(color='r', linestyle='-', linewidth=2)
 
-            Valid *kwargs* are
+            Valid keyword arguments are:
 
-        %(_Line2D_docstr)s
+            %(Line2D:kwdoc)s
 
         Notes
         -----
@@ -353,19 +353,20 @@ class TernaryAxesBase(Axes):
         grid is determined by the zorder of each axis, not by the zorder of the
         `.Line2D` objects comprising the grid.  Therefore, to set grid zorder,
         use `.set_axisbelow` or, for more control, call the
-        `~matplotlib.axis.Axis.set_zorder` method of each axis.
+        `~.Artist.set_zorder` method of each axis.
         """
-        if len(kwargs):
-            b = True
         _api.check_in_list(['t', 'l', 'r', 'both'], axis=axis)
         if axis in ['t', 'both']:
-            self.taxis.grid(b, which=which, **kwargs)
+            self.taxis.grid(visible, which=which, **kwargs)
         if axis in ['l', 'both']:
-            self.laxis.grid(b, which=which, **kwargs)
+            self.laxis.grid(visible, which=which, **kwargs)
         if axis in ['r', 'both']:
-            self.raxis.grid(b, which=which, **kwargs)
+            self.raxis.grid(visible, which=which, **kwargs)
 
     def tick_params(self, axis='both', **kwargs):
+        """
+        Change the appearance of ticks, tick labels, and gridlines.
+        """
         _api.check_in_list(['t', 'l', 'r', 'both'], axis=axis)
         if axis in ['t', 'both']:
             bkw = dict(kwargs)
@@ -649,9 +650,9 @@ class TernaryAxesBase(Axes):
 
     def can_zoom(self):
         """
-        Return *True* if this axes supports the zoom box button functionality.
+        Return whether this Axes supports the zoom box button functionality.
 
-        Ternary axes do not support zoom boxes.
+        TernaryAxes does not support zoom boxes.
         """
         return False
 
