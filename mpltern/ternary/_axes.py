@@ -397,6 +397,180 @@ class TernaryAxesBase(Axes):
             lkw.pop('labelright', None)
             self.raxis.set_tick_params(**lkw)
 
+    def get_tlabel(self):
+        """
+        Get the tlabel text string.
+        """
+        label = self.taxis.get_label()
+        return label.get_text()
+
+    def set_tlabel(self, tlabel, fontdict=None, labelpad=None, *,
+                   loc=None, **kwargs):
+        """
+        Set the label for the t-axis.
+
+        Parameters
+        ----------
+        tlabel : str
+            The label text.
+
+        labelpad : float, default: :rc:`axes.labelpad`
+            Spacing in points from the Axes bounding box including ticks
+            and tick labels.  If None, the previous value is left as is.
+
+        loc : {'left', 'center', 'right'}, default: :rc:`xaxis.labellocation`
+            The label position. This is a high-level alternative for passing
+            parameters *x* and *horizontalalignment*.
+
+        Other Parameters
+        ----------------
+        **kwargs : `.Text` properties
+            `.Text` properties control the appearance of the label.
+
+        See Also
+        --------
+        text : Documents the properties supported by `.Text`.
+        """
+        if labelpad is not None:
+            self.taxis.labelpad = labelpad
+        protected_kw = ['x', 'horizontalalignment', 'ha']
+        if {*kwargs} & {*protected_kw}:
+            if loc is not None:
+                raise TypeError(f"Specifying 'loc' is disallowed when any of "
+                                f"its corresponding low level keyword "
+                                f"arguments ({protected_kw}) are also "
+                                f"supplied")
+
+        else:
+            loc = (loc if loc is not None
+                   else mpl.rcParams['xaxis.labellocation'])
+            _api.check_in_list(('left', 'center', 'right'), loc=loc)
+
+            x = {
+                'left': 0,
+                'center': 0.5,
+                'right': 1,
+            }[loc]
+            kwargs.update(x=x, horizontalalignment=loc)
+
+        return self.taxis.set_label_text(tlabel, fontdict, **kwargs)
+
+    def get_llabel(self):
+        """
+        Get the llabel text string.
+        """
+        label = self.laxis.get_label()
+        return label.get_text()
+
+    def set_llabel(self, llabel, fontdict=None, labelpad=None, *,
+                   loc=None, **kwargs):
+        """
+        Set the label for the l-axis.
+
+        Parameters
+        ----------
+        llabel : str
+            The label text.
+
+        labelpad : float, default: :rc:`axes.labelpad`
+            Spacing in points from the Axes bounding box including ticks
+            and tick labels.  If None, the previous value is left as is.
+
+        loc : {'left', 'center', 'right'}, default: :rc:`xaxis.labellocation`
+            The label position. This is a high-level alternative for passing
+            parameters *x* and *horizontalalignment*.
+
+        Other Parameters
+        ----------------
+        **kwargs : `.Text` properties
+            `.Text` properties control the appearance of the label.
+
+        See Also
+        --------
+        text : Documents the properties supported by `.Text`.
+        """
+        if labelpad is not None:
+            self.laxis.labelpad = labelpad
+        protected_kw = ['x', 'horizontalalignment', 'ha']
+        if {*kwargs} & {*protected_kw}:
+            if loc is not None:
+                raise TypeError(f"Specifying 'loc' is disallowed when any of "
+                                f"its corresponding low level keyword "
+                                f"arguments ({protected_kw}) are also "
+                                f"supplied")
+
+        else:
+            loc = (loc if loc is not None
+                   else mpl.rcParams['xaxis.labellocation'])
+            _api.check_in_list(('left', 'center', 'right'), loc=loc)
+
+            x = {
+                'left': 0,
+                'center': 0.5,
+                'right': 1,
+            }[loc]
+            kwargs.update(x=x, horizontalalignment=loc)
+
+        return self.laxis.set_label_text(llabel, fontdict, **kwargs)
+
+    def get_rlabel(self):
+        """
+        Get the rlabel text string.
+        """
+        label = self.raxis.get_label()
+        return label.get_text()
+
+    def set_rlabel(self, rlabel, fontdict=None, labelpad=None, *,
+                   loc=None, **kwargs):
+        """
+        Set the label for the r-axis.
+
+        Parameters
+        ----------
+        rlabel : str
+            The label text.
+
+        labelpad : float, default: :rc:`axes.labelpad`
+            Spacing in points from the Axes bounding box including ticks
+            and tick labels.  If None, the previous value is left as is.
+
+        loc : {'left', 'center', 'right'}, default: :rc:`xaxis.labellocation`
+            The label position. This is a high-level alternative for passing
+            parameters *x* and *horizontalalignment*.
+
+        Other Parameters
+        ----------------
+        **kwargs : `.Text` properties
+            `.Text` properties control the appearance of the label.
+
+        See Also
+        --------
+        text : Documents the properties supported by `.Text`.
+        """
+        if labelpad is not None:
+            self.raxis.labelpad = labelpad
+        protected_kw = ['x', 'horizontalalignment', 'ha']
+        if {*kwargs} & {*protected_kw}:
+            if loc is not None:
+                raise TypeError(f"Specifying 'loc' is disallowed when any of "
+                                f"its corresponding low level keyword "
+                                f"arguments ({protected_kw}) are also "
+                                f"supplied")
+
+        else:
+            loc = (loc if loc is not None
+                   else mpl.rcParams['xaxis.labellocation'])
+            _api.check_in_list(('left', 'center', 'right'), loc=loc)
+
+            x = {
+                'left': 0,
+                'center': 0.5,
+                'right': 1,
+            }[loc]
+            kwargs.update(x=x, horizontalalignment=loc)
+
+        return self.raxis.set_label_text(rlabel, fontdict, **kwargs)
+
     def _create_bbox_from_ternary_lim(self):
         tmin, tmax = self.get_tlim()
         lmin, lmax = self.get_llim()
@@ -532,42 +706,6 @@ class TernaryAxes(TernaryAxesBase):
     The plot starts from the bottom and goes anti-clockwise.
     """
     name = 'ternary'
-
-    def get_tlabel(self):
-        """
-        Get the tlabel text string.
-        """
-        label = self.taxis.get_label()
-        return label.get_text()
-
-    def set_tlabel(self, tlabel, fontdict=None, labelpad=None, **kwargs):
-        if labelpad is not None:
-            self.taxis.labelpad = labelpad
-        return self.taxis.set_label_text(tlabel, fontdict, **kwargs)
-
-    def get_llabel(self):
-        """
-        Get the llabel text string.
-        """
-        label = self.laxis.get_label()
-        return label.get_text()
-
-    def set_llabel(self, llabel, fontdict=None, labelpad=None, **kwargs):
-        if labelpad is not None:
-            self.laxis.labelpad = labelpad
-        return self.laxis.set_label_text(llabel, fontdict, **kwargs)
-
-    def get_rlabel(self):
-        """
-        Get the rlabel text string.
-        """
-        label = self.raxis.get_label()
-        return label.get_text()
-
-    def set_rlabel(self, rlabel, fontdict=None, labelpad=None, **kwargs):
-        if labelpad is not None:
-            self.raxis.labelpad = labelpad
-        return self.raxis.set_label_text(rlabel, fontdict, **kwargs)
 
     @_parse_ternary_single
     def text(self, *args, **kwargs):
