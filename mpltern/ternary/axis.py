@@ -13,6 +13,9 @@ from mpltern.ternary.tick import TTick, LTick, RTick
 class TernaryAxis(XAxis):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self._init()
+
+    def _init(self):
         # x : data coordinates in the axis direction
         # y : display (pixel) coordinates in the direction vertical to the
         #     axis direction, updated when drawn in `_update_label_positions`
