@@ -31,30 +31,30 @@ class TernaryAxes(TernaryAxesBase):
 
         Parameters
         ----------
-        x : scalar, optional, default: 0
+        x : float, default: 0
             x position in data coordinates of the equi-t line.
 
-        ymin : scalar, optional, default: 0
+        ymin : float, default: 0
             Should be between 0 and 1, 0 being one end of the plot, 1 the
             other of the plot.
 
-        ymax : scalar, optional, default: 1
+        ymax : float, default: 1
             Should be between 0 and 1, 0 being one end of the plot, 1 the
             other of the plot.
 
         Returns
         -------
-        line : :class:`~matplotlib.lines.Line2D`
+        `~matplotlib.lines.Line2D`
 
         Other Parameters
         ----------------
         **kwargs
-            Valid kwargs are :class:`~matplotlib.lines.Line2D` properties,
-            with the exception of 'transform':
+            Valid keyword arguments are `.Line2D` properties, except for
+            'transform':
 
-        %(_Line2D_docstr)s
+            %(Line2D:kwdoc)s
 
-        See also
+        See Also
         --------
         axtspan : Add a equi-t span across the axis.
         """
@@ -73,30 +73,30 @@ class TernaryAxes(TernaryAxesBase):
 
         Parameters
         ----------
-        x : scalar, optional, default: 0
+        x : float, default: 0
             x position in data coordinates of the equi-l line.
 
-        ymin : scalar, optional, default: 0
+        ymin : float, default: 0
             Should be between 0 and 1, 0 being one end of the plot, 1 the
             other of the plot.
 
-        ymax : scalar, optional, default: 1
+        ymax : float, default: 1
             Should be between 0 and 1, 0 being one end of the plot, 1 the
             other of the plot.
 
         Returns
         -------
-        line : :class:`~matplotlib.lines.Line2D`
+        `~matplotlib.lines.Line2D`
 
         Other Parameters
         ----------------
         **kwargs
-            Valid kwargs are :class:`~matplotlib.lines.Line2D` properties,
-            with the exception of 'transform':
+            Valid keyword arguments are `.Line2D` properties, except for
+            'transform':
 
-        %(_Line2D_docstr)s
+            %(Line2D:kwdoc)s
 
-        See also
+        See Also
         --------
         axlspan : Add a equi-l span across the axis.
         """
@@ -115,30 +115,30 @@ class TernaryAxes(TernaryAxesBase):
 
         Parameters
         ----------
-        x : scalar, optional, default: 0
+        x : float, default: 0
             x position in data coordinates of the equi-r line.
 
-        ymin : scalar, optional, default: 0
+        ymin : float, default: 0
             Should be between 0 and 1, 0 being one end of the plot, 1 the
             other of the plot.
 
-        ymax : scalar, optional, default: 1
+        ymax : float, default: 1
             Should be between 0 and 1, 0 being one end of the plot, 1 the
             other of the plot.
 
         Returns
         -------
-        line : :class:`~matplotlib.lines.Line2D`
+        `~matplotlib.lines.Line2D`
 
         Other Parameters
         ----------------
         **kwargs
-            Valid kwargs are :class:`~matplotlib.lines.Line2D` properties,
-            with the exception of 'transform':
+            Valid keyword arguments are `.Line2D` properties, except for
+            'transform':
 
-        %(_Line2D_docstr)s
+            %(Line2D:kwdoc)s
 
-        See also
+        See Also
         --------
         axrspan : Add a equi-r span across the axis.
         """
@@ -205,13 +205,13 @@ class TernaryAxes(TernaryAxesBase):
 
         Returns
         -------
-        Polygon : `~matplotlib.patches.Polygon`
+        `~matplotlib.patches.Polygon`
 
         Other Parameters
         ----------------
-        **kwargs : `~matplotlib.patches.Polygon` properties.
+        **kwargs : `~matplotlib.patches.Polygon` properties
 
-        %(Polygon)s
+        %(Polygon:kwdoc)s
 
         See Also
         --------
@@ -244,13 +244,13 @@ class TernaryAxes(TernaryAxesBase):
 
         Returns
         -------
-        Polygon : `~matplotlib.patches.Polygon`
+        `~matplotlib.patches.Polygon`
 
         Other Parameters
         ----------------
-        **kwargs : `~matplotlib.patches.Polygon` properties.
+        **kwargs : `~matplotlib.patches.Polygon` properties
 
-        %(Polygon)s
+        %(Polygon:kwdoc)s
 
         See Also
         --------
@@ -283,13 +283,13 @@ class TernaryAxes(TernaryAxesBase):
 
         Returns
         -------
-        Polygon : `~matplotlib.patches.Polygon`
+        `~matplotlib.patches.Polygon`
 
         Other Parameters
         ----------------
-        **kwargs : `~matplotlib.patches.Polygon` properties.
+        **kwargs : `~matplotlib.patches.Polygon` properties
 
-        %(Polygon)s
+        %(Polygon:kwdoc)s
 
         See Also
         --------
