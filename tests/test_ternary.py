@@ -4,7 +4,7 @@ import pytest
 from matplotlib.testing.decorators import (
     image_comparison, check_figures_equal)
 import matplotlib.pyplot as plt
-from mpltern.ternary.datasets import (
+from mpltern.datasets import (
     get_spiral, get_scatter_points, get_triangular_grid)
 
 

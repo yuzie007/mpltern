@@ -8,7 +8,7 @@ Contour plots can be done using ``ax.tricontour`` or ``ax.tricontourf``.
 import numpy as np
 
 import matplotlib.pyplot as plt
-from mpltern.ternary.datasets import get_shanon_entropies
+from mpltern.datasets import get_shanon_entropies
 
 t, l, r, v = get_shanon_entropies()
 

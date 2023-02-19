@@ -5,7 +5,7 @@ Inset
 You can have an inset by adding another `TernaryAxes`.
 """
 import matplotlib.pyplot as plt
-from mpltern.ternary.datasets import get_scatter_points
+from mpltern.datasets import get_scatter_points
 
 
 t0, l0, r0 = get_scatter_points(seed=19)

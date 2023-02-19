@@ -16,7 +16,7 @@ Axis-label rotation can be controlled via e.g.
     which are anymore never modified automatically by mpltern.
 """
 import matplotlib.pyplot as plt
-from mpltern.ternary.datasets import get_spiral
+from mpltern.datasets import get_spiral
 
 
 pad = 42

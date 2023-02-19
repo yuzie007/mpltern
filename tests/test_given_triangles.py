@@ -4,7 +4,7 @@ import pytest
 from itertools import product
 from matplotlib.testing.decorators import image_comparison
 import matplotlib.pyplot as plt
-from mpltern.ternary.datasets import get_spiral
+from mpltern.datasets import get_spiral
 
 
 class TestGivenTriangles:

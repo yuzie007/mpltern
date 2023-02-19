@@ -4,7 +4,7 @@ Dirichlet distribution
 ======================
 """
 import matplotlib.pyplot as plt
-from mpltern.ternary.datasets import get_dirichlet_pdfs
+from mpltern.datasets import get_dirichlet_pdfs
 
 fig = plt.figure(figsize=(10.8, 8.8))
 fig.subplots_adjust(

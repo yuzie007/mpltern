@@ -10,7 +10,7 @@ The normalization of ternary plots can be modified using ``ternary_scale``.
     See details in :doc:`../../conventions`.
 """
 import matplotlib.pyplot as plt
-from mpltern.ternary.datasets import get_spiral
+from mpltern.datasets import get_spiral
 
 
 fig = plt.figure()

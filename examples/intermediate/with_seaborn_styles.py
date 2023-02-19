@@ -6,7 +6,7 @@ With seaborn styles
 You can use seaborn styles with mpltern in the same way as Matplotlib.
 """
 import matplotlib.pyplot as plt
-from mpltern.ternary.datasets import get_spiral
+from mpltern.datasets import get_spiral
 import seaborn as sns
 
 

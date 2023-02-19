@@ -9,7 +9,7 @@ This feature may be useful e.g. when you do not want to show zero ticks to make
 corner axis labels closer to the triangle.
 """
 import matplotlib.pyplot as plt
-from mpltern.ternary.datasets import get_spiral
+from mpltern.datasets import get_spiral
 
 
 ax = plt.subplot(projection='ternary')

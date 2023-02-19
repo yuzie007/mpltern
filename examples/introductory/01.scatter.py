@@ -8,7 +8,7 @@ Scatter plots can be done using ``ax.quiver``.
 import numpy as np
 
 import matplotlib.pyplot as plt
-from mpltern.ternary.datasets import get_scatter_points
+from mpltern.datasets import get_scatter_points
 
 
 t0, l0, r0 = get_scatter_points(100, seed=19)

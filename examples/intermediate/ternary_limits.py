@@ -6,7 +6,7 @@ Ternary limits
 We can limit the ranges of ternary axes.
 """
 import matplotlib.pyplot as plt
-from mpltern.ternary.datasets import get_spiral
+from mpltern.datasets import get_spiral
 
 
 ax = plt.subplot(projection='ternary')

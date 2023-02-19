@@ -8,7 +8,7 @@ You can plot onto the fixed positions of the triangle by specifying
 This may be particularly useful for some cases in interactive modes.
 """
 import matplotlib.pyplot as plt
-from mpltern.ternary.datasets import get_spiral
+from mpltern.datasets import get_spiral
 
 
 t, l, r = get_spiral()

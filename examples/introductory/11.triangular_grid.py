@@ -6,7 +6,7 @@ Triangular grid
 A triangular grid can be plotted by giving the grid points to ``ax.triplot``.
 """
 import matplotlib.pyplot as plt
-from mpltern.ternary.datasets import get_triangular_grid
+from mpltern.datasets import get_triangular_grid
 
 
 t, l, r = get_triangular_grid()

@@ -7,7 +7,7 @@ You can give a different color for each axis.
 
 """
 import matplotlib.pyplot as plt
-from mpltern.ternary.datasets import get_spiral
+from mpltern.datasets import get_spiral
 
 
 fig = plt.figure()

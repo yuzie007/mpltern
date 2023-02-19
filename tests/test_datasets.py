@@ -2,7 +2,7 @@ import os
 
 import numpy as np
 import pytest
-from mpltern.ternary.datasets import get_dirichlet_pdfs
+from mpltern.datasets import get_dirichlet_pdfs
 
 alphas = ((1.5, 1.5, 1.5), (5.0, 5.0, 5.0), (1.0, 2.0, 2.0), (2.0, 4.0, 8.0))
 

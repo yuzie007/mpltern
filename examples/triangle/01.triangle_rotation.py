@@ -7,7 +7,7 @@ The triangle for a ternary plot can be rotated by `rotation`.
 Axis labels, tick labels, and tick markers are also automatically aligned.
 """
 import matplotlib.pyplot as plt
-from mpltern.ternary.datasets import get_spiral
+from mpltern.datasets import get_spiral
 
 
 pad = 42

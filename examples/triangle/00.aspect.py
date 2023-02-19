@@ -7,7 +7,7 @@ The triangle aspect can be modified by `ax.set_aspect`.
 For more general triangles, use ``rotation`` and/or ``corners``.
 """
 import matplotlib.pyplot as plt
-from mpltern.ternary.datasets import get_spiral
+from mpltern.datasets import get_spiral
 
 
 ax = plt.subplot(projection='ternary')

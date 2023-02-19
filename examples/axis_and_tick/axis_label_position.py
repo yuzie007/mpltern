@@ -11,7 +11,7 @@ Axis-label position can be controlled via e.g.
 - ``'tick2'``: side for tick2 (should be used with turning on tick2)
 """
 import matplotlib.pyplot as plt
-from mpltern.ternary.datasets import get_spiral
+from mpltern.datasets import get_spiral
 
 
 t, l, r = get_spiral()

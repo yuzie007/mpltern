@@ -6,7 +6,7 @@ Legend
 The legend can be put using ``ax.legend`` in the same way as Matplotlib.
 """
 import matplotlib.pyplot as plt
-from mpltern.ternary.datasets import get_scatter_points
+from mpltern.datasets import get_scatter_points
 
 
 ax = plt.subplot(projection='ternary')

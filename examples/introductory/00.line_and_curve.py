@@ -6,7 +6,7 @@ Line and curve
 Lines and curves can be put using ``ax.plot`` in the same way as Matplotlib.
 """
 import matplotlib.pyplot as plt
-from mpltern.ternary.datasets import get_spiral
+from mpltern.datasets import get_spiral
 
 
 ax = plt.subplot(projection='ternary')

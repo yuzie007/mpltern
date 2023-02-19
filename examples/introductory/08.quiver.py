@@ -8,7 +8,7 @@ Quiver
 import numpy as np
 
 import matplotlib.pyplot as plt
-from mpltern.ternary.datasets import get_triangular_grid
+from mpltern.datasets import get_triangular_grid
 
 
 t, l, r = get_triangular_grid()

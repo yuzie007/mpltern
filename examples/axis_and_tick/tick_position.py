@@ -14,7 +14,7 @@ When the axis labels are on the sides, e.g. ``ax.taxis.set_label_position``
 should also be used.
 """
 import matplotlib.pyplot as plt
-from mpltern.ternary.datasets import get_spiral
+from mpltern.datasets import get_spiral
 
 
 t, l, r = get_spiral()

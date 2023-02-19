@@ -1,5 +1,5 @@
 import numpy as np
-from mpltern.ternary.datasets import get_triangular_grid
+from mpltern.datasets import get_triangular_grid
 from scipy.stats import dirichlet
 
 alphas = ((1.5, 1.5, 1.5), (5.0, 5.0, 5.0), (1.0, 2.0, 2.0), (2.0, 4.0, 8.0))
