@@ -468,14 +468,15 @@ class TernaryAxes(TernaryAxesBase):
 
         _ = hexbin_helpers.serial_to_ternary(gridsize, np.arange(n))
         offsets = np.array(_).T.astype(float)
+
+        # shift the origin to (tmax, lmin, rmin) with scaling
+        offsets -= offsets[0]
         offsets *= (st, sl, sr)
+        offsets += (tmax, lmin, rmin)
 
         # remove accumulation bins with no data
         offsets = offsets[good_idxs, :]
         accum = accum[good_idxs]
-
-        tlr = (tmax, lmin, rmin)
-        x, y = self.transProjection.transform(tlr)
 
         polygon = [st, sl, sr] * np.array([
             [-1.0 / 3, -1.0 / 3, +2.0 / 3],
@@ -484,13 +485,16 @@ class TernaryAxes(TernaryAxesBase):
             [+1.0 / 3, +1.0 / 3, -2.0 / 3],
             [-1.0 / 3, +2.0 / 3, -1.0 / 3],
             [-2.0 / 3, +1.0 / 3, +1.0 / 3],
-        ]) + tlr
+        ]) + (tmax, lmin, rmin)
 
         if linewidths is None:
             linewidths = [1.0]
 
         polygon = self.transProjection.transform(polygon)
-        offsets = self.transProjection.transform(offsets) - (x, y)
+        offsets = self.transProjection.transform(offsets)
+
+        # shift the reference polygon at (tmax, lmin, rmin) to the origin
+        polygon -= offsets[0]
 
         if True:
             # While `offset_transform` is introduced since `matplotlib>=3.6.0`,

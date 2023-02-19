@@ -1,3 +1,5 @@
+import numpy as np
+
 import pytest
 from itertools import product
 from matplotlib.testing.decorators import image_comparison

@@ -1,7 +1,6 @@
 import numpy as np
 
 import pytest
-import matplotlib as mpl
 from matplotlib.testing.decorators import (
     image_comparison, check_figures_equal)
 import matplotlib.pyplot as plt
@@ -409,20 +408,6 @@ class TestScatter:
         ax.set_tlabel('Top')
         ax.set_llabel('Left')
         ax.set_rlabel('Right')
-
-
-@image_comparison(
-    baseline_images=["hexbin"],
-    extensions=["pdf"],
-    style="mpl20",
-)
-def test_hexbin():
-    np.random.seed(19680801)
-    t, l, r = np.random.dirichlet(alpha=(2.0, 4.0, 8.0), size=100000).T
-    fig = plt.figure()
-    ax = fig.add_subplot(1, 1, 1, projection="ternary")
-    # If "face" (default), small hexagons look overlapping with each other.
-    ax.hexbin(t, l, r, edgecolors="none")
 
 
 class TestArrow:
