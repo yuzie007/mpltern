@@ -8,7 +8,7 @@ A binned plot can be shown together with a scatter plot.
 import numpy as np
 
 import matplotlib.pyplot as plt
-from mpltern.datasets import get_scatter_points
+import mpltern
 
 np.random.seed(19680801)
 t, l, r = np.random.dirichlet(alpha=(2.0, 2.0, 2.0), size=100).T
