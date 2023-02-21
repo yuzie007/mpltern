@@ -3,7 +3,7 @@
 Scatter
 =======
 
-Scatter plots can be done using ``ax.quiver``.
+Scatter plots can be done using ``ax.scatter``.
 """
 import numpy as np
 
