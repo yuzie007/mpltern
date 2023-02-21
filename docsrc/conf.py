@@ -84,6 +84,7 @@ sphinx_gallery_conf = {
     'doc_module': ('mpltern', ),
     'subsection_order': ExplicitOrder(['../examples/introductory',
                                        '../examples/intermediate',
+                                       '../examples/statistics',
                                        '../examples/axis_and_tick',
                                        '../examples/triangle',
                                        '../examples/advanced',
