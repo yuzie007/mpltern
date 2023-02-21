@@ -423,7 +423,8 @@ class TernaryAxes(TernaryAxesBase):
 
             %(PolyCollection:kwdoc)s
         """
-        self._process_unit_info([("t", t), ("l", l), ("r", r)], kwargs, convert=False)
+        self._process_unit_info(
+            [("t", t), ("l", l), ("r", r)], kwargs, convert=False)
 
         t, l, r, C = cbook.delete_masked_points(t, l, r, C)
 
@@ -470,14 +471,18 @@ class TernaryAxes(TernaryAxesBase):
         _ = hexbin_helpers.serial_to_ternary(gridsize, np.arange(n))
         offsets = np.array(_).T.astype(float)
 
-        # shift the origin to (tmax, lmin, rmin) with scaling
-        offsets -= offsets[0]
-        offsets *= (st, sl, sr)
-        offsets += (tmax, lmin, rmin)
-
         # remove accumulation bins with no data
         offsets = offsets[good_idxs, :]
         accum = accum[good_idxs]
+
+        # scale into [0, 1]
+        offsets /= gridsize
+
+        # scale into the given extent
+        offsets_c = 1.0 - offsets
+        offsets[..., 0] = offsets_c[..., 0] * tmin + offsets[..., 0] * tmax
+        offsets[..., 1] = offsets_c[..., 1] * lmin + offsets[..., 1] * lmax
+        offsets[..., 2] = offsets_c[..., 2] * rmin + offsets[..., 2] * rmax
 
         polygon = [st, sl, sr] * np.array([
             [-1.0 / 3, -1.0 / 3, +2.0 / 3],
@@ -654,7 +659,8 @@ class TernaryAxes(TernaryAxesBase):
 
             %(PolyCollection:kwdoc)s
         """
-        self._process_unit_info([("t", t), ("l", l), ("r", r)], kwargs, convert=False)
+        self._process_unit_info(
+            [("t", t), ("l", l), ("r", r)], kwargs, convert=False)
 
         t, l, r, C = cbook.delete_masked_points(t, l, r, C)
 
@@ -724,9 +730,10 @@ class TernaryAxes(TernaryAxesBase):
         polygons /= gridsize
 
         # scale into the given extent
-        polygons[..., 0] = (1.0 - polygons[..., 0]) * tmin + polygons[..., 0] * tmax
-        polygons[..., 1] = (1.0 - polygons[..., 1]) * lmin + polygons[..., 1] * lmax
-        polygons[..., 2] = (1.0 - polygons[..., 2]) * rmin + polygons[..., 2] * rmax
+        polygons_c = 1.0 - polygons
+        polygons[..., 0] = polygons_c[..., 0] * tmin + polygons[..., 0] * tmax
+        polygons[..., 1] = polygons_c[..., 1] * lmin + polygons[..., 1] * lmax
+        polygons[..., 2] = polygons_c[..., 2] * rmin + polygons[..., 2] * rmax
 
         if linewidths is None:
             linewidths = [1.0]
