@@ -12,5 +12,4 @@
    conventions.rst
    publications.rst
    alternatives.rst
-   notes_for_implementation.rst
-   notes_for_documentation.rst
+   notes.rst
