@@ -4,8 +4,8 @@ mpltern: Ternary plots with Matplotlib
 
 .. |PyPI version| image:: https://badge.fury.io/py/mpltern.svg
    :target: https://badge.fury.io/py/mpltern
-.. |PyPI| image:: https://img.shields.io/pypi/dm/mpltern.svg
-   :target: https://pypi.python.org/pypi/mpltern
+.. |Downloads| image:: https://static.pepy.tech/badge/mpltern/month
+   :target: https://pepy.tech/project/mpltern
 .. |Conda Version| image:: https://img.shields.io/conda/vn/conda-forge/mpltern.svg
    :target: https://anaconda.org/conda-forge/mpltern
 .. |Conda Downloads| image:: https://img.shields.io/conda/dn/conda-forge/mpltern.svg
@@ -17,7 +17,7 @@ mpltern: Ternary plots with Matplotlib
 .. |DOI| image:: https://zenodo.org/badge/DOI/10.5281/zenodo.3528354.svg
    :target: https://doi.org/10.5281/zenodo.3528354
 
-|PyPI version| |PyPI| |Conda Version| |Conda Downloads|
+|PyPI version| |Downloads| |Conda Version| |Conda Downloads|
 
 |GitHubActions| |CircleCI|
 
