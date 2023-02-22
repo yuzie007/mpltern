@@ -81,6 +81,14 @@ ternary-plot libraries:
      - .. image:: https://mpltern.readthedocs.io/en/latest/_images/sphx_glr_03.pseudocolor_001.svg
           :target: https://mpltern.readthedocs.io/en/latest/gallery/introductory/03.pseudocolor.html
 
+.. list-table::
+   :widths: auto
+
+   * - .. image:: https://mpltern.readthedocs.io/en/latest/_images/sphx_glr_with_scatter_001.svg
+          :target: https://mpltern.readthedocs.io/en/latest/gallery/statistics/with_scatter.html
+     - .. image:: https://mpltern.readthedocs.io/en/latest/_images/sphx_glr_tick_position_001.svg
+          :target: https://mpltern.readthedocs.io/en/develop/gallery/axis_and_tick/tick_position.html
+
 Installation
 ============
 
