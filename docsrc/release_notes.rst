@@ -2,6 +2,26 @@
 Release notes
 #############
 
+mpltern 0.5.0
+=============
+
+**Matplotlib 3.4.0-3.7.x**
+
+``ax.hexbin``
+-------------
+
+.. |ax.hexbin| replace:: ``ax.hexbin``
+.. _ax.hexbin: https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.hexbin.html
+
+|ax.hexbin|_ can now be used.
+See `gallery <https://mpltern.readthedocs.io/en/latest/gallery/statistics/hexbin.html>`__.
+
+``ax.tribin``
+-------------
+
+``ax.tribin`` can now be used.
+See `gallery <https://mpltern.readthedocs.io/en/latest/gallery/statistics/tribin.html>`__.
+
 mpltern 0.4.0
 =============
 
