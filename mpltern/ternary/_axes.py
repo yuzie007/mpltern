@@ -18,7 +18,7 @@ from mpltern.ternary._base import TernaryAxesBase
 class TernaryAxes(TernaryAxesBase):
     """
     A ternary graph projection, where the input dimensions are *t*, *l*, *r*.
-    The plot starts from the bottom and goes anti-clockwise.
+    The plot starts from the top and goes anti-clockwise.
     """
     name = 'ternary'
 
@@ -255,7 +255,7 @@ class TernaryAxes(TernaryAxesBase):
 
         See Also
         --------
-        axbspan : Add a span for the bottom coordinate.
+        axtspan : Add a span for the top coordinate.
         axrspan : Add a span for the right coordinate.
         """
         trans = self.get_laxis_transform(which='grid')
@@ -294,7 +294,7 @@ class TernaryAxes(TernaryAxesBase):
 
         See Also
         --------
-        axbspan : Add a span for the bottom coordinate.
+        axtspan : Add a span for the top coordinate.
         axlspan : Add a span for the left coordinate.
         """
         trans = self.get_raxis_transform(which='grid')
@@ -323,8 +323,8 @@ class TernaryAxes(TernaryAxesBase):
 
         If *C* is *None*, the value of the hexagon is determined by the number
         of points in the hexagon. Otherwise, *C* specifies values at the
-        coordinate (x[i], y[i]). For each hexagon, these values are reduced
-        using *reduce_C_function*.
+        coordinate (t[i], l[i], r[i]).
+        For each triangle, these values are reduced using *reduce_C_function*.
 
         Parameters
         ----------
@@ -422,6 +422,10 @@ class TernaryAxes(TernaryAxesBase):
             All other keyword arguments are passed on to `.PolyCollection`:
 
             %(PolyCollection:kwdoc)s
+
+        See Also
+        --------
+        tribin : 2D histogram triangular bins
         """
         self._process_unit_info(
             [("t", t), ("l", l), ("r", r)], kwargs, convert=False)
@@ -559,8 +563,8 @@ class TernaryAxes(TernaryAxesBase):
 
         If *C* is *None*, the value of the triangle is determined by the number
         of points in the triangle. Otherwise, *C* specifies values at the
-        coordinate (x[i], y[i]). For each triangle, these values are reduced
-        using *reduce_C_function*.
+        coordinate (t[i], l[i], r[i]).
+        For each triangle, these values are reduced using *reduce_C_function*.
 
         Parameters
         ----------
@@ -658,6 +662,10 @@ class TernaryAxes(TernaryAxesBase):
             All other keyword arguments are passed on to `.PolyCollection`:
 
             %(PolyCollection:kwdoc)s
+
+        See Also
+        --------
+        hexbin : 2D histogram hexagonal bins
         """
         self._process_unit_info(
             [("t", t), ("l", l), ("r", r)], kwargs, convert=False)

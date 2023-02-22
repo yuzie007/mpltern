@@ -12,6 +12,9 @@
 #
 import os
 import shutil
+import sys
+
+sys.path.insert(0, os.path.abspath(".."))
 
 from sphinx.transforms import SphinxTransform
 
@@ -24,6 +27,8 @@ import mpltern
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
 extensions = [
+    'sphinx.ext.autodoc',
+    'numpydoc',  # Needs to be loaded *after* autodoc.
     'sphinx_gallery.gen_gallery',
     'sphinx_copybutton',
 ]
@@ -59,6 +64,11 @@ _check_dependencies()
 
 # On Linux, prevent plt.show() from emitting a non-GUI backend warning.
 os.environ.pop("DISPLAY", None)
+
+intersphinx_mapping = {
+    'matplotlib': ('https://matplotlib.org/stable/', None),
+}
+
 
 from sphinx_gallery.scrapers import matplotlib_scraper
 
@@ -185,6 +195,10 @@ def setup(app):
 html_favicon = '_static/favicon.ico'
 
 html_logo = '_static/sphx_glr_logos0_002.svg'
+
+# numpydoc config
+
+numpydoc_show_class_members = False
 
 # Workaround to remove matplotlib warning based on
 # https://github.com/sphinx-gallery/sphinx-gallery/pull/521

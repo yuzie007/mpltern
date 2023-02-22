@@ -15,14 +15,6 @@ arguments:
 - ``ax.tripcolor``
 - ``ax.triplot``
 
-.. Note::
-
-    While also available, the followings methods have not supported well yet
-    in mpltern.
-
-        - ``ax.hexbin``
-        - ``ax.hist2d``
-
 Similarly, the following methods are available by giving,
 ``t``, ``l``, ``r``, ``dt``, ``dl``, ``dr`` as the first six arguments
 instead of ``x``, ``y``, ``dx``, ``dy``:
@@ -36,6 +28,13 @@ instead of ``x``, ``y``, ``dx``, ``dy``:
     one CAN still pass ``x`` and ``y`` for the plots onto the Cartesian
     coordinates like `data, axes, figure, and display coordinates <https://matplotlib.org/tutorials/advanced/transforms_tutorial.html#sphx-glr-tutorials-advanced-transforms-tutorial-py>`_
     of Matplotlib ``Axes``.
+
+The following methods are for binned plots.
+The first three arguments are for ``t``, ``l``, and ``r``, and `gridsize` must
+be one integer value.
+
+- ``ax.hexbin``
+- ``ax.tribin``
 
 .. Matplotlib
 

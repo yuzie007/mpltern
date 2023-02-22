@@ -49,6 +49,17 @@ class TernaryAxesBase(Axes):
 
     def __init__(self, *args, ternary_scale=1.0, corners=None, rotation=None,
                  **kwargs):
+        """Build an TernaryAxes in a figure.
+
+        Parameters
+        ----------
+        ternary_scale : float, optional
+            ``t + l + r``, by default 1.0
+        corners : Sequence[float] or None, optional
+            Corners of the triangle, by default None
+        rotation : float or None, optional
+            Rotation angle of the triangle, by default None
+        """
         # workaround for matplotlib>=3.6.0
         self._sharet = None
         self._sharel = None
