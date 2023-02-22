@@ -10,7 +10,6 @@
    implemented_methods.rst
    gallery/index.rst
    conventions.rst
-   aims.rst
    publications.rst
    alternatives.rst
    notes_for_implementation.rst
