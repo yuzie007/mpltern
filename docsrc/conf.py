@@ -121,7 +121,7 @@ source_encoding = "utf-8"
 master_doc = 'index'  # default: 'contents'
 
 project = 'mpltern'
-copyright = '2019-2022, Yuji Ikeda'
+copyright = '2019-2023, Yuji Ikeda'
 author = 'Yuji Ikeda'
 
 version = mpltern.__version__
