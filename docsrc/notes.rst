@@ -1,6 +1,6 @@
-################################
-Notes for mpltern Implementation
-################################
+#####
+Notes
+#####
 
 This page is rather personal notes of the author and summarizes the things
 learned about Matplotlib during the mpltern implementation.
