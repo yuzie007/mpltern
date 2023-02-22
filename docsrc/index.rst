@@ -14,4 +14,3 @@
    alternatives.rst
    notes_for_implementation.rst
    notes_for_documentation.rst
-   TODO.rst
