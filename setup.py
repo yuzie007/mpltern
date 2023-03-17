@@ -89,19 +89,12 @@ setup(
         #   4 - Beta
         #   5 - Production/Stable
         'Development Status :: 4 - Beta',
-
-        # Indicate who your project is intended for
-        'Intended Audience :: Developers',
-        'Topic :: Software Development :: Build Tools',
-
-        # Pick your license as you wish
+        'Framework :: Matplotlib',
+        'Intended Audience :: Science/Research',
+        'Intended Audience :: Education',
         'License :: OSI Approved :: MIT License',
-
-        # Specify the Python versions you support here. In particular, ensure
-        # that you indicate whether you support Python 2, Python 3 or both.
-        # These classifiers are *not* checked by 'pip install'. See instead
-        # 'python_requires' below.
-        'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3',
+        'Topic :: Scientific/Engineering :: Visualization',
     ],
 
     # This field adds keywords for your project which will appear on the
