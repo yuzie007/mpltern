@@ -798,6 +798,10 @@ class TernaryAxes(TernaryAxesBase):
     def quiver(self, *args, **kwargs):
         return super().quiver(*args, **kwargs)
 
+    @_parse_ternary_vector_field
+    def barbs(self, *args, **kwargs):
+        return super().barbs(*args, **kwargs)
+
     @_parse_ternary_multiple
     def fill(self, *args, **kwargs):
         return super().fill(*args, **kwargs)
