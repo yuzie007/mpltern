@@ -30,6 +30,7 @@ extensions = [
     'sphinx.ext.autodoc',
     'numpydoc',  # Needs to be loaded *after* autodoc.
     'sphinx_gallery.gen_gallery',
+    'sphinxext.custom_roles',
     'sphinx_copybutton',
 ]
 
