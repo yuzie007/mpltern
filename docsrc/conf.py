@@ -13,12 +13,21 @@
 import os
 import shutil
 import sys
+import warnings
 
 sys.path.insert(0, os.path.abspath(".."))
 
+import mpltern
+
+from datetime import datetime
+import time
+
 from sphinx.transforms import SphinxTransform
 
-import mpltern
+# Parse year using SOURCE_DATE_EPOCH, falling back to current time.
+# https://reproducible-builds.org/specs/source-date-epoch/
+sourceyear = datetime.utcfromtimestamp(
+    int(os.environ.get('SOURCE_DATE_EPOCH', time.time()))).year
 
 
 # General configuration
@@ -53,12 +62,11 @@ def _check_dependencies():
     if missing:
         raise ImportError(
             "The following dependencies are missing to build the "
-            "documentation: {}".format(", ".join(missing)))
+            f"documentation: {', '.join(missing)}")
     if shutil.which('dot') is None:
         raise OSError(
             "No binary named dot - graphviz must be installed to build the "
             "documentation")
-
 
 _check_dependencies()
 
@@ -70,6 +78,8 @@ intersphinx_mapping = {
     'matplotlib': ('https://matplotlib.org/stable/', None),
 }
 
+
+# Sphinx gallery configuration
 
 from sphinx_gallery.scrapers import matplotlib_scraper
 
@@ -85,14 +95,20 @@ class matplotlib_svg_scraper(object):
         return matplotlib_scraper(*args, format='svg', **kwargs)
 
 
-# Sphinx gallery configuration
 from sphinx_gallery.sorting import ExplicitOrder
 from sphinx_gallery.sorting import FileNameSortKey
+
+gallery_dirs = ['gallery']
+
+example_dirs = ['../examples']
 sphinx_gallery_conf = {
-    'examples_dirs': ['../examples'],
-    'filename_pattern': '^((?!sgskip).)*$',
-    'gallery_dirs': ['gallery'],
     'doc_module': ('mpltern', ),
+    'examples_dirs': example_dirs,
+    'filename_pattern': '^((?!sgskip).)*$',
+    'gallery_dirs': gallery_dirs,
+    # The following is commented out because SVG does not work nicely yet
+    # for `ax.pcolormesh(shading='gouraud')
+    'image_scrapers': (matplotlib_svg_scraper(),),
     'subsection_order': ExplicitOrder(['../examples/introductory',
                                        '../examples/intermediate',
                                        '../examples/statistics',
@@ -100,11 +116,8 @@ sphinx_gallery_conf = {
                                        '../examples/triangle',
                                        '../examples/advanced',
                                        '../examples/miscellaneous']),
-    'within_subsection_order': FileNameSortKey,
     'min_reported_time': 1,
-    # The following is commented out because SVG does not work nicely yet
-    # for `ax.pcolormesh(shading='gouraud')
-    'image_scrapers': (matplotlib_svg_scraper(),),
+    'within_subsection_order': FileNameSortKey,
 }
 
 plot_gallery = True
@@ -118,16 +131,29 @@ source_suffix = '.rst'
 # This is the default encoding, but it doesn't hurt to be explicit
 source_encoding = "utf-8"
 
-# The master toctree document.
-master_doc = 'index'  # default: 'contents'
+# The toplevel toctree document (renamed to root_doc in Sphinx 4.0)
+root_doc = master_doc = 'index'
 
 project = 'mpltern'
-copyright = '2019-2023, Yuji Ikeda'
+copyright = (
+    f'2019-{sourceyear} Yuji Ikeda'
+)
 author = 'Yuji Ikeda'
+
+
+# The default replacements for |version| and |release|, also used in various
+# other places throughout the built documents.
+#
+# The short X.Y version.
 
 version = mpltern.__version__
 # The full version, including alpha/beta/rc tags.
 release = version
+
+# The name of the Pygments (syntax highlighting) style to use.
+pygments_style = 'sphinx'
+
+default_role = 'obj'
 
 # Plot directive configuration
 # ----------------------------
@@ -205,7 +231,6 @@ numpydoc_show_class_members = False
 # https://github.com/sphinx-gallery/sphinx-gallery/pull/521
 
 
-import warnings
 
 # Remove matplotlib agg warnings from generated doc when using plt.show
 warnings.filterwarnings("ignore", category=UserWarning,
