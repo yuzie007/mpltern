@@ -1,7 +1,8 @@
-docutils<0.17
+sphinx>=3.0.0,!=6.1.2
 colorspacious
 ipython
-numpydoc
-sphinx_copybutton
-sphinx_gallery
+numpydoc>=1.0
+pydata-sphinx-theme
+sphinx-gallery
+sphinx-copybutton
 seaborn

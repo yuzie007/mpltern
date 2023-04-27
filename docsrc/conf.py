@@ -37,6 +37,7 @@ sourceyear = datetime.utcfromtimestamp(
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
 extensions = [
     'sphinx.ext.autodoc',
+    'IPython.sphinxext.ipython_console_highlighting',
     'numpydoc',  # Needs to be loaded *after* autodoc.
     'sphinx_gallery.gen_gallery',
     'sphinxext.custom_roles',
@@ -46,12 +47,12 @@ extensions = [
 
 def _check_dependencies():
     names = {
+        **{ext: ext.split(".")[0] for ext in extensions},
+        # Explicitly list deps that are not extensions, or whose PyPI package
+        # name does not match the (toplevel) module name.
         "colorspacious": 'colorspacious',
-        "IPython.sphinxext.ipython_console_highlighting": 'ipython',
+        "pydata_sphinx_theme": 'pydata_sphinx_theme',
         "matplotlib": 'matplotlib',
-        "numpydoc": 'numpydoc',
-        "sphinx_copybutton": 'sphinx_copybutton',
-        "sphinx_gallery": 'sphinx_gallery',
     }
     missing = []
     for name in names:
@@ -167,12 +168,10 @@ github_project_url = "https://github.com/yuzie007/mpltern/"
 # The name of the Pygments (syntax highlighting) style to use.
 pygments_style = 'sphinx'
 
-# -- Options for HTML output -------------------------------------------------
+# Options for HTML output
+# -----------------------
 
-# The theme to use for HTML and HTML Help pages.  See the documentation for
-# a list of builtin themes.
-#
-# html_theme = 'alabaster'
+html_theme = "pydata_sphinx_theme"
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
