@@ -2,4 +2,3 @@
 branch = true
 source =
     mpltern
-omit = mpltern/_version.py

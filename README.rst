@@ -16,10 +16,12 @@ mpltern: Ternary plots with Matplotlib
    :target: https://circleci.com/gh/yuzie007/mpltern
 .. |DOI| image:: https://zenodo.org/badge/DOI/10.5281/zenodo.3528354.svg
    :target: https://doi.org/10.5281/zenodo.3528354
+.. |Codecov| image:: https://codecov.io/gh/yuzie007/mpltern/branch/master/graph/badge.svg
+   :target: https://codecov.io/gh/yuzie007/mpltern
 
 |PyPI version| |Downloads| |Conda Version| |Conda Downloads|
 
-|GitHubActions| |CircleCI|
+|GitHubActions| |CircleCI| |Codecov|
 
 |DOI|
 
