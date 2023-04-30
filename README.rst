@@ -25,35 +25,31 @@ mpltern: Ternary plots with Matplotlib
 
 |DOI|
 
-Mpltern (https://yuzie007.github.io/mpltern) is a Python plotting library based
-on `Matplotlib <https://matplotlib.org>`__ specifically designed
-for `ternary plots <https://en.wikipedia.org/wiki/Ternary_plot>`_.
-Mpltern is implemented as a new projection for Matplotlib, with introducing
-e.g. new ``Transform`` classes for ternary plots.
-The followings are the features of mpltern when compared with other
-ternary-plot libraries:
+.. _Matplotlib: https://matplotlib.org
 
-- Many things one expects essentially possible using Matplotlib can be done
-  also in mpltern, without e.g. ternary-to-Cartesian conversions on the user
-  side
+`Mpltern <https://yuzie007.github.io/mpltern>`__ is a Python plotting library
+based on `Matplotlib`_ specifically designed for
+`ternary plots <https://en.wikipedia.org/wiki/Ternary_plot>`__.
 
-- For the same plotting styles, mpltern offers the same or very similar method
-  names as Matplotlib does; you do not need to learn many new commands in
-  addition to those for Matplotlib
+- Direct dependence on `Matplotlib`_ only
 
-- Tick markers, tick labels, and axis labels are automatically positioned with
-  reasonable paddings inherited from Matplotlib;
-  this allows users e.g. faster production of ternary plots with publication
-  quality
+- Many plotting styles with similar method names to those in Matplotlib
+
+- No need for ternary-to-Cartesian conversions on the user side
+
+- `Automatic positioning of tick markers, tick labels, and axis labels
+  consistent with Matplotlib
+  <https://mpltern.readthedocs.io/en/latest/gallery/axis_and_tick/index.html>`__
 
 - ``tight_layout`` and ``constrained_layout``
 
-- Easy combination with normal Matplotlib plots
+- `Easy combination with normal Matplotlib plots
+  <https://mpltern.readthedocs.io/en/latest/gallery/intermediate/with_normal_plots.html>`__
 
-- Easy application of `seaborn <https://seaborn.pydata.org>`__ styles
+- `Easy application of style sheets
+  <https://mpltern.readthedocs.io/en/latest/gallery/intermediate/style_sheets.html>`__
 
-- Working also in Matplotlib interactive modes inside e.g.
-  `Jupyter <http://jupyter.org>`__ notebooks
+- Interactive in, e.g., `Jupyter <http://jupyter.org>`__ notebooks
 
 .. list-table::
    :widths: auto
@@ -109,15 +105,18 @@ See `more examples in the gallery
 How to Cite mpltern
 ===================
 
-The author requests to cite mpltern via the DOI above if mpltern contributes
-to a scientific publication.
-Of course, `Matplotlib should be also very much acknowledged <https://matplotlib.org/citing.html>`_
+Please cite mpltern via the
+`DOI <https://doi.org/10.5281/zenodo.3528354>`__
+if mpltern contributes to a scientific publication.
+
+`Matplotlib should also be acknowledged <https://matplotlib.org/citing.html>`_
 when using mpltern.
 
 Author
 ======
 
-Yuji Ikeda
-(`GitHub <https://github.com/yuzie007>`__,
-`Google Scholar <https://scholar.google.co.jp/citations?user=2m5dkBwAAAAJ&hl=en>`__,
-`ResearchGate <https://www.researchgate.net/profile/Yuji_Ikeda6>`__)
+Yuji Ikeda `(University of Stuttgart, Germany) <https://www.imw.uni-stuttgart.de/team/Ikeda/>`__
+
+- `GitHub <https://github.com/yuzie007>`__
+- `Google Scholar <https://scholar.google.co.jp/citations?user=2m5dkBwAAAAJ&hl=en>`__
+- `ResearchGate <https://www.researchgate.net/profile/Yuji_Ikeda6>`__
