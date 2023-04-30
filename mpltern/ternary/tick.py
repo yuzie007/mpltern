@@ -1,13 +1,14 @@
 import numpy as np
 
-import matplotlib as mpl
 from matplotlib import _api
-import matplotlib.cbook as cbook
 import matplotlib.transforms as mtransforms
 from matplotlib.axis import XTick
 
 
 class TernaryTick(XTick):
+    """Ternary tick"""
+    tick_name = ""  # implemented in subclasses
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.tick1line.set_transform(self._get_axis_transform(which='tick1'))
@@ -214,14 +215,15 @@ class TernaryTick(XTick):
 
 
 class TTick(TernaryTick):
+    """T tick"""
     tick_name = 'ttick'
 
 
 class LTick(TernaryTick):
+    """L tick"""
     tick_name = 'ltick'
 
 
 class RTick(TernaryTick):
+    """R tick"""
     tick_name = 'rtick'
-
-
