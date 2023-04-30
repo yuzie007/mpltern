@@ -1,6 +1,6 @@
-from matplotlib import rcParams
-import matplotlib.spines as mspines
+import matplotlib as mpl
 import matplotlib.path as mpath
+import matplotlib.spines as mspines
 
 
 class Spine(mspines.Spine):
@@ -9,6 +9,7 @@ class Spine(mspines.Spine):
         self.set_transform(self.axes.transAxes)
 
     def _adjust_location(self):
+        """Automatically set spine bounds to the view interval."""
         corners = [[1., 0., 0.], [0., 1., 0.], [0., 0., 1.]]
         corners_axes = self.axes.transAxesProjection.transform(corners)
 
@@ -24,17 +25,14 @@ class Spine(mspines.Spine):
             v1[0] = corners_axes[0]
             v1[1] = corners_axes[1]
         else:
-            raise ValueError('unable to set bounds for spine "%s"' %
-                             self.spine_type)
+            raise ValueError(f'unknown spine spine_type: {self.spine_type}')
 
     def get_spine_transform(self):
         return self.axes.transAxes
 
     @classmethod
     def linear_spine(cls, axes, spine_type, **kwargs):
-        """
-        (staticmethod) Returns a linear :class:`Spine`.
-        """
+        """Create and return a linear `Spine`."""
         # all values of 0.999 get replaced upon call to set_bounds()
         if spine_type == 'tside':
             path = mpath.Path([(0.0, 0.0), (1.0, 0.0)])
@@ -45,7 +43,7 @@ class Spine(mspines.Spine):
         else:
             raise ValueError('unable to make path for spine "%s"' % spine_type)
         result = cls(axes, spine_type, path, **kwargs)
-        result.set_visible(rcParams['axes.spines.bottom'])
+        result.set_visible(mpl.rcParams['axes.spines.bottom'])
 
         return result
 
