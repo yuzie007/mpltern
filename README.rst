@@ -58,8 +58,8 @@ ternary-plot libraries:
 .. list-table::
    :widths: auto
 
-   * - .. image:: https://mpltern.readthedocs.io/en/latest/_images/sphx_glr_with_seaborn_styles_001.svg
-          :target: https://mpltern.readthedocs.io/en/latest/gallery/intermediate/with_seaborn_styles.html
+   * - .. image:: https://mpltern.readthedocs.io/en/latest/_images/sphx_glr_style_sheets_001.svg
+          :target: https://mpltern.readthedocs.io/en/latest/gallery/intermediate/style_sheets.html
      - .. image:: https://mpltern.readthedocs.io/en/latest/_images/sphx_glr_05.inset_001.svg
           :target: https://mpltern.readthedocs.io/en/latest/gallery/advanced/05.inset.html
      - .. image:: https://mpltern.readthedocs.io/en/latest/_images/sphx_glr_07.polygon_001.svg
