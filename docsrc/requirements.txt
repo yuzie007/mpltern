@@ -5,4 +5,3 @@ numpydoc>=1.0
 pydata-sphinx-theme
 sphinx-gallery
 sphinx-copybutton
-seaborn
