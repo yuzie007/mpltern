@@ -254,6 +254,21 @@ class TestTicks:
         ax.laxis.set_ticks([0.2, 0.4, 0.6, 0.8, 1.0])
         ax.raxis.set_ticks([0.2, 0.4, 0.6, 0.8, 1.0])
 
+    @image_comparison(baseline_images=['manual_ticklabels'],
+                      extensions=['pdf'], style='mpl20')
+    def test_manual_ticklabels(self):
+        fix_text_kerning_factor()
+
+        fig = plt.figure()
+        ax = fig.add_subplot(projection='ternary')
+
+        # Specify tick positions manually.
+        ticks = [0.0, 0.2, 0.4, 0.6, 0.8, 1.0]
+        labels = ["0/5", "1/5", "2/5", "3/5", "4/5", "5/5"]
+        ax.taxis.set_ticks(ticks, labels=labels)
+        ax.laxis.set_ticks(ticks, labels=labels)
+        ax.raxis.set_ticks(ticks, labels=labels)
+
 
 @check_figures_equal(extensions=('pdf',))
 def test_ternary_lim(fig_test, fig_ref):
