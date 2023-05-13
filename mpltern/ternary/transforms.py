@@ -77,11 +77,11 @@ class InvertedTernaryTransform(Transform):
         c0 = self.corners[(self.index + 0) % 3]
         c1 = self.corners[(self.index + 1) % 3]
         c2 = self.corners[(self.index + 2) % 3]
-        v = np.column_stack((c1 - c0, c2 - c0))
-        d = points - c0
-        tmp = np.dot(np.linalg.inv(v), d.T)
-        s = tmp[0]
-        p = tmp[1] / (1.0 - s)
+        vectors = np.column_stack((c1 - c0, c2 - c0))
+        relative_points = points - c0
+        tmp = np.linalg.inv(vectors) @ relative_points.T
+        s = 1.0 - (tmp[0] + tmp[1])
+        p = tmp[0] / (1.0 - s)
         return np.column_stack((s, p)).astype(float)
 
     def inverted(self):
