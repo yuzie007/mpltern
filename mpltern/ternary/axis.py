@@ -201,10 +201,10 @@ class TernaryAxis(XAxis):
     def get_view_interval(self):
         'return the Interval instance for this axis view limits'
         return {
-            't': self.axes.get_tlim,
-            'l': self.axes.get_llim,
-            'r': self.axes.get_rlim,
-        }[self.axis_name]()
+            't': self.axes.viewTLim.intervalx,
+            'l': self.axes.viewLLim.intervalx,
+            'r': self.axes.viewRLim.intervalx,
+        }[self.axis_name]
 
     # Helper methods for `mpltern`
 
