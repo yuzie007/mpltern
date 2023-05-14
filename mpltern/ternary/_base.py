@@ -577,10 +577,15 @@ class TernaryAxesBase(Axes):
         return self.raxis.set_label_text(rlabel, fontdict, **kwargs)
 
     def _create_bbox_from_ternary_lim(self):
-        tmin, tmax = self.get_tlim()
-        lmin, lmax = self.get_llim()
-        rmin, rmax = self.get_rlim()
-        points = [[tmax, lmin, rmin], [tmin, lmax, rmin], [tmin, lmin, rmax]]
+        scale = self.ternary_scale
+        tmin = self.get_tlim()[0]
+        lmin = self.get_llim()[0]
+        rmin = self.get_rlim()[0]
+        points = [
+            [scale - lmin - rmin, lmin, rmin],
+            [tmin, scale - tmin - rmin, rmin],
+            [tmin, lmin, scale - tmin - lmin],
+        ]
         points = self.transProjection.transform(points)
         bbox = mtransforms.Bbox.unit()
         bbox.update_from_data_xy(points, ignore=True)
@@ -594,19 +599,13 @@ class TernaryAxesBase(Axes):
         xmin, xmax : holizontal limits of the triangle
         ymin, ymax : bottom and top of the triangle
         """
-        tt = tmax + lmin + rmin
-        ll = tmin + lmax + rmin
-        rr = tmin + lmin + rmax
-        s = self.ternary_scale
-        tol = 1e-12
-        if (abs(tt - s) > tol) or (abs(ll - s) > tol) or (abs(rr - s) > tol):
-            raise ValueError(tt, ll, rr, s)
-
         boxin = self._create_bbox_from_ternary_lim()
 
-        self.set_tlim(tmin, tmax)
-        self.set_llim(lmin, lmax)
-        self.set_rlim(rmin, rmax)
+        scale = self.ternary_scale
+
+        self.set_tlim(tmin, scale - lmin - rmin)
+        self.set_llim(lmin, scale - tmin - rmin)
+        self.set_rlim(rmin, scale - tmin - lmin)
 
         boxout = self._create_bbox_from_ternary_lim()
 
