@@ -30,13 +30,13 @@ class TernaryTransform(Transform):
         self.corners = np.asarray(corners, float)
         self.index = index
 
-    def transform_non_affine(self, points):
+    def transform_non_affine(self, values):
         """Transform ternary-axis to Cartesian coordinates
 
         Parameters
         ----------
-        points : (N, 2) array_like
-            ``s, p == points[:, 0], points[:, 1]``
+        values : (N, 2) array_like
+            ``s, p == values[:, 0], values[:, 1]``
             ``s`` : ternary coordinate of the given axis.
             ``s == 0`` : ternary min.
             ``s == 1`` : ternary max.
@@ -51,8 +51,8 @@ class TernaryTransform(Transform):
         c0 = self.corners[(self.index + 0) % 3]
         c1 = self.corners[(self.index + 1) % 3]
         c2 = self.corners[(self.index + 2) % 3]
-        s = points[:, 0]
-        p = points[:, 1]
+        s = values[:, 0]
+        p = values[:, 1]
         v1 = c1 - c0
         v2 = c2 - c0
         x = c0[0] + (1.0 - s) * (p * v1[0] + (1.0 - p) * v2[0])
@@ -73,12 +73,12 @@ class InvertedTernaryTransform(Transform):
         self.corners = np.asarray(corners, float)
         self.index = index
 
-    def transform_non_affine(self, points):
+    def transform_non_affine(self, values):
         c0 = self.corners[(self.index + 0) % 3]
         c1 = self.corners[(self.index + 1) % 3]
         c2 = self.corners[(self.index + 2) % 3]
         vectors = np.column_stack((c1 - c0, c2 - c0))
-        relative_points = points - c0
+        relative_points = values - c0
         tmp = np.linalg.inv(vectors) @ relative_points.T
         s = 1.0 - (tmp[0] + tmp[1])
         p = tmp[0] / (1.0 - s)
@@ -156,13 +156,13 @@ class TernaryPerpendicularTransform(Transform):
         self.corners = np.asarray(corners, float)
         self.index = index
 
-    def transform_non_affine(self, points):
+    def transform_non_affine(self, values):
         """Transform axis-label to Cartesian (likely `display`) coordinates
 
         Parameters
         ----------
-        points : (N, 2) array_like
-            ``s, p == points[:, 0], points[:, 1]``
+        values : (N, 2) array_like
+            ``s, p == values[:, 0], values[:, 1]``
             ``s`` : ternary coordinate of the given axis.
             ``s == 0`` : ternary min.
             ``s == 1`` : ternary max.
@@ -186,7 +186,7 @@ class TernaryPerpendicularTransform(Transform):
         vp = v10 - np.dot(v10, v12) / np.dot(v12, v12) * v12
         vp /= np.linalg.norm(vp)
         v = np.column_stack((v12, vp))
-        return c1 + np.dot(v, points.T).T
+        return c1 + np.dot(v, values.T).T
 
     def inverted(self):
         return InvertedTernaryPerpendicularTransform(
@@ -204,7 +204,7 @@ class InvertedTernaryPerpendicularTransform(Transform):
         self.corners = np.asarray(corners, float)
         self.index = index
 
-    def transform_non_affine(self, points):
+    def transform_non_affine(self, values):
         corners = self.trans.transform(self.corners)
         c0 = corners[(self.index + 0) % 3]
         c1 = corners[(self.index + 1) % 3]
@@ -214,7 +214,7 @@ class InvertedTernaryPerpendicularTransform(Transform):
         vp = v10 - np.dot(v10, v12) / np.dot(v12, v12) * v12
         vp /= np.linalg.norm(vp)
         v = np.column_stack((v12, vp))
-        d = points - c1
+        d = values - c1
         tmp = np.dot(np.linalg.inv(v), d.T).T
         return tmp
 
@@ -243,21 +243,21 @@ class BarycentricTransform(Transform):
         super().__init__(*args, **kwargs)
         self.corners = np.asarray(corners, float)
 
-    def transform_non_affine(self, points):
+    def transform_non_affine(self, values):
         """Transform ternary-axis to Cartesian coordinates
 
         Parameters
         ----------
-        points : (N, 3) array_like
+        values : (N, 3) array_like
             Points in the barycentric coordinates.
 
         Returns
         -------
         (x, y) : Cartesian coordinates
         """
-        points = np.asarray(points, float)
-        points /= np.sum(points, axis=1)[:, np.newaxis]
-        return np.dot(points, self.corners)
+        values = np.asarray(values, float)
+        values /= np.sum(values, axis=1)[:, np.newaxis]
+        return np.dot(values, self.corners)
 
     def inverted(self):
         return InvertedBarycentricTransform(self.corners)
@@ -272,8 +272,8 @@ class InvertedBarycentricTransform(Transform):
         super().__init__(*args, **kwargs)
         self.corners = np.asarray(corners, float)
 
-    def transform_non_affine(self, points):
-        xys = np.column_stack((points, np.ones(points.shape[0])))
+    def transform_non_affine(self, values):
+        xys = np.column_stack((values, np.ones(values.shape[0])))
         v = np.column_stack((self.corners, np.ones(3)))
         return np.dot(xys, np.linalg.inv(v))
 
