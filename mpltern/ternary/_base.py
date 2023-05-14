@@ -43,6 +43,7 @@ def _create_corners(corners=None, rotation=None):
         corners += (np.array([0.0, 0.5]) - tmp)
     return corners
 
+
 class TernaryAxesBase(Axes):
     _axis_names = ("x", "y", "t", "l", "r")
     _shared_axes = {name: cbook.Grouper() for name in _axis_names}
@@ -585,7 +586,7 @@ class TernaryAxesBase(Axes):
         bbox.update_from_data_xy(points, ignore=True)
         return bbox
 
-    def set_ternary_lim(self, tmin, tmax, lmin, lmax, rmin, rmax, *args, **kwargs):
+    def set_ternary_lim(self, tmin, tmax, lmin, lmax, rmin, rmax):
         """
 
         Notes
@@ -593,13 +594,13 @@ class TernaryAxesBase(Axes):
         xmin, xmax : holizontal limits of the triangle
         ymin, ymax : bottom and top of the triangle
         """
-        t = tmax + lmin + rmin
-        l = tmin + lmax + rmin
-        r = tmin + lmin + rmax
+        tt = tmax + lmin + rmin
+        ll = tmin + lmax + rmin
+        rr = tmin + lmin + rmax
         s = self.ternary_scale
         tol = 1e-12
-        if (abs(t - s) > tol) or (abs(l - s) > tol) or (abs(r - s) > tol):
-            raise ValueError(t, l, r, s)
+        if (abs(tt - s) > tol) or (abs(ll - s) > tol) or (abs(rr - s) > tol):
+            raise ValueError(tt, ll, rr, s)
 
         boxin = self._create_bbox_from_ternary_lim()
 
@@ -619,19 +620,19 @@ class TernaryAxesBase(Axes):
         self.set_xlim(xmin, xmax)
         self.set_ylim(ymin, ymax)
 
-    def set_ternary_min(self, tmin, lmin, rmin, *args, **kwargs):
-        s = self.ternary_scale
-        tmax = s - lmin - rmin
-        lmax = s - rmin - tmin
-        rmax = s - tmin - lmin
-        self.set_ternary_lim(tmin, tmax, lmin, lmax, rmin, rmax, *args, **kwargs)
+    def set_ternary_min(self, tmin, lmin, rmin):
+        scale = self.ternary_scale
+        tmax = scale - lmin - rmin
+        lmax = scale - rmin - tmin
+        rmax = scale - tmin - lmin
+        self.set_ternary_lim(tmin, tmax, lmin, lmax, rmin, rmax)
 
-    def set_ternary_max(self, tmax, lmax, rmax, *args, **kwargs):
-        s = self.ternary_scale
-        tmin = (s + tmax - lmax - rmax) * 0.5
-        lmin = (s + lmax - rmax - tmax) * 0.5
-        rmin = (s + rmax - tmax - lmax) * 0.5
-        self.set_ternary_lim(tmin, tmax, lmin, lmax, rmin, rmax, *args, **kwargs)
+    def set_ternary_max(self, tmax, lmax, rmax):
+        scale = self.ternary_scale
+        tmin = (scale + tmax - lmax - rmax) * 0.5
+        lmin = (scale + lmax - rmax - tmax) * 0.5
+        rmin = (scale + rmax - tmax - lmax) * 0.5
+        self.set_ternary_lim(tmin, tmax, lmin, lmax, rmin, rmax)
 
     def get_tlim(self):
         return tuple(self.viewTLim.intervalx)
