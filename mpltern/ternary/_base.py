@@ -1,5 +1,4 @@
 import logging
-from collections import OrderedDict
 
 import numpy as np
 
@@ -230,9 +229,8 @@ class TernaryAxesBase(Axes):
 
     def _gen_axes_spines(self, locations=None, offset=0.0, units='inches'):
         # Use `Spine` in `mpltern`
-        spines = OrderedDict((side, Spine.linear_spine(self, side))
-                             for side in ['tside', 'lside', 'rside'])
-        return spines
+        return {side: Spine.linear_spine(self, side)
+                for side in ['tside', 'lside', 'rside']}
 
     def get_taxis(self):
         """Return the TAxis instance"""
