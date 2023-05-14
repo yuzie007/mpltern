@@ -126,6 +126,10 @@ class TernaryAxesBase(Axes):
         self.spines['lside'].register_axis(self.laxis)
         self.spines['rside'].register_axis(self.raxis)
 
+        self.spines['t1'].register_axis(self.taxis)
+        self.spines['l1'].register_axis(self.laxis)
+        self.spines['r1'].register_axis(self.raxis)
+
         self._update_transScale()
 
     def _set_lim_and_transforms(self):
@@ -230,7 +234,7 @@ class TernaryAxesBase(Axes):
     def _gen_axes_spines(self, locations=None, offset=0.0, units='inches'):
         # Use `Spine` in `mpltern`
         return {side: Spine.linear_spine(self, side)
-                for side in ['tside', 'lside', 'rside']}
+                for side in ['tside', 't1', 'lside', 'l1', 'rside', 'r1']}
 
     def get_taxis(self):
         """Return the TAxis instance"""
