@@ -607,15 +607,7 @@ class TernaryAxesBase(Axes):
         """
         boxin = self._create_bbox_from_ternary_lim()
 
-        scale = self.ternary_scale
-
-        self.viewTLim.intervalx = tmin, min(tmax, scale - lmin - rmin)
-        self.viewLLim.intervalx = lmin, min(lmax, scale - tmin - rmin)
-        self.viewRLim.intervalx = rmin, min(rmax, scale - tmin - lmin)
-
-        self.viewOuterTLim.intervalx = tmin, scale - lmin - rmin
-        self.viewOuterLLim.intervalx = lmin, scale - tmin - rmin
-        self.viewOuterRLim.intervalx = rmin, scale - tmin - lmin
+        self._set_ternary_lim(tmin, tmax, lmin, lmax, rmin, rmax)
 
         boxout = self._create_bbox_from_ternary_lim()
 
@@ -630,10 +622,16 @@ class TernaryAxesBase(Axes):
         self.set_ylim(ymin, ymax)
 
         # update self.patch
-        denominator = scale - tmin - lmin - rmin
-        tmax_axes = (min(tmax, scale - lmin - rmin) - tmin) / denominator
-        lmax_axes = (min(lmax, scale - tmin - rmin) - lmin) / denominator
-        rmax_axes = (min(rmax, scale - tmin - lmin) - rmin) / denominator
+
+        scale = self.ternary_scale
+
+        tmax2 = self.viewTLim.intervalx[1]
+        lmax2 = self.viewLLim.intervalx[1]
+        rmax2 = self.viewRLim.intervalx[1]
+
+        tmax_axes = (tmax2 - tmin) / (scale - tmin - lmin - rmin)
+        lmax_axes = (lmax2 - lmin) / (scale - tmin - lmin - rmin)
+        rmax_axes = (rmax2 - rmin) / (scale - tmin - lmin - rmin)
         tlr = [
             [tmax_axes, 0.0, 1.0 - tmax_axes],
             [tmax_axes, 1.0 - tmax_axes, 0.0],
@@ -644,6 +642,26 @@ class TernaryAxesBase(Axes):
         ]
         xy = self.transAxesProjection.transform(tlr)
         self.patch.set_xy(xy)
+
+    def _set_ternary_lim(self, tmin, tmax, lmin, lmax, rmin, rmax):
+        scale = self.ternary_scale
+
+        if scale > 0.0:
+            tmax2 = min(tmax, scale - lmin - rmin)
+            lmax2 = min(lmax, scale - tmin - rmin)
+            rmax2 = min(rmax, scale - tmin - lmin)
+        else:
+            tmax2 = max(tmax, scale - lmin - rmin)
+            lmax2 = max(lmax, scale - tmin - rmin)
+            rmax2 = max(rmax, scale - tmin - lmin)
+
+        self.viewTLim.intervalx = tmin, tmax2
+        self.viewLLim.intervalx = lmin, lmax2
+        self.viewRLim.intervalx = rmin, rmax2
+
+        self.viewOuterTLim.intervalx = tmin, scale - lmin - rmin
+        self.viewOuterLLim.intervalx = lmin, scale - tmin - rmin
+        self.viewOuterRLim.intervalx = rmin, scale - tmin - lmin
 
     def set_ternary_min(self, tmin, lmin, rmin):
         scale = self.ternary_scale
@@ -725,12 +743,4 @@ class TernaryAxesBase(Axes):
         rmax = points[4, 2]
         rmin = points[1, 2]
 
-        scale = self.ternary_scale
-
-        self.viewTLim.intervalx = tmin, min(tmax, scale - lmin - rmin)
-        self.viewLLim.intervalx = lmin, min(lmax, scale - tmin - rmin)
-        self.viewRLim.intervalx = rmin, min(rmax, scale - tmin - lmin)
-
-        self.viewOuterTLim.intervalx = tmin, scale - lmin - rmin
-        self.viewOuterLLim.intervalx = lmin, scale - tmin - rmin
-        self.viewOuterRLim.intervalx = rmin, scale - tmin - lmin
+        self._set_ternary_lim(tmin, tmax, lmin, lmax, rmin, rmax)
