@@ -17,10 +17,10 @@ ax.set_tlabel('Top')
 ax.set_llabel('Left')
 ax.set_rlabel('Right')
 
-# Using ``ternary_lim``, you can limit the range of ternary axes.
+# Using ``ternary_bounds``, you can limit the range of ternary axes.
 # Be sure about the consistency; the limit values must satisfy:
 # tmax + lmin + rmin = tmin + lmax + rmin = tmin + lmin + rmax = ternary_scale
-ax.set_ternary_lim(
+ax.set_ternary_bounds(
     0.1, 0.5,  # tmin, tmax
     0.2, 0.6,  # lmin, lmax
     0.3, 0.7,  # rmin, rmax

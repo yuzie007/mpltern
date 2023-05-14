@@ -278,7 +278,7 @@ def test_ternary_lim(fig_test, fig_ref):
     """
     ax = fig_test.add_subplot(projection='ternary')
     t, l, r = get_spiral()
-    ax.set_ternary_lim(
+    ax.set_ternary_bounds(
         0.1, 0.5,  # tmin, tmax
         0.2, 0.6,  # lmin, lmax
         0.3, 0.7,  # rmin, rmax
@@ -291,7 +291,7 @@ def test_ternary_lim(fig_test, fig_ref):
     ax = fig_ref.add_subplot(projection='ternary')
     t, l, r = get_spiral()
     ax.plot(t, l, r)
-    ax.set_ternary_lim(
+    ax.set_ternary_bounds(
         0.1, 0.5,  # tmin, tmax
         0.2, 0.6,  # lmin, lmax
         0.3, 0.7,  # rmin, rmax
