@@ -145,6 +145,7 @@ class TernaryTick(XTick):
         # Implementation in `ThetaTick` and `RadialTick` in Matplotlib may be
         # helpful to understand what is done here.
         super().update_position(loc)
+        self.update_ydata(loc)
         tick1_angle = self.get_tick_angle()  # in degree
         tick2_angle = tick1_angle + 180.0
         axis1_angle = self.get_axis1_angle()  # in degree
@@ -175,6 +176,41 @@ class TernaryTick(XTick):
         self.label2.set_rotation_mode('anchor')
 
     # Helper methods for `mpltern`
+
+    def update_ydata(self, loc):
+        """Update ydata particularly for nontriangular bounds."""
+        scale = self.axes.ternary_scale
+
+        tmin, tmax_in = self.axes.viewTLim.intervalx
+        lmin, lmax_in = self.axes.viewLLim.intervalx
+        rmin, rmax_in = self.axes.viewRLim.intervalx
+
+        y0, y1 = 0.0, 1.0
+
+        if self.tick_name == "ttick":
+            denominator = (scale - lmin - rmin) - loc  # full length at loc
+            if loc < scale - lmin - rmax_in:
+                y0 = 1.0 - (rmax_in - rmin) / denominator
+            if loc < scale - lmax_in - rmin:
+                y1 = (lmax_in - lmin) / denominator
+        elif self.tick_name == "ltick":
+            denominator = (scale - rmin - tmin) - loc  # full length at loc
+            if loc < scale - rmin - tmax_in:
+                y0 = 1.0 - (lmax_in - lmin) / denominator
+            if loc < scale - rmax_in - tmin:
+                y1 = (tmax_in - tmin) / denominator
+        elif self.tick_name == "rtick":
+            denominator = (scale - tmin - lmin) - loc  # full length at loc
+            if loc < scale - tmin - lmax_in:
+                y0 = 1.0 - (tmax_in - tmin) / denominator
+            if loc < scale - tmax_in - lmin:
+                y1 = (lmax_in - lmin) / denominator
+
+        self.tick1line.set_ydata((y0,))
+        self.tick2line.set_ydata((y1,))
+        self.gridline.set_ydata((y0, y1))
+        self.label1.set_y(y0)
+        self.label2.set_y(y1)
 
     def get_tick_angle(self):
         # The angle here is for `direction='in'`
