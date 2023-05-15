@@ -669,20 +669,28 @@ class TernaryAxesBase(Axes):
         self.patch.set_xy(xy)
 
     def _set_ternary_lim(self, tmin, tmax, lmin, lmax, rmin, rmax):
+        """Set ternary limits.
+
+        Notes
+        -----
+        The given ternary limits may be further modified to show intersections
+        of (tmin, tmax), (lmin, lmax), (rmin, rmax).
+        """
         scale = self.ternary_scale
 
-        if scale > 0.0:
-            tmax2 = min(tmax, scale - lmin - rmin)
-            lmax2 = min(lmax, scale - tmin - rmin)
-            rmax2 = min(rmax, scale - tmin - lmin)
-        else:
-            tmax2 = max(tmax, scale - lmin - rmin)
-            lmax2 = max(lmax, scale - tmin - rmin)
-            rmax2 = max(rmax, scale - tmin - lmin)
+        select_min, select_max = (max, min) if scale > 0.0 else (min, max)
 
-        self.viewTLim.intervalx = tmin, tmax2
-        self.viewLLim.intervalx = lmin, lmax2
-        self.viewRLim.intervalx = rmin, rmax2
+        tmin = select_min(tmin, scale - lmax - rmax)
+        lmin = select_min(lmin, scale - rmax - tmax)
+        rmin = select_min(rmin, scale - tmax - lmax)
+
+        tmax = select_max(tmax, scale - lmin - rmin)
+        lmax = select_max(lmax, scale - rmin - tmin)
+        rmax = select_max(rmax, scale - tmin - lmin)
+
+        self.viewTLim.intervalx = tmin, tmax
+        self.viewLLim.intervalx = lmin, lmax
+        self.viewRLim.intervalx = rmin, rmax
 
         self.viewOuterTLim.intervalx = tmin, scale - lmin - rmin
         self.viewOuterLLim.intervalx = lmin, scale - tmin - rmin
