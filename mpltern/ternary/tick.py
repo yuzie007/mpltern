@@ -219,15 +219,15 @@ class TernaryTick(XTick):
         elif self.tick_name == "ltick":
             denominator = (scale - rmin - tmin) - loc  # full length at loc
             if np.sign(scale) * (loc - (scale - rmin - tmax_in)) < 0.0:
-                y0 = 1.0 - (lmax_in - lmin) / denominator
+                y0 = 1.0 - (tmax_in - tmin) / denominator
             if np.sign(scale) * (loc - (scale - rmax_in - tmin)) < 0.0:
-                y1 = (tmax_in - tmin) / denominator
+                y1 = (rmax_in - rmin) / denominator
         elif self.tick_name == "rtick":
             denominator = (scale - tmin - lmin) - loc  # full length at loc
             if np.sign(scale) * (loc - (scale - tmin - lmax_in)) < 0.0:
-                y0 = 1.0 - (tmax_in - tmin) / denominator
+                y0 = 1.0 - (lmax_in - lmin) / denominator
             if np.sign(scale) * (loc - (scale - tmax_in - lmin)) < 0.0:
-                y1 = (lmax_in - lmin) / denominator
+                y1 = (tmax_in - tmin) / denominator
 
         return y0, y1
 
