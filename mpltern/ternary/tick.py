@@ -150,7 +150,6 @@ class TernaryTick(XTick):
         # Implementation in `ThetaTick` and `RadialTick` in Matplotlib may be
         # helpful to understand what is done here.
         super().update_position(loc)
-        self.update_ydata(loc)
         tick1_angle = self.get_tick_angle()  # in degree
         tick2_angle = tick1_angle + 180.0
         axis1_angle = self.get_axis1_angle()  # in degree
@@ -165,6 +164,14 @@ class TernaryTick(XTick):
             self.label1.set_rotation(user_angle)
             self.label2.set_rotation(user_angle)
             return
+
+        y0, y1 = self.get_ydata(loc)
+
+        self.tick1line.set_ydata((y0,))
+        self.tick2line.set_ydata((y1,))
+        self.gridline.set_ydata((y0, y1))
+        self.label1.set_y(y0)
+        self.label2.set_y(y1)
 
         ha1, va1, rotation1 = self._determine_anchor(
             mode, axis1_angle, tick1_angle)
@@ -182,8 +189,19 @@ class TernaryTick(XTick):
 
     # Helper methods for `mpltern`
 
-    def update_ydata(self, loc):
-        """Update ydata particularly for nontriangular bounds."""
+    def get_ydata(self, loc: float) -> tuple:
+        """Update ydata particularly for nontriangular bounds.
+
+        Parameters
+        ----------
+        loc : float
+            Coordinate of the tick.
+
+        Returns
+        -------
+        y0, y1 : tuple[float]
+            End points for the tick transform.
+        """
         scale = self.axes.ternary_scale
 
         tmin, tmax_in = self.axes.viewTLim.intervalx
@@ -211,11 +229,7 @@ class TernaryTick(XTick):
             if loc < scale - tmax_in - lmin:
                 y1 = (lmax_in - lmin) / denominator
 
-        self.tick1line.set_ydata((y0,))
-        self.tick2line.set_ydata((y1,))
-        self.gridline.set_ydata((y0, y1))
-        self.label1.set_y(y0)
-        self.label2.set_y(y1)
+        return y0, y1
 
     def get_tick_angle(self):
         # The angle here is for `direction='in'`
