@@ -1,3 +1,6 @@
+"""
+Classes for the ternary ticks.
+"""
 import numpy as np
 
 from matplotlib import _api
@@ -26,8 +29,10 @@ class TernaryTick(XTick):
         else:
             mode = 'tick'
             angle = labelrotation
-        _api.check_in_list(['tick', 'axis', 'horizontal', 'manual'],
-                             labelrotation=mode)
+        _api.check_in_list(
+            ['tick', 'axis', 'horizontal', 'manual'],
+            labelrotation=mode,
+        )
         self._labelrotation = (mode, angle)
 
     def _get_text1_transform(self):
@@ -163,15 +168,15 @@ class TernaryTick(XTick):
 
         ha1, va1, rotation1 = self._determine_anchor(
             mode, axis1_angle, tick1_angle)
-        self.label1.set_ha(ha1)
-        self.label1.set_va(va1)
+        self.label1.set_horizontalalignment(ha1)
+        self.label1.set_verticalalignment(va1)
         self.label1.set_rotation(rotation1 + user_angle)
         self.label1.set_rotation_mode('anchor')
 
         ha2, va2, rotation2 = self._determine_anchor(
             mode, axis2_angle, tick2_angle)
-        self.label2.set_ha(ha2)
-        self.label2.set_va(va2)
+        self.label2.set_horizontalalignment(ha2)
+        self.label2.set_verticalalignment(va2)
         self.label2.set_rotation(rotation2 + user_angle)
         self.label2.set_rotation_mode('anchor')
 
@@ -218,24 +223,24 @@ class TernaryTick(XTick):
         indices = {'ttick': [2, 1], 'ltick': [0, 2], 'rtick': [1, 0]}[name]
         corners = [[1., 0., 0.], [0., 1., 0.], [0., 0., 1.]]
         points = self.axes.transTernaryAxes.transform(corners)[indices]
-        d = points[1] - points[0]
-        return np.rad2deg(np.arctan2(d[1], d[0]))
+        direction = points[1] - points[0]
+        return np.rad2deg(np.arctan2(direction[1], direction[0]))
 
     def get_axis1_angle(self):
         name = self.tick_name
         indices = {'ttick': [2, 0], 'ltick': [0, 1], 'rtick': [1, 2]}[name]
         corners = [[1., 0., 0.], [0., 1., 0.], [0., 0., 1.]]
         points = self.axes.transTernaryAxes.transform(corners)[indices]
-        d = points[1] - points[0]
-        return np.rad2deg(np.arctan2(d[1], d[0]))
+        direction = points[1] - points[0]
+        return np.rad2deg(np.arctan2(direction[1], direction[0]))
 
     def get_axis2_angle(self):
         name = self.tick_name
         indices = {'ttick': [1, 0], 'ltick': [2, 1], 'rtick': [0, 2]}[name]
         corners = [[1., 0., 0.], [0., 1., 0.], [0., 0., 1.]]
         points = self.axes.transTernaryAxes.transform(corners)[indices]
-        d = points[1] - points[0]
-        return np.rad2deg(np.arctan2(d[1], d[0]))
+        direction = points[1] - points[0]
+        return np.rad2deg(np.arctan2(direction[1], direction[0]))
 
     def _tilt_marker(self, line, angle):
         if self._tickdir == 'in':
@@ -245,7 +250,7 @@ class TernaryTick(XTick):
         elif self._tickdir == 'out':
             trans = mtransforms.Affine2D().scale(-1.0).rotate(angle)
         else:
-            # Don't modify custom tick line markers.
+            # Not modify custom tick line markers.
             trans = line._marker._transform
         line._marker._transform = trans
 
