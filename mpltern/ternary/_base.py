@@ -649,23 +649,18 @@ class TernaryAxesBase(Axes):
 
     def _update_axes_patch(self):
         scale = self.ternary_scale
-
-        tmin, tmax2 = self.viewTLim.intervalx
-        lmin, lmax2 = self.viewLLim.intervalx
-        rmin, rmax2 = self.viewRLim.intervalx
-
-        tmax_axes = (tmax2 - tmin) / (scale - tmin - lmin - rmin)
-        lmax_axes = (lmax2 - lmin) / (scale - tmin - lmin - rmin)
-        rmax_axes = (rmax2 - rmin) / (scale - tmin - lmin - rmin)
+        tmin, tmax = self.get_tlim()
+        lmin, lmax = self.get_llim()
+        rmin, rmax = self.get_rlim()
         tlr = [
-            [tmax_axes, 0.0, 1.0 - tmax_axes],
-            [tmax_axes, 1.0 - tmax_axes, 0.0],
-            [1.0 - lmax_axes, lmax_axes, 0.0],
-            [0.0, lmax_axes, 1.0 - lmax_axes],
-            [0.0, 1.0 - rmax_axes, rmax_axes],
-            [1.0 - rmax_axes, 0.0, rmax_axes],
+            [tmax, lmin, scale - tmax - lmin],
+            [tmax, scale - tmax - rmin, rmin],
+            [scale - lmax - rmin, lmax, rmin],
+            [tmin, lmax, scale - lmax - tmin],
+            [tmin, scale - rmax - tmin, rmax],
+            [scale - rmax - lmin, lmin, rmax],
         ]
-        xy = self.transAxesProjection.transform(tlr)
+        xy = self._ternary_axes_transform.transform(tlr)
         self.patch.set_xy(xy)
 
     def _set_ternary_lim(self, tmin, tmax, lmin, lmax, rmin, rmax):
