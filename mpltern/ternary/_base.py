@@ -171,6 +171,9 @@ class TernaryAxesBase(Axes):
         # From ternary coordinates to the original Axes coordinates
         self._ternary_axes_transform = self.transProjection + self.transLimits
 
+        # From ternary coordinates to display coordinates
+        self._ternary2display_transform = self.transProjection + self.transData
+
         # From barycentric coordinates to the original Axes coordinates
         self.transAxesProjection = BarycentricTransform(self.corners_axes)
 

@@ -154,7 +154,7 @@ class TernaryAxis(XAxis):
             corner = corners[corner_index]
             x = trans.inverted().transform(corner)[0]
 
-        points = self._get_points_surrounding_triangle(renderer=renderer)
+        points = self._get_points_surrounding_hexagon(renderer=renderer)
         points = trans.inverted().transform(points)
         y = max(sign * points[:, 1]) * sign
         position = (x, y + sign * pad)
@@ -209,7 +209,7 @@ class TernaryAxis(XAxis):
 
     # Helper methods for `mpltern`
 
-    def _get_points_surrounding_triangle(self, renderer):
+    def _get_points_surrounding_hexagon(self, renderer):
         """Get the points of all tick labels in the pixel coordinates."""
         ticks = []
         # Only ticks to draw are added.
@@ -221,8 +221,8 @@ class TernaryAxis(XAxis):
                 if text.get_visible():
                     points.extend(_get_points_surrounding_text(text, renderer))
         # In case no tick labels exist, points of triangle corners are added.
-        corners = [[1., 0., 0.], [0., 1., 0.], [0., 0., 1.]]
-        points.extend(self.axes.transTernaryAxes.transform(corners))
+        vertices = self.axes._get_hexagonal_vertices()
+        points.extend(self.axes._ternary2display_transform.transform(vertices))
         return np.asarray(points)
 
     def set_label_rotation_mode(self, mode):
