@@ -582,20 +582,38 @@ class TernaryAxesBase(Axes):
 
         return self.raxis.set_label_text(rlabel, fontdict, **kwargs)
 
-    def _create_bbox_from_ternary_lim(self):
-        # bbox for the extrapolative triangle
+    def _get_hexagonal_vertices(self):
+        """Get vertices of the view-limit hexagon."""
+        scale = self.ternary_scale
+        tmin, tmax = self.get_tlim()
+        lmin, lmax = self.get_llim()
+        rmin, rmax = self.get_rlim()
+        return [
+            [tmax, lmin, scale - tmax - lmin],
+            [tmax, scale - tmax - rmin, rmin],
+            [scale - lmax - rmin, lmax, rmin],
+            [tmin, lmax, scale - lmax - tmin],
+            [tmin, scale - rmax - tmin, rmax],
+            [scale - rmax - lmin, lmin, rmax],
+        ]
+
+    def _get_triangular_vertices(self):
+        """Get vertices of the extrapolative triangle."""
         scale = self.ternary_scale
         tmin = self.get_tlim()[0]
         lmin = self.get_llim()[0]
         rmin = self.get_rlim()[0]
-        points = [
+        return [
             [scale - lmin - rmin, lmin, rmin],
-            [tmin, scale - tmin - rmin, rmin],
+            [tmin, scale - rmin - tmin, rmin],
             [tmin, lmin, scale - tmin - lmin],
         ]
-        points = self.transProjection.transform(points)
+
+    def _create_bbox_from_ternary_lim(self):
+        tlr = self._get_hexagonal_vertices()
+        xy = self.transProjection.transform(tlr)
         bbox = mtransforms.Bbox.unit()
-        bbox.update_from_data_xy(points, ignore=True)
+        bbox.update_from_data_xy(xy, ignore=True)
         return bbox
 
     def set_ternary_lim(self, tmin, tmax, lmin, lmax, rmin, rmax):
@@ -646,22 +664,19 @@ class TernaryAxesBase(Axes):
         self.set_ylim(ymin, ymax)
 
         self._update_axes_patch()
+        self._update_triangular_vertices()
 
     def _update_axes_patch(self):
-        scale = self.ternary_scale
-        tmin, tmax = self.get_tlim()
-        lmin, lmax = self.get_llim()
-        rmin, rmax = self.get_rlim()
-        tlr = [
-            [tmax, lmin, scale - tmax - lmin],
-            [tmax, scale - tmax - rmin, rmin],
-            [scale - lmax - rmin, lmax, rmin],
-            [tmin, lmax, scale - lmax - tmin],
-            [tmin, scale - rmax - tmin, rmax],
-            [scale - rmax - lmin, lmin, rmax],
-        ]
+        tlr = self._get_hexagonal_vertices()
         xy = self._ternary_axes_transform.transform(tlr)
         self.patch.set_xy(xy)
+
+    def _update_triangular_vertices(self):
+        tlr = self._get_triangular_vertices()
+        xy = self._ternary_axes_transform.transform(tlr)
+        # Update the corner positions in axes coordinates.
+        # Indexing is necessary to keep the object ID.
+        self.corners_axes[:, :] = xy
 
     def _set_ternary_lim(self, tmin, tmax, lmin, lmax, rmin, rmax):
         """Set ternary limits.
