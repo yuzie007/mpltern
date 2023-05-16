@@ -1,3 +1,6 @@
+"""
+Classes for t-, l-, r-axis.
+"""
 import numpy as np
 
 from matplotlib import _api
@@ -9,6 +12,7 @@ from mpltern.ternary.tick import TTick, LTick, RTick
 
 
 class TernaryAxis(XAxis):
+    """Ternary axis."""
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self._init()
@@ -93,10 +97,7 @@ class TernaryAxis(XAxis):
             'l': LTick,
             'r': RTick,
         }[self.axis_name]
-        try:
-            return tick(self.axes, 0, major=major, **tick_kw)
-        except TypeError:  # matplotlib<=3.2.2
-            return tick(self.axes, 0, '', major=major, **tick_kw)
+        return tick(self.axes, 0, major=major, **tick_kw)
 
     def set_label_position(self, position):
         """
@@ -161,8 +162,8 @@ class TernaryAxis(XAxis):
         self.label.set_position(position)
         self.label.set_transform(trans)
         angle, ha, va = self._get_label_rotation()
-        self.label.set_ha(ha)
-        self.label.set_va(va)
+        self.label.set_horizontalalignment(ha)
+        self.label.set_verticalalignment(va)
         self.label.set_rotation(angle)
 
     def set_ticks_position(self, position):
@@ -212,13 +213,8 @@ class TernaryAxis(XAxis):
         """Get the points of all tick labels in the pixel coordinates."""
         ticks = []
         # Only ticks to draw are added.
-        for axis in self.axes._get_axis_list():
-            if axis in [self.axes.xaxis, self.axes.yaxis]:
-                continue
-            try:
-                ticks.extend(axis._update_ticks())
-            except TypeError:  # For Matplotlib 3.0.3
-                ticks.extend(axis._update_ticks(renderer))
+        for axis in [self.axes.taxis, self.axes.laxis, self.axes.raxis]:
+            ticks.extend(axis._update_ticks())
         points = []
         for tick in ticks:
             for text in [tick.label1, tick.label2]:
@@ -267,8 +263,8 @@ class TernaryAxis(XAxis):
                 corners, self.axis_name, self.label_position)
         else:
             label_rotation = self.label.get_rotation()
-            ha = self.label.get_ha()
-            va = self.label.get_va()
+            ha = self.label.get_horizontalalignment()
+            va = self.label.get_verticalalignment()
         return label_rotation, ha, va
 
 
