@@ -8,7 +8,7 @@ values are forced to be the same as ``input_dims``.
 """
 import numpy as np
 
-from matplotlib.transforms import Transform, ScaledTranslation
+from matplotlib.transforms import Affine2DBase, Transform, ScaledTranslation
 
 
 class TernaryTransform(Transform):
@@ -134,7 +134,7 @@ class InvertedTernaryShift(_TernaryShiftBase):
             self.indices, self.figure, self.axes, self.pad_points)
 
 
-class PSTransform(Transform):
+class PSTransform(Affine2DBase):
     """Transform to place axis-label at side.
 
     Parameters
@@ -148,7 +148,6 @@ class PSTransform(Transform):
     """
     input_dims = 2
     output_dims = 2
-    has_inverse = True
 
     def __init__(self, trans, corners, index, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -156,7 +155,7 @@ class PSTransform(Transform):
         self.corners = np.asarray(corners, float)
         self.index = index
 
-    def transform_non_affine(self, values):
+    def get_matrix(self):
         """Transform axis-label to Cartesian (likely `display`) coordinates
 
         Parameters
@@ -184,45 +183,18 @@ class PSTransform(Transform):
         # triangle is defined in a clockwise or in a counterclockwise manner.
         vp = v10 - np.dot(v10, v12) / np.dot(v12, v12) * v12
         vp /= np.linalg.norm(vp)
-        v = np.column_stack((v12, vp))
-        return c1 + np.dot(v, values.T).T
+        return np.array([
+            [v12[0], vp[0], c1[0]],
+            [v12[1], vp[1], c1[1]],
+            [0.0, 0.0, 1.0],
+        ])
 
     def inverted(self):
-        return InvertedPSTransform(
-            self.trans, self.corners, self.index)
+        self._invalid = 1  # necessary to recompute the inverted transform
+        return super().inverted()
 
 
-class InvertedPSTransform(Transform):
-    input_dims = 2
-    output_dims = 2
-    has_inverse = True
-
-    def __init__(self, trans, corners, index, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.trans = trans
-        self.corners = np.asarray(corners, float)
-        self.index = index
-
-    def transform_non_affine(self, values):
-        corners = self.trans.transform(self.corners)
-        c0 = corners[(self.index + 0) % 3]
-        c1 = corners[(self.index + 1) % 3]
-        c2 = corners[(self.index + 2) % 3]
-        v10 = c0 - c1
-        v12 = c2 - c1
-        vp = v10 - np.dot(v10, v12) / np.dot(v12, v12) * v12
-        vp /= np.linalg.norm(vp)
-        v = np.column_stack((v12, vp))
-        d = values - c1
-        tmp = np.dot(np.linalg.inv(v), d.T).T
-        return tmp
-
-    def inverted(self):
-        return PSTransform(
-            self.trans, self.corners, self.index)
-
-
-class PCTransform(Transform):
+class PCTransform(Affine2DBase):
     """Transform to place axis-label at corner.
 
     Parameters
@@ -236,7 +208,6 @@ class PCTransform(Transform):
     """
     input_dims = 2
     output_dims = 2
-    has_inverse = True
 
     def __init__(self, trans, corners, index, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -244,7 +215,7 @@ class PCTransform(Transform):
         self.corners = np.asarray(corners, float)
         self.index = index
 
-    def transform_non_affine(self, values):
+    def get_matrix(self):
         """Transform axis-label to Cartesian (likely `display`) coordinates
 
         Parameters
@@ -272,42 +243,15 @@ class PCTransform(Transform):
         # triangle is defined in a clockwise or in a counterclockwise manner.
         vp = v01 - np.dot(v01, v21) / np.dot(v21, v21) * v21
         vp /= np.linalg.norm(vp)
-        v = np.column_stack((v21, vp))
-        return (c0 - 0.5 * v21) + np.dot(v, values.T).T
+        return np.array([
+            [v21[0], vp[0], c0[0] - 0.5 * v21[0]],
+            [v21[1], vp[1], c0[1] - 0.5 * v21[1]],
+            [0.0, 0.0, 1.0],
+        ])
 
     def inverted(self):
-        return InvertedPerpendicularCTransform(
-            self.trans, self.corners, self.index)
-
-
-class InvertedPerpendicularCTransform(Transform):
-    input_dims = 2
-    output_dims = 2
-    has_inverse = True
-
-    def __init__(self, trans, corners, index, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.trans = trans
-        self.corners = np.asarray(corners, float)
-        self.index = index
-
-    def transform_non_affine(self, values):
-        corners = self.trans.transform(self.corners)
-        c0 = corners[(self.index + 0) % 3]
-        c1 = corners[(self.index + 1) % 3]
-        c2 = corners[(self.index + 2) % 3]
-        v01 = c1 - c0
-        v21 = c1 - c2
-        vp = v01 - np.dot(v01, v21) / np.dot(v21, v21) * v21
-        vp /= np.linalg.norm(vp)
-        v = np.column_stack((v21, vp))
-        d = values - (c0 - 0.5 * v21)
-        tmp = np.dot(np.linalg.inv(v), d.T).T
-        return tmp
-
-    def inverted(self):
-        return PCTransform(
-            self.trans, self.corners, self.index)
+        self._invalid = 1  # necessary to recompute the inverted transform
+        return super().inverted()
 
 
 class BarycentricTransform(Transform):
