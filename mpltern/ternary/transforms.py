@@ -223,6 +223,94 @@ class InvertedTernaryPerpendicularTransform(Transform):
             self.trans, self.corners, self.index)
 
 
+class PCTransform(Transform):
+    """Transform to place axis-label at corner.
+
+    Parameters
+    ----------
+    trans : ``Transform``
+        ``Axes.transAxes`` is supposed to be given.
+    corners : (3, 2) array_like
+        Corners of the triangle in Cartesian coordinates.
+    index : int
+        Index of the axis; t: 0, l: 1, r: 2.
+    """
+    input_dims = 2
+    output_dims = 2
+    has_inverse = True
+
+    def __init__(self, trans, corners, index, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.trans = trans
+        self.corners = np.asarray(corners, float)
+        self.index = index
+
+    def transform_non_affine(self, values):
+        """Transform axis-label to Cartesian (likely `display`) coordinates
+
+        Parameters
+        ----------
+        values : (N, 2) array_like
+            ``s, p == values[:, 0], values[:, 1]``
+            ``s`` : coordinate along the the edge opposite to the vertex.
+            ``s == 0.5`` corresponds to the corner position.
+            ``p`` : Vertical shift from the first axis in the `display`
+            coordinate system. ``p > 0`` and ``p < 0`` are towards the inside
+            and the outside of the triangle.
+
+        Returns
+        -------
+        (x, y) : Coordinates in the `display` (pixel) coordinates.
+        """
+        corners = self.trans.transform(self.corners)
+        c0 = corners[(self.index + 0) % 3]
+        c1 = corners[(self.index + 1) % 3]
+        c2 = corners[(self.index + 2) % 3]
+        v01 = c1 - c0
+        v21 = c1 - c2
+        # Obtain the vector perpendicular to v21 in the Gram-Schmidt method.
+        # The obtained `vp` points inside of the triangle, regardless if the
+        # triangle is defined in a clockwise or in a counterclockwise manner.
+        vp = v01 - np.dot(v01, v21) / np.dot(v21, v21) * v21
+        vp /= np.linalg.norm(vp)
+        v = np.column_stack((v21, vp))
+        return (c0 - 0.5 * v21) + np.dot(v, values.T).T
+
+    def inverted(self):
+        return InvertedPerpendicularCTransform(
+            self.trans, self.corners, self.index)
+
+
+class InvertedPerpendicularCTransform(Transform):
+    input_dims = 2
+    output_dims = 2
+    has_inverse = True
+
+    def __init__(self, trans, corners, index, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.trans = trans
+        self.corners = np.asarray(corners, float)
+        self.index = index
+
+    def transform_non_affine(self, values):
+        corners = self.trans.transform(self.corners)
+        c0 = corners[(self.index + 0) % 3]
+        c1 = corners[(self.index + 1) % 3]
+        c2 = corners[(self.index + 2) % 3]
+        v01 = c1 - c0
+        v21 = c1 - c2
+        vp = v01 - np.dot(v01, v21) / np.dot(v21, v21) * v21
+        vp /= np.linalg.norm(vp)
+        v = np.column_stack((v21, vp))
+        d = values - (c0 - 0.5 * v21)
+        tmp = np.dot(np.linalg.inv(v), d.T).T
+        return tmp
+
+    def inverted(self):
+        return PCTransform(
+            self.trans, self.corners, self.index)
+
+
 class BarycentricTransform(Transform):
     """Transform from the barycentric to Cartesian coordinates.
 

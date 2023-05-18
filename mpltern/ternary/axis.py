@@ -123,12 +123,13 @@ class TernaryAxis(XAxis):
 
         pad = self.labelpad * self.figure.dpi / 72
 
-        trans, sign, x = self._get_ternary_label_transform()
+        trans = self._get_ternary_label_transform()
+        sign = -1.0
 
         points = self._get_points_surrounding_hexagon(renderer=renderer)
         points = trans.inverted().transform(points)
         y = max(sign * points[:, 1]) * sign
-        position = (x, y + sign * pad)
+        position = (0.5, y + sign * pad)
 
         self.label.set_position(position)
         self.label.set_transform(trans)
@@ -197,27 +198,21 @@ class TernaryAxis(XAxis):
         return np.asarray(points)
 
     def _get_ternary_label_transform(self):
-        transforms = [
-            self.axes._tlabel_transform,
-            self.axes._llabel_transform,
-            self.axes._rlabel_transform,
-        ]
         i = ["t", "l", "r"].index(self.axis_name)
-        j = ["corner", "tick1", "tick2"].index(self.label_position)
-        transform = transforms[(i + j) % 3]
-        if self.label_position == "corner":
-            sign = 1.0  # inward triangle
-            # Get the corner in the display coordinates, and then get
-            # the *x* coordinates in the `trans` coordinates
-            corner_index = {'t': 0, 'l': 1, 'r': 2}[self.axis_name]
-            corners = [[1., 0., 0.], [0., 1., 0.], [0., 0., 1.]]
-            corners = self.axes.transTernaryAxes.transform(corners)
-            corner = corners[corner_index]
-            x = transform.inverted().transform(corner)[0]
-        else:  # self.label_position in ["tick1", "tick2"]
-            sign = -1.0  # outward triangle
-            x = 0.5  # midpoint of the axis
-        return transform, sign, x
+        if self.label_position in ["corner"]:
+            return [
+                self.axes._tlabel_c_transform,
+                self.axes._llabel_c_transform,
+                self.axes._rlabel_c_transform,
+            ][i]
+        if self.label_position in ["tick1", "tick2"]:
+            j = [None, "tick1", "tick2"].index(self.label_position)
+            return [
+                self.axes._tlabel_transform,
+                self.axes._llabel_transform,
+                self.axes._rlabel_transform,
+            ][(i + j) % 3]
+        raise ValueError
 
     def set_label_rotation_mode(self, mode):
         """

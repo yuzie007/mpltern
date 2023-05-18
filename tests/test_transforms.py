@@ -5,6 +5,7 @@ from matplotlib.transforms import IdentityTransform
 
 from mpltern.ternary.transforms import (BarycentricTransform,
                                         TernaryPerpendicularTransform,
+                                        PCTransform,
                                         TernaryTransform)
 
 corners_list = [
@@ -37,6 +38,21 @@ def test_ternary_perpendicular_transform(corners, index):
     points /= np.sum(points, axis=1)[:, None]
 
     trans = TernaryPerpendicularTransform(IdentityTransform(), corners, index)
+    points_transformed = trans.transform(points)
+    points_inverted = trans.inverted().transform(points_transformed)
+
+    np.testing.assert_almost_equal(points_inverted, points)
+
+
+@pytest.mark.parametrize("corners", corners_list)
+@pytest.mark.parametrize("index", [0, 1, 2])
+def test_perpendicular_1_transform(corners, index):
+    """Test TernaryPerpendicularTransform."""
+    np.random.seed(1986)
+    points = np.random.rand(300).reshape(-1, 2)
+    points /= np.sum(points, axis=1)[:, None]
+
+    trans = PCTransform(IdentityTransform(), corners, index)
     points_transformed = trans.transform(points)
     points_inverted = trans.inverted().transform(points_transformed)
 
