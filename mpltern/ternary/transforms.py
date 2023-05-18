@@ -134,8 +134,8 @@ class InvertedTernaryShift(_TernaryShiftBase):
             self.indices, self.figure, self.axes, self.pad_points)
 
 
-class TernaryPerpendicularTransform(Transform):
-    """Transform convenient for axis-labels in TernaryAxis.
+class PSTransform(Transform):
+    """Transform to place axis-label at side.
 
     Parameters
     ----------
@@ -163,9 +163,8 @@ class TernaryPerpendicularTransform(Transform):
         ----------
         values : (N, 2) array_like
             ``s, p == values[:, 0], values[:, 1]``
-            ``s`` : ternary coordinate of the given axis.
-            ``s == 0`` : ternary min.
-            ``s == 1`` : ternary max.
+            ``s`` : coordinate along the the edge opposite to the vertex.
+            ``s == 0.5`` corresponds to the center position.
             ``p`` : Vertical shift from the ternary axis in the `display`
             coordinate system. ``p > 0`` and ``p < 0`` are towards the inside
             and the outside of the triangle.
@@ -189,11 +188,11 @@ class TernaryPerpendicularTransform(Transform):
         return c1 + np.dot(v, values.T).T
 
     def inverted(self):
-        return InvertedTernaryPerpendicularTransform(
+        return InvertedPSTransform(
             self.trans, self.corners, self.index)
 
 
-class InvertedTernaryPerpendicularTransform(Transform):
+class InvertedPSTransform(Transform):
     input_dims = 2
     output_dims = 2
     has_inverse = True
@@ -219,7 +218,7 @@ class InvertedTernaryPerpendicularTransform(Transform):
         return tmp
 
     def inverted(self):
-        return TernaryPerpendicularTransform(
+        return PSTransform(
             self.trans, self.corners, self.index)
 
 

@@ -12,7 +12,7 @@ from matplotlib.axes import Axes
 from matplotlib import _api
 from mpltern.ternary.spines import Spine
 from mpltern.ternary.transforms import (
-    TernaryTransform, TernaryPerpendicularTransform, PCTransform,
+    TernaryTransform, PSTransform, PCTransform,
     BarycentricTransform, TernaryScaleTransform, TernaryShift)
 from mpltern.ternary.axis import TAxis, LAxis, RAxis
 
@@ -157,12 +157,9 @@ class TernaryAxesBase(Axes):
         self._raxis_transform = transRLimits + raxis_transform + self.transAxes
 
         # For axis labels
-        t_l_t = TernaryPerpendicularTransform(self.transAxes, corners_axes, 0)
-        l_l_t = TernaryPerpendicularTransform(self.transAxes, corners_axes, 1)
-        r_l_t = TernaryPerpendicularTransform(self.transAxes, corners_axes, 2)
-        self._tlabel_transform = t_l_t
-        self._llabel_transform = l_l_t
-        self._rlabel_transform = r_l_t
+        self._tlabel_s_transform = PSTransform(self.transAxes, corners_axes, 0)
+        self._llabel_s_transform = PSTransform(self.transAxes, corners_axes, 1)
+        self._rlabel_s_transform = PSTransform(self.transAxes, corners_axes, 2)
         self._tlabel_c_transform = PCTransform(self.transAxes, corners_axes, 0)
         self._llabel_c_transform = PCTransform(self.transAxes, corners_axes, 1)
         self._rlabel_c_transform = PCTransform(self.transAxes, corners_axes, 2)

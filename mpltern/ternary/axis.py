@@ -208,9 +208,9 @@ class TernaryAxis(XAxis):
         if self.label_position in ["tick1", "tick2"]:
             j = [None, "tick1", "tick2"].index(self.label_position)
             return [
-                self.axes._tlabel_transform,
-                self.axes._llabel_transform,
-                self.axes._rlabel_transform,
+                self.axes._tlabel_s_transform,
+                self.axes._llabel_s_transform,
+                self.axes._rlabel_s_transform,
             ][(i + j) % 3]
         raise ValueError
 
