@@ -22,9 +22,9 @@ class TernaryAxis(XAxis):
         # y : display (pixel) coordinates in the direction vertical to the
         #     axis direction, updated when drawn in `_update_label_positions`
         trans = {
-            't': self.axes.get_taxis_transform(which='label'),
-            'l': self.axes.get_laxis_transform(which='label'),
-            'r': self.axes.get_raxis_transform(which='label'),
+            't': self.axes._tlabel_c_transform,
+            'l': self.axes._llabel_c_transform,
+            'r': self.axes._rlabel_c_transform,
         }[self.axis_name]
         self.label.set_rotation(0)
         self.label.set_rotation_mode('anchor')
