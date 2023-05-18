@@ -160,9 +160,9 @@ class TernaryAxesBase(Axes):
         t_l_t = TernaryPerpendicularTransform(self.transAxes, corners_axes, 0)
         l_l_t = TernaryPerpendicularTransform(self.transAxes, corners_axes, 1)
         r_l_t = TernaryPerpendicularTransform(self.transAxes, corners_axes, 2)
-        self._taxis_label_transform = t_l_t
-        self._laxis_label_transform = l_l_t
-        self._raxis_label_transform = r_l_t
+        self._tlabel_transform = t_l_t
+        self._llabel_transform = l_l_t
+        self._rlabel_transform = r_l_t
 
         # From ternary coordinates to the original data coordinates
         self.transProjection = (transTernaryScale
@@ -189,22 +189,13 @@ class TernaryAxesBase(Axes):
         return self._yaxis_transform
 
     def get_taxis_transform(self, which='grid'):
-        if which == 'label':
-            return self._taxis_label_transform
-        else:
-            return self._taxis_transform
+        return self._taxis_transform
 
     def get_laxis_transform(self, which='grid'):
-        if which == 'label':
-            return self._laxis_label_transform
-        else:
-            return self._laxis_transform
+        return self._laxis_transform
 
     def get_raxis_transform(self, which='grid'):
-        if which == 'label':
-            return self._raxis_label_transform
-        else:
-            return self._raxis_transform
+        return self._raxis_transform
 
     def _get_axis_text_transform(self, pad_points, trans, indices):
         pad_shift = TernaryShift(indices, self.figure, self.axes, pad_points)

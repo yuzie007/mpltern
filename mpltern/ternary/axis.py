@@ -123,36 +123,7 @@ class TernaryAxis(XAxis):
 
         pad = self.labelpad * self.figure.dpi / 72
 
-        if self.label_position == 'tick1':
-            trans = {
-                't': self.axes.get_laxis_transform(which='label'),
-                'l': self.axes.get_raxis_transform(which='label'),
-                'r': self.axes.get_taxis_transform(which='label'),
-            }[self.axis_name]
-            sign = -1.0  # outward triangle
-            x = 0.5  # midpoint of the axis
-        elif self.label_position == 'tick2':
-            trans = {
-                't': self.axes.get_raxis_transform(which='label'),
-                'l': self.axes.get_taxis_transform(which='label'),
-                'r': self.axes.get_laxis_transform(which='label'),
-            }[self.axis_name]
-            sign = -1.0  # outward triangle
-            x = 0.5  # midpoint of the axis
-        else:  # self.label_position == 'corner'
-            trans = {
-                't': self.axes.get_taxis_transform(which='label'),
-                'l': self.axes.get_laxis_transform(which='label'),
-                'r': self.axes.get_raxis_transform(which='label'),
-            }[self.axis_name]
-            sign = 1.0  # inward triangle
-            # Get the corner in the display coordinates, and then get
-            # the *x* coordinates in the `trans` coordinates
-            corner_index = {'t': 0, 'l': 1, 'r': 2}[self.axis_name]
-            corners = [[1., 0., 0.], [0., 1., 0.], [0., 0., 1.]]
-            corners = self.axes.transTernaryAxes.transform(corners)
-            corner = corners[corner_index]
-            x = trans.inverted().transform(corner)[0]
+        trans, sign, x = self._get_ternary_label_transform()
 
         points = self._get_points_surrounding_hexagon(renderer=renderer)
         points = trans.inverted().transform(points)
@@ -224,6 +195,29 @@ class TernaryAxis(XAxis):
         vertices = self.axes._get_hexagonal_vertices()
         points.extend(self.axes._ternary2display_transform.transform(vertices))
         return np.asarray(points)
+
+    def _get_ternary_label_transform(self):
+        transforms = [
+            self.axes._tlabel_transform,
+            self.axes._llabel_transform,
+            self.axes._rlabel_transform,
+        ]
+        i = ["t", "l", "r"].index(self.axis_name)
+        j = ["corner", "tick1", "tick2"].index(self.label_position)
+        transform = transforms[(i + j) % 3]
+        if self.label_position == "corner":
+            sign = 1.0  # inward triangle
+            # Get the corner in the display coordinates, and then get
+            # the *x* coordinates in the `trans` coordinates
+            corner_index = {'t': 0, 'l': 1, 'r': 2}[self.axis_name]
+            corners = [[1., 0., 0.], [0., 1., 0.], [0., 0., 1.]]
+            corners = self.axes.transTernaryAxes.transform(corners)
+            corner = corners[corner_index]
+            x = transform.inverted().transform(corner)[0]
+        else:  # self.label_position in ["tick1", "tick2"]
+            sign = -1.0  # outward triangle
+            x = 0.5  # midpoint of the axis
+        return transform, sign, x
 
     def set_label_rotation_mode(self, mode):
         """
