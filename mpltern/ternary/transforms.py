@@ -106,6 +106,9 @@ class _TernaryShiftBase(Transform):
         d1 = points[1] - points[0]  # outward against the triangle
         return d1 / np.linalg.norm(d1) * self.pad_points / 72.0
 
+    def inverted(self):
+        raise NotImplementedError
+
 
 class TernaryShift(_TernaryShiftBase):
     """Shift of tick labels from tick points
@@ -327,3 +330,109 @@ class InvertedTernaryScaleTransform(Transform):
 
     def inverted(self):
         return TernaryScaleTransform(self.ternary_scale)
+
+
+class T2HWidthTransform(Transform):
+    """Transform from ternary-axis to scaled hexagonal-axis coordinates."""
+    input_dims = 2
+    output_dims = 2
+    has_inverse = True
+
+    def __init__(self, ternary_scale, viewTernaryLims, index, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.ternary_scale = ternary_scale
+        self.viewTernaryLims = viewTernaryLims
+        self.index = index
+
+    def transform_non_affine(self, values):
+        """Transform ternary-axis to scaled hexagonal-axis coordinates
+
+        Parameters
+        ----------
+        values : (N, 2) array_like
+            Coordinates in the ternary-axis coordinates.
+            ``s, p == values[:, 0], values[:, 1]``
+            ``s`` : ternary coordinate of the given axis.
+            ``s == ternary_min`` and ``s == ternary_max`` correspond to the
+            side and the corner of the extrapolative triangle, respectively.
+            ``p == 0`` and ``p == 1`` correspond to the end points of the edge.
+
+        Returns
+        -------
+        (x, y) : (N, 2) array_like
+            Coordinates in the scaled hexagonal-axis coordinates.
+            ``x == 0`` corresponds to the side of the hexagon.
+            ``x == 1`` corresponds to the corner of the hexagon.
+            ``y == 0`` and ``y == 1`` correspond to the end points of the edge.
+        """
+        values = np.asarray(values)
+        scale = self.ternary_scale
+        min0, max0 = self.viewTernaryLims[(self.index + 0) % 3].intervalx
+        min1, max1 = self.viewTernaryLims[(self.index + 1) % 3].intervalx
+        min2, max2 = self.viewTernaryLims[(self.index - 1) % 3].intervalx
+        x = values[:, 0] * ((scale - min1 - min2) - min0) + min0  # unscaling
+        denominator = scale - min1 - min2 - x
+        y0 = 1.0 - (max2 - min2) / denominator
+        y1 = 0.0 + (max1 - min1) / denominator
+        sign = np.sign(scale)
+        y0 = np.where(sign * (x - (scale - max2 - min1)) > 0.0, 0.0, y0)
+        y1 = np.where(sign * (x - (scale - max1 - min2)) > 0.0, 1.0, y1)
+        y = (values[:, 1] - y0) / (y1 - y0)
+        return np.column_stack((values[:, 0], y))
+
+    def inverted(self):
+        return H2TWidthTransform(
+            self.ternary_scale, self.viewTernaryLims, self.index)
+
+
+class H2TWidthTransform(Transform):
+    """Transform from scaled hexagonal-axis to ternary-axis coordinates."""
+    input_dims = 2
+    output_dims = 2
+    has_inverse = True
+
+    def __init__(self, ternary_scale, viewTernaryLims, index, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.ternary_scale = ternary_scale
+        self.viewTernaryLims = viewTernaryLims
+        self.index = index
+
+    def transform_non_affine(self, values):
+        """Transform scaled hexagonal-axis to ternary-axis coordinates
+
+        Parameters
+        ----------
+        values : (N, 2) array_like
+            Coordinates in the scaled hexagonal-axis coordinates.
+            ``s, p == values[:, 0], values[:, 1]``
+            ``s == 0`` corresponds to the side of the hexagon.
+            ``s == 1`` corresponds to the corner of the hexagon.
+            ``p == 0`` and ``p == 1`` correspond to the end points of the edge.
+
+        Returns
+        -------
+        (x, y) : (N, 2) array_like
+            Coordinates in the ternary-axis coordinates.
+            ``x`` : ternary coordinate of the given axis.
+            ``x == ternary_min`` and ``x == ternary_max`` correspond to the
+            side and the corner of the extrapolative triangle, respectively.
+            ``y == 0`` and ``y == 1`` correspond to the end points of the edge.
+        """
+        values = np.asarray(values)
+        scale = self.ternary_scale
+        min0, max0 = self.viewTernaryLims[(self.index + 0) % 3].intervalx
+        min1, max1 = self.viewTernaryLims[(self.index + 1) % 3].intervalx
+        min2, max2 = self.viewTernaryLims[(self.index - 1) % 3].intervalx
+        x = values[:, 0] * ((scale - min1 - min2) - min0) + min0  # unscaling
+        denominator = scale - min1 - min2 - x
+        y0 = 1.0 - (max2 - min2) / denominator
+        y1 = 0.0 + (max1 - min1) / denominator
+        sign = np.sign(scale)
+        y0 = np.where(sign * (x - (scale - max2 - min1)) > 0.0, 0.0, y0)
+        y1 = np.where(sign * (x - (scale - max1 - min2)) > 0.0, 1.0, y1)
+        y = values[:, 1] * (y1 - y0) + y0
+        return np.column_stack((values[:, 0], y))
+
+    def inverted(self):
+        return T2HWidthTransform(
+            self.ternary_scale, self.viewTernaryLims, self.index)
