@@ -1,7 +1,6 @@
 """Test transforms for ternary plots."""
 import numpy as np
 import pytest
-from matplotlib.transforms import IdentityTransform
 
 from mpltern.ternary.transforms import (BarycentricTransform,
                                         PSTransform,
@@ -37,7 +36,7 @@ def test_ternary_perpendicular_transform(corners, index):
     points = np.random.rand(300).reshape(-1, 2)
     points /= np.sum(points, axis=1)[:, None]
 
-    trans = PSTransform(IdentityTransform(), corners, index)
+    trans = PSTransform(TernaryTransform(corners, index))
     points_transformed = trans.transform(points)
     points_inverted = trans.inverted().transform(points_transformed)
 
@@ -52,7 +51,7 @@ def test_perpendicular_1_transform(corners, index):
     points = np.random.rand(300).reshape(-1, 2)
     points /= np.sum(points, axis=1)[:, None]
 
-    trans = PCTransform(IdentityTransform(), corners, index)
+    trans = PCTransform(TernaryTransform(corners, index))
     points_transformed = trans.transform(points)
     points_inverted = trans.inverted().transform(points_transformed)
 

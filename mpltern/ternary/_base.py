@@ -148,21 +148,21 @@ class TernaryAxesBase(Axes):
 
         corners_axes = self.corners_axes
 
-        taxis_transform = TernaryTransform(corners_axes, 0)
-        laxis_transform = TernaryTransform(corners_axes, 1)
-        raxis_transform = TernaryTransform(corners_axes, 2)
+        taxis_transform = TernaryTransform(corners_axes, 0) + self.transAxes
+        laxis_transform = TernaryTransform(corners_axes, 1) + self.transAxes
+        raxis_transform = TernaryTransform(corners_axes, 2) + self.transAxes
 
-        self._taxis_transform = transTLimits + taxis_transform + self.transAxes
-        self._laxis_transform = transLLimits + laxis_transform + self.transAxes
-        self._raxis_transform = transRLimits + raxis_transform + self.transAxes
+        self._taxis_transform = transTLimits + taxis_transform
+        self._laxis_transform = transLLimits + laxis_transform
+        self._raxis_transform = transRLimits + raxis_transform
 
-        # For axis labels
-        self._tlabel_s_transform = PSTransform(self.transAxes, corners_axes, 0)
-        self._llabel_s_transform = PSTransform(self.transAxes, corners_axes, 1)
-        self._rlabel_s_transform = PSTransform(self.transAxes, corners_axes, 2)
-        self._tlabel_c_transform = PCTransform(self.transAxes, corners_axes, 0)
-        self._llabel_c_transform = PCTransform(self.transAxes, corners_axes, 1)
-        self._rlabel_c_transform = PCTransform(self.transAxes, corners_axes, 2)
+        # For axis labels (to display coordinates)
+        self._tlabel_s_transform = PSTransform(taxis_transform)
+        self._llabel_s_transform = PSTransform(laxis_transform)
+        self._rlabel_s_transform = PSTransform(raxis_transform)
+        self._tlabel_c_transform = PCTransform(taxis_transform)
+        self._llabel_c_transform = PCTransform(laxis_transform)
+        self._rlabel_c_transform = PCTransform(raxis_transform)
 
         # From ternary coordinates to the original data coordinates
         self.transProjection = (transTernaryScale

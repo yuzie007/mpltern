@@ -140,20 +140,14 @@ class PSTransform(Affine2DBase):
     Parameters
     ----------
     trans : ``Transform``
-        ``Axes.transAxes`` is supposed to be given.
-    corners : (3, 2) array_like
-        Corners of the triangle in Cartesian coordinates.
-    index : int
-        Index of the axis; t: 0, l: 1, r: 2.
+        Transform derived from ``TernaryTransform`` is supposed to be given.
     """
     input_dims = 2
     output_dims = 2
 
-    def __init__(self, trans, corners, index, *args, **kwargs):
+    def __init__(self, trans: Transform, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.trans = trans
-        self.corners = np.asarray(corners, float)
-        self.index = index
 
     def get_matrix(self):
         """Transform axis-label to Cartesian (likely `display`) coordinates
@@ -172,10 +166,7 @@ class PSTransform(Affine2DBase):
         -------
         (x, y) : Coordinates in the `display` (pixel) coordinates.
         """
-        corners = self.trans.transform(self.corners)
-        c0 = corners[(self.index + 0) % 3]
-        c1 = corners[(self.index + 1) % 3]
-        c2 = corners[(self.index + 2) % 3]
+        c0, c1, c2 = self.trans.transform([[1.0, 0.5], [0.0, 0.0], [0.0, 1.0]])
         v10 = c0 - c1
         v12 = c2 - c1
         # Obtain the vector perpendicular to v12 in the Gram-Schmidt method.
@@ -200,20 +191,14 @@ class PCTransform(Affine2DBase):
     Parameters
     ----------
     trans : ``Transform``
-        ``Axes.transAxes`` is supposed to be given.
-    corners : (3, 2) array_like
-        Corners of the triangle in Cartesian coordinates.
-    index : int
-        Index of the axis; t: 0, l: 1, r: 2.
+        Transform derived from ``TernaryTransform`` is supposed to be given.
     """
     input_dims = 2
     output_dims = 2
 
-    def __init__(self, trans, corners, index, *args, **kwargs):
+    def __init__(self, trans: Transform, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.trans = trans
-        self.corners = np.asarray(corners, float)
-        self.index = index
 
     def get_matrix(self):
         """Transform axis-label to Cartesian (likely `display`) coordinates
@@ -232,10 +217,7 @@ class PCTransform(Affine2DBase):
         -------
         (x, y) : Coordinates in the `display` (pixel) coordinates.
         """
-        corners = self.trans.transform(self.corners)
-        c0 = corners[(self.index + 0) % 3]
-        c1 = corners[(self.index + 1) % 3]
-        c2 = corners[(self.index + 2) % 3]
+        c0, c1, c2 = self.trans.transform([[1.0, 0.5], [0.0, 0.0], [0.0, 1.0]])
         v01 = c1 - c0
         v21 = c1 - c2
         # Obtain the vector perpendicular to v21 in the Gram-Schmidt method.
