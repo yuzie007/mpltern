@@ -162,24 +162,24 @@ class PSTransform(Affine2DBase):
             ``s`` : coordinate along the the edge opposite to the vertex.
             ``s == 0.5`` corresponds to the center position.
             ``p`` : Vertical shift from the ternary axis in the `display`
-            coordinate system. ``p > 0`` and ``p < 0`` are towards the inside
-            and the outside of the triangle.
+            coordinate system. ``p > 0`` and ``p < 0`` are towards the outside
+            and the inside of the triangle.
 
         Returns
         -------
         (x, y) : Coordinates in the `display` (pixel) coordinates.
         """
         c0, c1, c2 = self.trans.transform([[1.0, 0.5], [0.0, 0.0], [0.0, 1.0]])
-        v10 = c0 - c1
-        v12 = c2 - c1
+        v02 = c2 - c0
+        v21 = c1 - c2
         # Obtain the vector perpendicular to v12 in the Gram-Schmidt method.
         # The obtained `vp` points inside of the triangle, regardless if the
         # triangle is defined in a clockwise or in a counterclockwise manner.
-        vp = v10 - np.dot(v10, v12) / np.dot(v12, v12) * v12
+        vp = v02 - np.dot(v02, v21) / np.dot(v21, v21) * v21
         vp /= np.linalg.norm(vp)
         return np.array([
-            [v12[0], vp[0], c1[0]],
-            [v12[1], vp[1], c1[1]],
+            [v21[0], vp[0], c2[0]],
+            [v21[1], vp[1], c2[1]],
             [0.0, 0.0, 1.0],
         ])
 
@@ -213,24 +213,24 @@ class PCTransform(Affine2DBase):
             ``s`` : coordinate along the the edge opposite to the vertex.
             ``s == 0.5`` corresponds to the corner position.
             ``p`` : Vertical shift from the first axis in the `display`
-            coordinate system. ``p > 0`` and ``p < 0`` are towards the inside
-            and the outside of the triangle.
+            coordinate system. ``p > 0`` and ``p < 0`` are towards the outside
+            and the inside of the triangle.
 
         Returns
         -------
         (x, y) : Coordinates in the `display` (pixel) coordinates.
         """
         c0, c1, c2 = self.trans.transform([[1.0, 0.5], [0.0, 0.0], [0.0, 1.0]])
-        v01 = c1 - c0
-        v21 = c1 - c2
+        v10 = c0 - c1
+        v12 = c2 - c1
         # Obtain the vector perpendicular to v21 in the Gram-Schmidt method.
         # The obtained `vp` points inside of the triangle, regardless if the
         # triangle is defined in a clockwise or in a counterclockwise manner.
-        vp = v01 - np.dot(v01, v21) / np.dot(v21, v21) * v21
+        vp = v10 - np.dot(v10, v12) / np.dot(v12, v12) * v12
         vp /= np.linalg.norm(vp)
         return np.array([
-            [v21[0], vp[0], c0[0] - 0.5 * v21[0]],
-            [v21[1], vp[1], c0[1] - 0.5 * v21[1]],
+            [v12[0], vp[0], c0[0] - 0.5 * v12[0]],
+            [v12[1], vp[1], c0[1] - 0.5 * v12[1]],
             [0.0, 0.0, 1.0],
         ])
 

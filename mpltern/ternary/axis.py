@@ -124,14 +124,11 @@ class TernaryAxis(XAxis):
         pad = self.labelpad * self.figure.dpi / 72
 
         trans = self._get_ternary_label_transform()
-        sign = -1.0
 
         points = self._get_points_surrounding_hexagon(renderer=renderer)
         points = trans.inverted().transform(points)
-        y = max(sign * points[:, 1]) * sign
-        position = (0.5, y + sign * pad)
 
-        self.label.set_position(position)
+        self.label.set_position((0.5, max(points[:, 1]) + pad))
         self.label.set_transform(trans)
         angle, ha, va = self._get_label_rotation()
         self.label.set_horizontalalignment(ha)
