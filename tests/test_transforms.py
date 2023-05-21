@@ -2,8 +2,9 @@
 import numpy as np
 import pytest
 
-from matplotlib.transforms import Bbox
+from matplotlib.transforms import Bbox, IdentityTransform
 from mpltern.ternary.transforms import (BarycentricTransform,
+                                        T2HHeightTransform,
                                         T2HWidthTransform,
                                         PSTransform,
                                         PCTransform,
@@ -32,13 +33,13 @@ def test_ternary_transform(corners, index):
 
 @pytest.mark.parametrize("corners", corners_list)
 @pytest.mark.parametrize("index", [0, 1, 2])
-def test_ternary_perpendicular_transform(corners, index):
+def test_label_s_transform(corners, index):
     """Test TernaryPerpendicularTransform."""
     np.random.seed(1986)
     points = np.random.rand(300).reshape(-1, 2)
     points /= np.sum(points, axis=1)[:, None]
 
-    trans = PSTransform(TernaryTransform(corners, index))
+    trans = PSTransform(TernaryTransform(corners, index), IdentityTransform())
     points_transformed = trans.transform(points)
     points_inverted = trans.inverted().transform(points_transformed)
 
@@ -47,13 +48,35 @@ def test_ternary_perpendicular_transform(corners, index):
 
 @pytest.mark.parametrize("corners", corners_list)
 @pytest.mark.parametrize("index", [0, 1, 2])
-def test_perpendicular_1_transform(corners, index):
+def test_label_c_transform(corners, index):
     """Test TernaryPerpendicularTransform."""
     np.random.seed(1986)
     points = np.random.rand(300).reshape(-1, 2)
     points /= np.sum(points, axis=1)[:, None]
 
-    trans = PCTransform(TernaryTransform(corners, index))
+    trans = PCTransform(TernaryTransform(corners, index), IdentityTransform())
+    points_transformed = trans.transform(points)
+    points_inverted = trans.inverted().transform(points_transformed)
+
+    np.testing.assert_almost_equal(points_inverted, points)
+
+
+@pytest.mark.parametrize("scale", [1.0, 2.0, -1.0, -2.0])
+@pytest.mark.parametrize("index", [0, 1, 2])
+def test_t2h_height_transform(scale, index):
+    """Test T2HTransform."""
+    np.random.seed(1986)
+    points = np.random.rand(300).reshape(-1, 2)
+
+    viewTLim = Bbox.unit()
+    viewLLim = Bbox.unit()
+    viewRLim = Bbox.unit()
+
+    viewTLim.intervalx = 0.1, 0.9
+    viewLLim.intervalx = 0.2, 0.8
+    viewRLim.intervalx = 0.3, 0.7
+
+    trans = T2HHeightTransform(scale, [viewTLim, viewLLim, viewRLim], index)
     points_transformed = trans.transform(points)
     points_inverted = trans.inverted().transform(points_transformed)
 

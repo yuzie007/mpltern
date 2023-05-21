@@ -12,7 +12,8 @@ from matplotlib.axes import Axes
 from matplotlib import _api
 from mpltern.ternary.spines import Spine
 from mpltern.ternary.transforms import (
-    TernaryTransform, PSTransform, PCTransform, H2TWidthTransform,
+    TernaryTransform, PSTransform, PCTransform,
+    H2THeightTransform, H2TWidthTransform,
     BarycentricTransform, TernaryScaleTransform, TernaryShift)
 from mpltern.ternary.axis import TAxis, LAxis, RAxis
 
@@ -150,9 +151,17 @@ class TernaryAxesBase(Axes):
 
         ternary_limits = [self.viewTLim, self.viewLLim, self.viewRLim]
 
-        h2t_width_t = H2TWidthTransform(self.ternary_scale, ternary_limits, 0)
-        h2t_width_l = H2TWidthTransform(self.ternary_scale, ternary_limits, 1)
-        h2t_width_r = H2TWidthTransform(self.ternary_scale, ternary_limits, 2)
+        h2t_h_t = H2THeightTransform(self.ternary_scale, ternary_limits, 0)
+        h2t_h_l = H2THeightTransform(self.ternary_scale, ternary_limits, 1)
+        h2t_h_r = H2THeightTransform(self.ternary_scale, ternary_limits, 2)
+
+        h2t_w_t = H2TWidthTransform(self.ternary_scale, ternary_limits, 0)
+        h2t_w_l = H2TWidthTransform(self.ternary_scale, ternary_limits, 1)
+        h2t_w_r = H2TWidthTransform(self.ternary_scale, ternary_limits, 2)
+
+        h2t_t = h2t_h_t + h2t_w_t
+        h2t_l = h2t_h_l + h2t_w_l
+        h2t_r = h2t_h_r + h2t_w_r
 
         # From scaled ternary-axis coordinates to display coordinates
         taxis_transform = TernaryTransform(corners_axes, 0) + self.transAxes
@@ -160,17 +169,17 @@ class TernaryAxesBase(Axes):
         raxis_transform = TernaryTransform(corners_axes, 2) + self.transAxes
 
         # For ticks and spines
-        self._taxis_transform = transTLimits + h2t_width_t + taxis_transform
-        self._laxis_transform = transLLimits + h2t_width_l + laxis_transform
-        self._raxis_transform = transRLimits + h2t_width_r + raxis_transform
+        self._taxis_transform = transTLimits + h2t_w_t + taxis_transform
+        self._laxis_transform = transLLimits + h2t_w_l + laxis_transform
+        self._raxis_transform = transRLimits + h2t_w_r + raxis_transform
 
         # For axis labels (to display coordinates)
-        self._tlabel_s_transform = PSTransform(taxis_transform)
-        self._llabel_s_transform = PSTransform(laxis_transform)
-        self._rlabel_s_transform = PSTransform(raxis_transform)
-        self._tlabel_c_transform = PCTransform(taxis_transform)
-        self._llabel_c_transform = PCTransform(laxis_transform)
-        self._rlabel_c_transform = PCTransform(raxis_transform)
+        self._tlabel_s_transform = PSTransform(taxis_transform, h2t_t)
+        self._llabel_s_transform = PSTransform(laxis_transform, h2t_l)
+        self._rlabel_s_transform = PSTransform(raxis_transform, h2t_r)
+        self._tlabel_c_transform = PCTransform(taxis_transform, h2t_t)
+        self._llabel_c_transform = PCTransform(laxis_transform, h2t_l)
+        self._rlabel_c_transform = PCTransform(raxis_transform, h2t_r)
 
         # From ternary coordinates to the original data coordinates
         self.transProjection = (transTernaryScale
