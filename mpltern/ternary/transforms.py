@@ -169,7 +169,7 @@ class PSTransform(Affine2DBase):
         -------
         (x, y) : Coordinates in the `display` (pixel) coordinates.
         """
-        c0, c1, c2 = self.trans.transform([[1.0, 0.5], [0.0, 0.0], [0.0, 1.0]])
+        c0, c1, c2 = self.trans.transform([[1.0, 0.5], [0.0, 1.0], [0.0, 0.0]])
         v02 = c2 - c0
         v21 = c1 - c2
         # Obtain the vector perpendicular to v12 in the Gram-Schmidt method.
@@ -220,7 +220,7 @@ class PCTransform(Affine2DBase):
         -------
         (x, y) : Coordinates in the `display` (pixel) coordinates.
         """
-        c0, c1, c2 = self.trans.transform([[1.0, 0.5], [0.0, 0.0], [0.0, 1.0]])
+        c0, c1, c2 = self.trans.transform([[1.0, 0.5], [0.0, 1.0], [0.0, 0.0]])
         v10 = c0 - c1
         v12 = c2 - c1
         # Obtain the vector perpendicular to v21 in the Gram-Schmidt method.
