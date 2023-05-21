@@ -12,7 +12,7 @@ from matplotlib.axes import Axes
 from matplotlib import _api
 from mpltern.ternary.spines import Spine
 from mpltern.ternary.transforms import (
-    TernaryTransform, PSTransform, PCTransform,
+    TernaryTransform, PSTransform, PCTransform, H2TWidthTransform,
     BarycentricTransform, TernaryScaleTransform, TernaryShift)
 from mpltern.ternary.axis import TAxis, LAxis, RAxis
 
@@ -148,13 +148,21 @@ class TernaryAxesBase(Axes):
 
         corners_axes = self.corners_axes
 
+        ternary_limits = [self.viewTLim, self.viewLLim, self.viewRLim]
+
+        h2t_width_t = H2TWidthTransform(self.ternary_scale, ternary_limits, 0)
+        h2t_width_l = H2TWidthTransform(self.ternary_scale, ternary_limits, 1)
+        h2t_width_r = H2TWidthTransform(self.ternary_scale, ternary_limits, 2)
+
+        # From scaled ternary-axis coordinates to display coordinates
         taxis_transform = TernaryTransform(corners_axes, 0) + self.transAxes
         laxis_transform = TernaryTransform(corners_axes, 1) + self.transAxes
         raxis_transform = TernaryTransform(corners_axes, 2) + self.transAxes
 
-        self._taxis_transform = transTLimits + taxis_transform
-        self._laxis_transform = transLLimits + laxis_transform
-        self._raxis_transform = transRLimits + raxis_transform
+        # For ticks and spines
+        self._taxis_transform = transTLimits + h2t_width_t + taxis_transform
+        self._laxis_transform = transLLimits + h2t_width_l + laxis_transform
+        self._raxis_transform = transRLimits + h2t_width_r + raxis_transform
 
         # For axis labels (to display coordinates)
         self._tlabel_s_transform = PSTransform(taxis_transform)

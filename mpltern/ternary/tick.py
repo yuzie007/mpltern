@@ -165,14 +165,6 @@ class TernaryTick(XTick):
             self.label2.set_rotation(user_angle)
             return
 
-        y0, y1 = self.get_ydata(loc)
-
-        self.tick1line.set_ydata((y0,))
-        self.tick2line.set_ydata((y1,))
-        self.gridline.set_ydata((y0, y1))
-        self.label1.set_y(y0)
-        self.label2.set_y(y1)
-
         ha1, va1, rotation1 = self._determine_anchor(
             mode, axis1_angle, tick1_angle)
         self.label1.set_horizontalalignment(ha1)
@@ -188,48 +180,6 @@ class TernaryTick(XTick):
         self.label2.set_rotation_mode('anchor')
 
     # Helper methods for `mpltern`
-
-    def get_ydata(self, loc: float) -> tuple:
-        """Update ydata particularly for nontriangular bounds.
-
-        Parameters
-        ----------
-        loc : float
-            Coordinate of the tick.
-
-        Returns
-        -------
-        y0, y1 : tuple[float]
-            End points for the tick transform.
-        """
-        scale = self.axes.ternary_scale
-
-        tmin, tmax_in = self.axes.viewTLim.intervalx
-        lmin, lmax_in = self.axes.viewLLim.intervalx
-        rmin, rmax_in = self.axes.viewRLim.intervalx
-
-        y0, y1 = 0.0, 1.0
-
-        if self.tick_name == "ttick":
-            denominator = (scale - lmin - rmin) - loc  # full length at loc
-            if np.sign(scale) * (loc - (scale - lmin - rmax_in)) < 0.0:
-                y0 = 1.0 - (rmax_in - rmin) / denominator
-            if np.sign(scale) * (loc - (scale - lmax_in - rmin)) < 0.0:
-                y1 = (lmax_in - lmin) / denominator
-        elif self.tick_name == "ltick":
-            denominator = (scale - rmin - tmin) - loc  # full length at loc
-            if np.sign(scale) * (loc - (scale - rmin - tmax_in)) < 0.0:
-                y0 = 1.0 - (tmax_in - tmin) / denominator
-            if np.sign(scale) * (loc - (scale - rmax_in - tmin)) < 0.0:
-                y1 = (rmax_in - rmin) / denominator
-        elif self.tick_name == "rtick":
-            denominator = (scale - tmin - lmin) - loc  # full length at loc
-            if np.sign(scale) * (loc - (scale - tmin - lmax_in)) < 0.0:
-                y0 = 1.0 - (lmax_in - lmin) / denominator
-            if np.sign(scale) * (loc - (scale - tmax_in - lmin)) < 0.0:
-                y1 = (tmax_in - tmin) / denominator
-
-        return y0, y1
 
     def get_tick_angle(self):
         # The angle here is for `direction='in'`

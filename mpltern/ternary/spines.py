@@ -27,22 +27,8 @@ class Spine(mspines.Spine):
         else:
             raise ValueError
 
-        scale = self.axes.ternary_scale
-
-        tmin, tmax2 = self.axes.viewTLim.intervalx
-        lmin, lmax2 = self.axes.viewLLim.intervalx
-        rmin, rmax2 = self.axes.viewRLim.intervalx
-
-        tmax_axes = (tmax2 - tmin) / (scale - tmin - lmin - rmin)
-        lmax_axes = (lmax2 - lmin) / (scale - tmin - lmin - rmin)
-        rmax_axes = (rmax2 - rmin) / (scale - tmin - lmin - rmin)
-
-        if self.spine_type == "tside":
-            self._path.vertices = [[low, 1.0 - rmax_axes], [low, lmax_axes]]
-        elif self.spine_type == "lside":
-            self._path.vertices = [[low, 1.0 - tmax_axes], [low, rmax_axes]]
-        elif self.spine_type == "rside":
-            self._path.vertices = [[low, 1.0 - lmax_axes], [low, tmax_axes]]
+        if self.spine_type in ["tside", "lside", "rside"]:
+            self._path.vertices = [[low, 0.0], [low, 1.0]]
         elif self.spine_type in ["t1", "l1", "r1"]:
             self._path.vertices = [[high, 0.0], [high, 1.0]]
         else:
