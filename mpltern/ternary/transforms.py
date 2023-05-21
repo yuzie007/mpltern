@@ -370,14 +370,20 @@ class T2HWidthTransform(Transform):
         min0, max0 = self.viewTernaryLims[(self.index + 0) % 3].intervalx
         min1, max1 = self.viewTernaryLims[(self.index + 1) % 3].intervalx
         min2, max2 = self.viewTernaryLims[(self.index - 1) % 3].intervalx
+
         x = values[:, 0] * ((scale - min1 - min2) - min0) + min0  # unscaling
+
         denominator = scale - min1 - min2 - x
-        y0 = 1.0 - (max2 - min2) / denominator
-        y1 = 0.0 + (max1 - min1) / denominator
+        out = np.zeros_like(denominator)
+        where = (denominator != 0.0)
+        y0 = 1.0 - np.divide(max2 - min2, denominator, out=out, where=where)
+        y1 = 0.0 + np.divide(max1 - min1, denominator, out=out, where=where)
+
         sign = np.sign(scale)
         y0 = np.where(sign * (x - (scale - max2 - min1)) > 0.0, 0.0, y0)
         y1 = np.where(sign * (x - (scale - max1 - min2)) > 0.0, 1.0, y1)
         y = (values[:, 1] - y0) / (y1 - y0)
+
         return np.column_stack((values[:, 0], y))
 
     def inverted(self):
@@ -423,14 +429,20 @@ class H2TWidthTransform(Transform):
         min0, max0 = self.viewTernaryLims[(self.index + 0) % 3].intervalx
         min1, max1 = self.viewTernaryLims[(self.index + 1) % 3].intervalx
         min2, max2 = self.viewTernaryLims[(self.index - 1) % 3].intervalx
+
         x = values[:, 0] * ((scale - min1 - min2) - min0) + min0  # unscaling
+
         denominator = scale - min1 - min2 - x
-        y0 = 1.0 - (max2 - min2) / denominator
-        y1 = 0.0 + (max1 - min1) / denominator
+        out = np.zeros_like(denominator)
+        where = (denominator != 0.0)
+        y0 = 1.0 - np.divide(max2 - min2, denominator, out=out, where=where)
+        y1 = 0.0 + np.divide(max1 - min1, denominator, out=out, where=where)
+
         sign = np.sign(scale)
         y0 = np.where(sign * (x - (scale - max2 - min1)) > 0.0, 0.0, y0)
         y1 = np.where(sign * (x - (scale - max1 - min2)) > 0.0, 1.0, y1)
         y = values[:, 1] * (y1 - y0) + y0
+
         return np.column_stack((values[:, 0], y))
 
     def inverted(self):
