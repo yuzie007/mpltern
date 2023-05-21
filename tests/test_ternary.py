@@ -301,17 +301,23 @@ def test_ternary_lim(fig_test, fig_ref):
     ax.set_rlabel('Right')
 
 
-def set_spans(ax):
-    # "clip_on=False" is just for testing purpose
-    ax.axtline(0.2, c='C0', clip_on=False)  # line for equi-t values
-    ax.axlline(0.3, c='C1', clip_on=False)  # line for equi-l values
-    ax.axrline(0.4, c='C2', clip_on=False)  # line for equi-r values
+@image_comparison(
+    baseline_images=['spans'],
+    extensions=['pdf'],
+    remove_text=True,
+    style='mpl20',
+)
+def test_spans():
+    fig = plt.figure()
+    ax = fig.add_subplot(projection="ternary")
 
-    # "clip_on=False" is just for testing purpose
-    kwargs = dict(alpha=0.2, clip_on=False)
-    ax.axtspan(0.3, 0.4, fc='C0', **kwargs)  # region between tmin and tmax
-    ax.axlspan(0.4, 0.5, fc='C1', **kwargs)  # region between lmin and lmax
-    ax.axrspan(0.5, 0.6, fc='C2', **kwargs)  # region between rmin and rmax
+    ax.axtline(0.2, c='C0')
+    ax.axlline(0.3, c='C1')
+    ax.axrline(0.4, c='C2')
+
+    ax.axtspan(0.3, 0.5, fc='C0', alpha=0.2)
+    ax.axlspan(0.4, 0.6, fc='C1', alpha=0.2)
+    ax.axrspan(0.5, 0.7, fc='C2', alpha=0.2)
 
 
 class TestTickDirection:
