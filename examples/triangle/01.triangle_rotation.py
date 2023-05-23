@@ -10,13 +10,14 @@ import matplotlib.pyplot as plt
 from mpltern.datasets import get_spiral
 
 
-pad = 42
-
 t, l, r = get_spiral()
 
 fig = plt.figure(figsize=(10.8, 8.8))
 fig.subplots_adjust(
-    left=0.1, right=0.9, bottom=0.1, top=0.9, wspace=0.5, hspace=0.5)
+    left=0.1,
+    right=0.9,
+    hspace=0.75,
+)
 
 rotations = range(0, 360, 90)
 for i, rotation in enumerate(rotations):
@@ -28,6 +29,6 @@ for i, rotation in enumerate(rotations):
     ax.set_llabel('Left')
     ax.set_rlabel('Right')
 
-    ax.set_title("rotation={}".format(rotation), pad=pad)
+    ax.set_title(f"rotation={rotation}")
 
 plt.show()
