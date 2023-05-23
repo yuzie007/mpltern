@@ -271,6 +271,28 @@ class TestTicks:
 
 
 @check_figures_equal(extensions=('pdf',))
+def test_ternary_scale(fig_test, fig_ref):
+    ax = fig_test.add_subplot(projection='ternary', ternary_scale=0.5)
+    t, l, r = get_spiral()
+    ax.plot(t, l, r)
+    ax.set_tlabel('Top')
+    ax.set_llabel('Left')
+    ax.set_rlabel('Right')
+
+    ax = fig_ref.add_subplot(projection='ternary')
+    t, l, r = get_spiral()
+    ax.plot(t, l, r)
+    ax.set_tlabel('Top')
+    ax.set_llabel('Left')
+    ax.set_rlabel('Right')
+    ticks = [0.0, 0.2, 0.4, 0.6, 0.8, 1.0]
+    ticklabels = [0.0, 0.1, 0.2, 0.3, 0.4, 0.5]
+    ax.taxis.set_ticks(ticks, ticklabels)
+    ax.laxis.set_ticks(ticks, ticklabels)
+    ax.raxis.set_ticks(ticks, ticklabels)
+
+
+@check_figures_equal(extensions=('pdf',))
 def test_ternary_lim(fig_test, fig_ref):
     """
     Check that the order of `plot` and `set_ternary_lim` does not affect
