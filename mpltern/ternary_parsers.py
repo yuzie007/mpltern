@@ -7,7 +7,7 @@ def _get_xy(ax, this, trans):
     t, l, r = this
     tlr = np.column_stack((t, l, r))
     if trans == ax.transTernaryAxes:
-        trans_xy = ax.transAxes
+        trans_xy = ax.transOuterAxes
         x, y = ax.transAxesProjection.transform(tlr).T
     else:
         trans_xy = ax.transData

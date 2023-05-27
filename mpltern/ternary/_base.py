@@ -192,10 +192,15 @@ class TernaryAxesBase(Axes):
         self._ternary2display_transform = self.transProjection + self.transData
 
         # From barycentric coordinates to the original Axes coordinates
-        self.transAxesProjection = BarycentricTransform(self.corners_axes)
+        self.transAxesProjection = BarycentricTransform(corners_axes.copy())
 
         # From barycentric coordinates to display coordinates
         self.transTernaryAxes = self.transAxesProjection + self.transAxes
+
+        # From outer Axes coordinates to display coordinates
+        self._outer_position = mtransforms.Bbox.unit()
+        self.transOuterAxes = (
+            mtransforms.BboxTransformTo(self._outer_position) + self.transAxes)
 
     def get_xaxis_transform(self, which='grid'):
         # Overridden not to call spines
@@ -701,6 +706,7 @@ class TernaryAxesBase(Axes):
         # Update the corner positions in axes coordinates.
         # Indexing is necessary to keep the object ID.
         self.corners_axes[:, :] = xy
+        self._outer_position.update_from_data_xy(xy)
 
     def _set_ternary_lim(self, tmin, tmax, lmin, lmax, rmin, rmax):
         """Set ternary limits.
