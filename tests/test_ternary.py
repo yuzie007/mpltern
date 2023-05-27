@@ -292,35 +292,44 @@ def test_ternary_scale(fig_test, fig_ref):
     ax.raxis.set_ticks(ticks, ticklabels)
 
 
-@check_figures_equal(extensions=('pdf',))
-def test_ternary_lim(fig_test, fig_ref):
-    """
-    Check that the order of `plot` and `set_ternary_lim` does not affect
-    the result.
-    """
-    ax = fig_test.add_subplot(projection='ternary')
-    t, l, r = get_spiral()
-    ax.set_ternary_bounds(
-        0.1, 0.5,  # tmin, tmax
-        0.2, 0.6,  # lmin, lmax
-        0.3, 0.7,  # rmin, rmax
-    )
-    ax.plot(t, l, r)
-    ax.set_tlabel('Top')
-    ax.set_llabel('Left')
-    ax.set_rlabel('Right')
+class TestTernaryLim:
+    @check_figures_equal(extensions=('pdf',))
+    def test_order_data(self, fig_test, fig_ref):
+        """
+        Check that the order of `plot` and `set_ternary_lim` does not affect
+        the result.
+        """
+        t, l, r = get_spiral()
 
-    ax = fig_ref.add_subplot(projection='ternary')
-    t, l, r = get_spiral()
-    ax.plot(t, l, r)
-    ax.set_ternary_bounds(
-        0.1, 0.5,  # tmin, tmax
-        0.2, 0.6,  # lmin, lmax
-        0.3, 0.7,  # rmin, rmax
-    )
-    ax.set_tlabel('Top')
-    ax.set_llabel('Left')
-    ax.set_rlabel('Right')
+        ax = fig_test.add_subplot(projection="ternary")
+        ax.set_ternary_bounds(
+            0.1, 0.5,  # tmin, tmax
+            0.2, 0.6,  # lmin, lmax
+            0.3, 0.7,  # rmin, rmax
+        )
+        ax.plot(t, l, r)
+
+        ax = fig_ref.add_subplot(projection="ternary")
+        ax.plot(t, l, r)
+        ax.set_ternary_bounds(
+            0.1, 0.5,  # tmin, tmax
+            0.2, 0.6,  # lmin, lmax
+            0.3, 0.7,  # rmin, rmax
+        )
+
+    @check_figures_equal(extensions=('pdf',))
+    def test_order_axes(self, fig_test, fig_ref):
+        t, l, r = get_spiral()
+
+        ax = fig_test.add_subplot(projection="ternary")
+        ax.set_ternary_bounds(0.1, 0.7, 0.1, 0.6, 0.1, 0.5)
+        ax.plot(t, l, r)
+        ax.plot(t, l, r, "k", transform=ax.transTernaryAxes)
+
+        ax = fig_ref.add_subplot(projection="ternary")
+        ax.plot(t, l, r)
+        ax.plot(t, l, r, "k", transform=ax.transTernaryAxes)
+        ax.set_ternary_bounds(0.1, 0.7, 0.1, 0.6, 0.1, 0.5)
 
 
 @image_comparison(
