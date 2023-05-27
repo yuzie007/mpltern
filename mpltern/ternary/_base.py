@@ -669,10 +669,23 @@ class TernaryAxesBase(Axes):
         xmin, xmax = self.get_xlim()
         ymin, ymax = self.get_ylim()
         points = [[xmin, ymin], [xmax, ymax]]
-        ((xmin, ymin), (xmax, ymax)) = trans.transform(points)
 
-        self.set_xlim(xmin, xmax)
-        self.set_ylim(ymin, ymax)
+        # Expand xlim or ylim to keep:
+        # - the original Axes ratio
+        # - the same x/y aspect (by default equal, modified by set_aspect)
+        # - the position of the hexagon to the center of Axes
+        bbox = mtransforms.Bbox.unit()
+        bbox.update_from_data_xy(trans.transform(points))
+        aspect = 0.5 * np.sqrt(3.0)
+        if isinstance(self.get_aspect(), float):
+            aspect *= self.get_aspect()
+        tmp = aspect / (bbox.height / bbox.width)
+        if bbox.height / bbox.width < aspect:
+            bbox = bbox.expanded(1.0, tmp)
+        else:
+            bbox = bbox.expanded(1.0 / tmp, 1.0)
+        self.set_xlim(bbox.x0, bbox.x1)
+        self.set_ylim(bbox.y0, bbox.y1)
 
         self._update_axes_patch()
         self._update_triangular_vertices()
