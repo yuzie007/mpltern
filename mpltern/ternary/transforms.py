@@ -64,6 +64,7 @@ class TernaryTransform(Transform):
 
 
 class InvertedTernaryTransform(Transform):
+    """Transform convenient for ticks in TernaryAxis."""
     input_dims = 2
     output_dims = 2
     has_inverse = True
@@ -103,8 +104,8 @@ class _TernaryShiftBase(Transform):
     def _get_translation(self):
         corners = [[1., 0., 0.], [0., 1., 0.], [0., 0., 1.]]
         points = self.axes.transTernaryAxes.transform(corners)[self.indices]
-        d1 = points[1] - points[0]  # outward against the triangle
-        return d1 / np.linalg.norm(d1) * self.pad_points / 72.0
+        direction = points[1] - points[0]  # outward against the triangle
+        return direction / np.linalg.norm(direction) * self.pad_points / 72.0
 
     def inverted(self):
         raise NotImplementedError
@@ -174,14 +175,14 @@ class PSTransform(Affine2DBase):
         v02 = c2 - c0
         v21 = c1 - c2
         # Obtain the vector perpendicular to v12 in the Gram-Schmidt method.
-        # The obtained `vp` points inside of the triangle, regardless if the
+        # The obtained `vp` points outside of the triangle, regardless if the
         # triangle is defined in a clockwise or in a counterclockwise manner.
-        vp = v02 - np.dot(v02, v21) / np.dot(v21, v21) * v21
-        vp /= np.linalg.norm(vp)
+        vperp = v02 - np.dot(v02, v21) / np.dot(v21, v21) * v21
+        vperp /= np.linalg.norm(vperp)
         origin = self.trans.transform(self.h2t.transform((0.0, 0.5)))
         return np.array([
-            [v21[0], vp[0], origin[0] - 0.5 * v21[0]],
-            [v21[1], vp[1], origin[1] - 0.5 * v21[1]],
+            [v21[0], vperp[0], origin[0] - 0.5 * v21[0]],
+            [v21[1], vperp[1], origin[1] - 0.5 * v21[1]],
             [0.0, 0.0, 1.0],
         ])
 
@@ -227,14 +228,14 @@ class PCTransform(Affine2DBase):
         v10 = c0 - c1
         v12 = c2 - c1
         # Obtain the vector perpendicular to v21 in the Gram-Schmidt method.
-        # The obtained `vp` points inside of the triangle, regardless if the
+        # The obtained `vp` points outside of the triangle, regardless if the
         # triangle is defined in a clockwise or in a counterclockwise manner.
-        vp = v10 - np.dot(v10, v12) / np.dot(v12, v12) * v12
-        vp /= np.linalg.norm(vp)
+        vperp = v10 - np.dot(v10, v12) / np.dot(v12, v12) * v12
+        vperp /= np.linalg.norm(vperp)
         origin = self.trans.transform(self.h2t.transform((1.0, 0.5)))
         return np.array([
-            [v12[0], vp[0], origin[0] - 0.5 * v12[0]],
-            [v12[1], vp[1], origin[1] - 0.5 * v12[1]],
+            [v12[0], vperp[0], origin[0] - 0.5 * v12[0]],
+            [v12[1], vperp[1], origin[1] - 0.5 * v12[1]],
             [0.0, 0.0, 1.0],
         ])
 
