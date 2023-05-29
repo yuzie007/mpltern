@@ -288,30 +288,40 @@ class RAxis(TernaryAxis):
     axis_name = 'r'
 
 
-def _get_label_rotation_along_axis(corners, axis_name, label_position):
-    # Index of the corner
-    index = {'t': 0, 'l': 1, 'r': 2}[axis_name]
-    if label_position == 'tick1':
-        c0, c1, c2 = np.roll(corners,  1 - index, axis=0)
-    elif label_position == 'tick2':
-        c0, c1, c2 = np.roll(corners,  0 - index, axis=0)
-    else:  # self.label_position == 'corner':
-        c0, c1, c2 = np.roll(corners, -1 - index, axis=0)
+def _get_corners(corners, axis_name: str, label_position: str):
+    """Get corners to determine label rotation.
 
-    d01 = c1 - c0
-    d12 = c2 - c1
-    axis_angle = np.rad2deg(np.arctan2(d01[1], d01[0]))  # [-180, +180]
-    clockwise = ((d01[0] * d12[1] - d01[1] * d12[0]) < 0.0)
+    Returns
+    -------
+    c0, c1, c2 : corners
+        The axis label is given at c0 or at the side opposite to c0.
+    """
+    index = ['t', 'l', 'r'].index(axis_name)
+    if label_position in ['corner']:
+        return np.roll(corners, 0 - index, axis=0)
+    if label_position == 'tick2':
+        return np.roll(corners, 1 - index, axis=0)
+    if label_position == 'tick1':
+        return np.roll(corners, 2 - index, axis=0)
+    raise ValueError(label_position)
+
+
+def _get_label_rotation_along_axis(corners, axis_name, label_position):
+    c0, c1, c2 = _get_corners(corners, axis_name, label_position)
+    v01 = c1 - c0
+    v12 = c2 - c1
+    axis_angle = np.rad2deg(np.arctan2(v12[1], v12[0]))  # [-180, +180]
+    clockwise = ((v01[0] * v12[1] - v01[1] * v12[0]) < 0.0)
     is_corner = (label_position not in ['tick1', 'tick2'])
 
     tol = 1e-6
     if abs(abs(axis_angle) - 90.0) < tol:  # axis_angle is -90 or 90.
         # `label_rotation` is determined by comparing the coordinates of
         # the midpoint of the axis with those of the other corner point.
-        midpoint = (c0 + c1) * 0.5
+        is_right = (c0[0] > 0.5 * (c1[0] + c2[0]))
         # (the other corner is on the right side) xor
         # (the label is at the other corner)
-        if (c2[0] > midpoint[0]) ^ is_corner:
+        if is_right ^ is_corner:
             label_rotation = 90.0
         else:
             label_rotation = -90.0
@@ -331,19 +341,11 @@ def _get_label_rotation_along_axis(corners, axis_name, label_position):
 
 
 def _get_label_rotation_horizontal(corners, axis_name, label_position):
-    # Index of the corner
-    index = {'t': 0, 'l': 1, 'r': 2}[axis_name]
-    if label_position == 'tick1':
-        c0, c1, c2 = np.roll(corners,  1 - index, axis=0)
-    elif label_position == 'tick2':
-        c0, c1, c2 = np.roll(corners,  0 - index, axis=0)
-    else:  # elif label_position == 'corner':
-        c0, c1, c2 = np.roll(corners, -1 - index, axis=0)
-
-    d01 = c1 - c0
-    d12 = c2 - c1
-    axis_angle = np.rad2deg(np.arctan2(d01[1], d01[0]))  # [-180, +180]
-    clockwise = ((d01[0] * d12[1] - d01[1] * d12[0]) < 0.0)
+    c0, c1, c2 = _get_corners(corners, axis_name, label_position)
+    v01 = c1 - c0
+    v12 = c2 - c1
+    axis_angle = np.rad2deg(np.arctan2(v12[1], v12[0]))  # [-180, +180]
+    clockwise = ((v01[0] * v12[1] - v01[1] * v12[0]) < 0.0)
     is_corner = (label_position not in ['tick1', 'tick2'])
 
     tol = 1e-6
