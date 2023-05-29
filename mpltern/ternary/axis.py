@@ -168,6 +168,28 @@ class TernaryAxis(XAxis):
             assert False, "unhandled parameter not caught by _check_in_list"
         self.stale = True
 
+    def get_tick_space(self):
+        """Get tick space in data coordinates
+
+        This is overridden to get the proper number of ticks for ternary axes.
+        """
+        trans = {
+            't': self.axes._tlabel_s_transform,
+            'l': self.axes._llabel_s_transform,
+            'r': self.axes._rlabel_s_transform,
+        }[self.axis_name]
+        vertices = self.axes._get_hexagonal_vertices()
+        points = self.axes._ternary2display_transform.transform(vertices)
+        points = trans.inverted().transform(points)
+        # length in pixel
+        length = np.linalg.norm(max(points[:, 1]) - min(points[:, 1]))
+        # Having a spacing of at least 2 just looks good.
+        size = self._get_tick_label_size('y') * 2
+        if size > 0:
+            return int(np.floor(length / size))
+        else:
+            return 2**31 - 1
+
     def get_view_interval(self):
         'return the Interval instance for this axis view limits'
         return {
