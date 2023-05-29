@@ -348,6 +348,27 @@ class TestTernaryLim:
         ax.plot(t, l, r, "k", transform=ax.transTernaryAxes)
         ax.set_ternary_bounds(0.1, 0.7, 0.1, 0.6, 0.1, 0.5)
 
+    @pytest.mark.parametrize(
+        "fix_triangle, baseline_images",
+        [[False, ["hexagonal_False"]], [True, ["hexagonal_True"]]],
+    )
+    @image_comparison(
+        baseline_images=None,
+        extensions=['pdf'],
+        remove_text=True,
+        style='mpl20',
+    )
+    def test_hexagonal(self, fix_triangle, baseline_images):
+        """Test if hexagonal limits are properly plotted."""
+        fig = plt.figure()
+        ax = fig.add_subplot(projection="ternary")
+        t, l, r = get_spiral()
+        ax.plot(t, l, r, "C0")
+        ax.plot(t, l, r, "k", transform=ax.transTernaryAxes)
+        ax.set_facecolor("0.9")
+        ax.grid(True)
+        ax.set_ternary_bounds(0.1, 0.7, 0.1, 0.6, 0.1, 0.5, fix_triangle)
+
 
 @image_comparison(
     baseline_images=['spans'],
