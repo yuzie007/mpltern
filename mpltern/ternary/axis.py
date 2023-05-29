@@ -109,10 +109,10 @@ class TernaryAxis(XAxis):
 
         Notes
         -----
-        'side' may be practical only for hexagonal plotting regions.
+        'side', 'tick1b', 'tick2b' are practical only for hexagonal boundaries.
         """
         _api.check_in_list(
-            ['corner', 'tick1', 'tick2', 'side'],
+            ['corner', 'tick1', 'tick2', 'side', 'tick1b', 'tick2b'],
             position=position,
         )
         self.label_position = position
@@ -225,19 +225,25 @@ class TernaryAxis(XAxis):
 
     def _get_ternary_label_transform(self):
         i = ["t", "l", "r"].index(self.axis_name)
-        if self.label_position in ["corner"]:
+
+        tmp = ["corner", "tick1b", "tick2b"]
+        if self.label_position in tmp:
+            j = tmp.index(self.label_position)
             return [
                 self.axes._tlabel_c_transform,
                 self.axes._llabel_c_transform,
                 self.axes._rlabel_c_transform,
-            ][i]
-        if self.label_position in ["tick1", "tick2", "side"]:
-            j = ["side", "tick1", "tick2"].index(self.label_position)
+            ][(i + j) % 3]
+
+        tmp = ["side", "tick1", "tick2"]
+        if self.label_position in tmp:
+            j = tmp.index(self.label_position)
             return [
                 self.axes._tlabel_s_transform,
                 self.axes._llabel_s_transform,
                 self.axes._rlabel_s_transform,
             ][(i + j) % 3]
+
         raise ValueError
 
     def set_label_rotation_mode(self, mode):
@@ -306,9 +312,9 @@ def _get_corners(corners, axis_name: str, label_position: str):
     index = ['t', 'l', 'r'].index(axis_name)
     if label_position in ['corner', 'side']:
         return np.roll(corners, 0 - index, axis=0)
-    if label_position == 'tick2':
+    if label_position in ['tick2', 'tick2b']:
         return np.roll(corners, 1 - index, axis=0)
-    if label_position == 'tick1':
+    if label_position in ['tick1', 'tick1b']:
         return np.roll(corners, 2 - index, axis=0)
     raise ValueError(label_position)
 
@@ -319,7 +325,7 @@ def _get_label_rotation_along_axis(corners, axis_name, label_position):
     v12 = c2 - c1
     axis_angle = np.rad2deg(np.arctan2(v12[1], v12[0]))  # [-180, +180]
     clockwise = ((v01[0] * v12[1] - v01[1] * v12[0]) < 0.0)
-    is_corner = (label_position in ['corner'])
+    is_corner = (label_position in ['corner', 'tick1b', 'tick2b'])
 
     tol = 1e-6
     if abs(abs(axis_angle) - 90.0) < tol:  # axis_angle is -90 or 90.
@@ -353,7 +359,7 @@ def _get_label_rotation_horizontal(corners, axis_name, label_position):
     v12 = c2 - c1
     axis_angle = np.rad2deg(np.arctan2(v12[1], v12[0]))  # [-180, +180]
     clockwise = ((v01[0] * v12[1] - v01[1] * v12[0]) < 0.0)
-    is_corner = (label_position in ['corner'])
+    is_corner = (label_position in ['corner', 'tick1b', 'tick2b'])
 
     tol = 1e-6
     b = clockwise ^ is_corner
