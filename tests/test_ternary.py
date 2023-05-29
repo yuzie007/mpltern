@@ -348,6 +348,15 @@ class TestTernaryLim:
         ax.plot(t, l, r, "k", transform=ax.transTernaryAxes)
         ax.set_ternary_bounds(0.1, 0.7, 0.1, 0.6, 0.1, 0.5)
 
+    @check_figures_equal(extensions=('pdf',))
+    def test_min_vs_max(self, fig_test, fig_ref):
+        """Test if ternary_min and ternary_max give the same result."""
+        ax = fig_test.add_subplot(projection="ternary")
+        ax.set_ternary_min(0.1, 0.2, 0.3)
+
+        ax = fig_ref.add_subplot(projection="ternary")
+        ax.set_ternary_max(0.5, 0.6, 0.7)
+
     @pytest.mark.parametrize(
         "fix_triangle, baseline_images",
         [[False, ["hexagonal_False"]], [True, ["hexagonal_True"]]],
