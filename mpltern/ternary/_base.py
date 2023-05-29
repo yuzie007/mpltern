@@ -625,8 +625,11 @@ class TernaryAxesBase(Axes):
             [tmin, lmin, scale - tmin - lmin],
         ]
 
-    def _create_bbox_from_ternary_lim(self):
-        tlr = self._get_hexagonal_vertices()
+    def _create_bbox_from_ternary_lim(self, fix_triangle: bool = False):
+        if fix_triangle:
+            tlr = self._get_triangular_vertices()
+        else:
+            tlr = self._get_hexagonal_vertices()
         xy = self.transProjection.transform(tlr)
         bbox = mtransforms.Bbox.unit()
         bbox.update_from_data_xy(xy, ignore=True)
@@ -654,7 +657,9 @@ class TernaryAxesBase(Axes):
             raise ValueError("rmax - rmin must have the same sign as scale.")
         self.set_ternary_bounds(tmin, tmax, lmin, lmax, rmin, rmax)
 
-    def set_ternary_bounds(self, tmin, tmax, lmin, lmax, rmin, rmax):
+    def set_ternary_bounds(
+        self, tmin, tmax, lmin, lmax, rmin, rmax, fix_triangle: bool = False
+    ):
         scale = self.ternary_scale
         if np.sign(tmax - tmin) != np.sign(scale):
             tmin, tmax = tmax, tmin
@@ -663,11 +668,11 @@ class TernaryAxesBase(Axes):
         if np.sign(rmax - rmin) != np.sign(scale):
             rmin, rmax = rmax, rmin
 
-        boxin = self._create_bbox_from_ternary_lim()
+        boxin = self._create_bbox_from_ternary_lim(fix_triangle)
 
         self._set_ternary_lim(tmin, tmax, lmin, lmax, rmin, rmax)
 
-        boxout = self._create_bbox_from_ternary_lim()
+        boxout = self._create_bbox_from_ternary_lim(fix_triangle)
 
         trans = mtransforms.BboxTransform(boxin, boxout)
 
