@@ -105,9 +105,16 @@ class TernaryAxis(XAxis):
 
         Parameters
         ----------
-        position : {'corner', 'tick1', 'tick2'}
+        position : {'corner', 'tick1', 'tick2', 'side'}
+
+        Notes
+        -----
+        'side' may be practical only for hexagonal plotting regions.
         """
-        _api.check_in_list(['corner', 'tick1', 'tick2'], position=position)
+        _api.check_in_list(
+            ['corner', 'tick1', 'tick2', 'side'],
+            position=position,
+        )
         self.label_position = position
         self.stale = True
 
@@ -224,8 +231,8 @@ class TernaryAxis(XAxis):
                 self.axes._llabel_c_transform,
                 self.axes._rlabel_c_transform,
             ][i]
-        if self.label_position in ["tick1", "tick2"]:
-            j = [None, "tick1", "tick2"].index(self.label_position)
+        if self.label_position in ["tick1", "tick2", "side"]:
+            j = ["side", "tick1", "tick2"].index(self.label_position)
             return [
                 self.axes._tlabel_s_transform,
                 self.axes._llabel_s_transform,
@@ -297,7 +304,7 @@ def _get_corners(corners, axis_name: str, label_position: str):
         The axis label is given at c0 or at the side opposite to c0.
     """
     index = ['t', 'l', 'r'].index(axis_name)
-    if label_position in ['corner']:
+    if label_position in ['corner', 'side']:
         return np.roll(corners, 0 - index, axis=0)
     if label_position == 'tick2':
         return np.roll(corners, 1 - index, axis=0)
@@ -312,7 +319,7 @@ def _get_label_rotation_along_axis(corners, axis_name, label_position):
     v12 = c2 - c1
     axis_angle = np.rad2deg(np.arctan2(v12[1], v12[0]))  # [-180, +180]
     clockwise = ((v01[0] * v12[1] - v01[1] * v12[0]) < 0.0)
-    is_corner = (label_position not in ['tick1', 'tick2'])
+    is_corner = (label_position in ['corner'])
 
     tol = 1e-6
     if abs(abs(axis_angle) - 90.0) < tol:  # axis_angle is -90 or 90.
@@ -346,7 +353,7 @@ def _get_label_rotation_horizontal(corners, axis_name, label_position):
     v12 = c2 - c1
     axis_angle = np.rad2deg(np.arctan2(v12[1], v12[0]))  # [-180, +180]
     clockwise = ((v01[0] * v12[1] - v01[1] * v12[0]) < 0.0)
-    is_corner = (label_position not in ['tick1', 'tick2'])
+    is_corner = (label_position in ['corner'])
 
     tol = 1e-6
     b = clockwise ^ is_corner
