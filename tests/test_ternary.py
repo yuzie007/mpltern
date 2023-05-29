@@ -1,6 +1,7 @@
 import numpy as np
 
 import pytest
+import matplotlib as mpl
 from matplotlib.testing.decorators import (
     image_comparison, check_figures_equal)
 import matplotlib.pyplot as plt
@@ -268,6 +269,22 @@ class TestTicks:
         ax.taxis.set_ticks(ticks, labels=labels)
         ax.laxis.set_ticks(ticks, labels=labels)
         ax.raxis.set_ticks(ticks, labels=labels)
+
+    @mpl.style.context("default")
+    @check_figures_equal(extensions=('pdf',))
+    def test_number_of_ticks(self, fig_test, fig_ref):
+        """
+        Test if the number of ticks are automatically properly adjusted.
+
+        It is necessary to switch the style to "default" because the "classic"
+        style gives a different result.
+        """
+        ax = fig_test.add_subplot(projection="ternary")
+        ax.set_ternary_bounds(0.0, 0.2, 0.0, 1.0, 0.0, 1.0)
+
+        ax = fig_ref.add_subplot(projection="ternary")
+        ax.set_ternary_bounds(0.0, 0.2, 0.0, 1.0, 0.0, 1.0)
+        ax.taxis.set_ticks([0.0, 0.1, 0.2])
 
 
 @check_figures_equal(extensions=('pdf',))
