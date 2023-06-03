@@ -164,8 +164,6 @@ plot_formats = [('png', 100), ('pdf', 100)]
 
 github_project_url = "https://github.com/yuzie007/mpltern/"
 
-# The name of the Pygments (syntax highlighting) style to use.
-pygments_style = 'sphinx'
 
 # Options for HTML output
 # -----------------------
