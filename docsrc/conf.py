@@ -170,6 +170,10 @@ github_project_url = "https://github.com/yuzie007/mpltern/"
 
 html_theme = "pydata_sphinx_theme"
 
+html_theme_options = {
+    "github_url": "https://github.com/yuzie007/mpltern",
+}
+
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
