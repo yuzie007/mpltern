@@ -295,23 +295,7 @@ class TernaryScaleTransform(Transform):
         return np.asarray(values, float) / self.ternary_scale
 
     def inverted(self):
-        return InvertedTernaryScaleTransform(self.ternary_scale)
-
-
-class InvertedTernaryScaleTransform(Transform):
-    input_dims = 3
-    output_dims = 3
-    has_inverse = True
-
-    def __init__(self, ternary_scale, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.ternary_scale = ternary_scale
-
-    def transform_non_affine(self, values):
-        return np.asarray(values, float) * self.ternary_scale
-
-    def inverted(self):
-        return TernaryScaleTransform(self.ternary_scale)
+        return TernaryScaleTransform(1.0 / self.ternary_scale)
 
 
 class H2THeightTransform(Transform):
