@@ -8,7 +8,7 @@ values are forced to be the same as ``input_dims``.
 """
 import numpy as np
 
-from matplotlib.transforms import Affine2DBase, Transform, ScaledTranslation
+from matplotlib.transforms import Affine2DBase, Transform
 
 
 class TernaryTransform(Transform):
@@ -89,11 +89,12 @@ class InvertedTernaryTransform(Transform):
         return TernaryTransform(self.corners, self.index)
 
 
-class _TernaryShiftBase(Transform):
-    input_dims = 2
-    output_dims = 2
-    has_inverse = True
+class TernaryShift(Affine2DBase):
+    """Shift of tick labels from tick points
 
+    This is essentially a wrapper of ScaledTranslation, but the direction to
+    pad is determined on the fly when drawing.
+    """
     def __init__(self, indices, figure, axes, pad_points):
         super().__init__()
         self.indices = indices
@@ -101,41 +102,17 @@ class _TernaryShiftBase(Transform):
         self.axes = axes
         self.pad_points = pad_points
 
-    def _get_translation(self):
+    def get_matrix(self):
         corners = [[1., 0., 0.], [0., 1., 0.], [0., 0., 1.]]
         points = self.axes.transTernaryAxes.transform(corners)[self.indices]
         direction = points[1] - points[0]  # outward against the triangle
-        return direction / np.linalg.norm(direction) * self.pad_points / 72.0
+        xt, yt = direction / np.linalg.norm(direction) * self.pad_points / 72.0
+        xt, yt = self.figure.dpi_scale_trans.transform((xt, yt))
+        return np.array([[1.0, 0.0, xt], [0.0, 1.0, yt], [0.0, 0.0, 1.0]])
 
     def inverted(self):
-        raise NotImplementedError
-
-
-class TernaryShift(_TernaryShiftBase):
-    """Shift of tick labels from tick points
-
-    This is essentially a wrapper of ScaledTranslation, but the direction to
-    pad is determined on the fly when drawing.
-    """
-    def transform_non_affine(self, values):
-        x, y = self._get_translation()
-        trans = ScaledTranslation(x, y, self.figure.dpi_scale_trans)
-        return trans.transform(values)
-
-    def inverted(self):
-        return InvertedTernaryShift(
-            self.indices, self.figure, self.axes, self.pad_points)
-
-
-class InvertedTernaryShift(_TernaryShiftBase):
-    def transform_non_affine(self, values):
-        x, y = self._get_translation()
-        trans = ScaledTranslation(-x, -y, self.figure.dpi_scale_trans)
-        return trans.transform(values)
-
-    def inverted(self):
-        return TernaryShift(
-            self.indices, self.figure, self.axes, self.pad_points)
+        self._invalid = 1  # necessary to recompute the inverted transform
+        return super().inverted()
 
 
 class PSTransform(Affine2DBase):
