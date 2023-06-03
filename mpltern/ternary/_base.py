@@ -211,12 +211,15 @@ class TernaryAxesBase(Axes):
         return self._yaxis_transform
 
     def get_taxis_transform(self, which='grid'):
+        """Get the transformation for drawing t-axis ticks and gridlines."""
         return self._taxis_transform
 
     def get_laxis_transform(self, which='grid'):
+        """Get the transformation for drawing l-axis ticks and gridlines."""
         return self._laxis_transform
 
     def get_raxis_transform(self, which='grid'):
+        """Get the transformation for drawing r-axis ticks and gridlines."""
         return self._raxis_transform
 
     def _get_axis_text_transform(self, pad_points, trans, indices):
@@ -225,26 +228,32 @@ class TernaryAxesBase(Axes):
         return trans + pad_shift, 'top', 'center'
 
     def get_taxis_text1_transform(self, pad_points):
+        """Get the transformation for drawing t-axis tick-labels."""
         trans = self.get_taxis_transform(which='tick1')
         return self._get_axis_text_transform(pad_points, trans, [1, 2])
 
     def get_taxis_text2_transform(self, pad_points):
+        """Get the transformation for drawing t-axis tick-labels."""
         trans = self.get_taxis_transform(which='tick2')
         return self._get_axis_text_transform(pad_points, trans, [2, 1])
 
     def get_laxis_text1_transform(self, pad_points):
+        """Get the transformation for drawing l-axis tick-labels."""
         trans = self.get_laxis_transform(which='tick1')
         return self._get_axis_text_transform(pad_points, trans, [2, 0])
 
     def get_laxis_text2_transform(self, pad_points):
+        """Get the transformation for drawing l-axis tick-labels."""
         trans = self.get_laxis_transform(which='tick2')
         return self._get_axis_text_transform(pad_points, trans, [0, 2])
 
     def get_raxis_text1_transform(self, pad_points):
+        """Get the transformation for drawing r-axis tick-labels."""
         trans = self.get_raxis_transform(which='tick1')
         return self._get_axis_text_transform(pad_points, trans, [0, 1])
 
     def get_raxis_text2_transform(self, pad_points):
+        """Get the transformation for drawing r-axis tick-labels."""
         trans = self.get_raxis_transform(which='tick2')
         return self._get_axis_text_transform(pad_points, trans, [1, 0])
 
@@ -636,7 +645,7 @@ class TernaryAxesBase(Axes):
         return bbox
 
     def set_ternary_lim(self, tmin, tmax, lmin, lmax, rmin, rmax):
-        """
+        """Set ternary limits.
 
         Notes
         -----
@@ -742,6 +751,7 @@ class TernaryAxesBase(Axes):
         self.viewOuterRLim.intervalx = rmin, scale - tmin - lmin
 
     def set_ternary_min(self, tmin, lmin, rmin):
+        """Set the minimum values for ternary limits."""
         scale = self.ternary_scale
         tmax = scale - lmin - rmin
         lmax = scale - rmin - tmin
@@ -749,6 +759,7 @@ class TernaryAxesBase(Axes):
         self.set_ternary_bounds(tmin, tmax, lmin, lmax, rmin, rmax)
 
     def set_ternary_max(self, tmax, lmax, rmax):
+        """Set the maximum values for ternary limits."""
         scale = self.ternary_scale
         tmin = (scale + tmax - lmax - rmax) * 0.5
         lmin = (scale + lmax - rmax - tmax) * 0.5
@@ -756,25 +767,31 @@ class TernaryAxesBase(Axes):
         self.set_ternary_bounds(tmin, tmax, lmin, lmax, rmin, rmax)
 
     def get_tlim(self):
+        """Return the t-axis view limits."""
         return tuple(self.viewTLim.intervalx)
 
     def get_llim(self):
+        """Return the l-axis view limits."""
         return tuple(self.viewLLim.intervalx)
 
     def get_rlim(self):
+        """Return the r-axis view limits."""
         return tuple(self.viewRLim.intervalx)
 
     def set_tlim(self, tmin, tmax):
+        """Set the t-axis view limits."""
         self.viewTLim.intervalx = (tmin, tmax)
         self.stale = True
         return tmin, tmax
 
     def set_llim(self, lmin, lmax):
+        """Set the l-axis view limits."""
         self.viewLLim.intervalx = (lmin, lmax)
         self.stale = True
         return lmin, lmax
 
     def set_rlim(self, rmin, rmax):
+        """Set the r-axis view limits."""
         self.viewRLim.intervalx = (rmin, rmax)
         self.stale = True
         return rmin, rmax
