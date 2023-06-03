@@ -1,8 +1,8 @@
 import numpy as np
-from typing import Tuple
+from typing import Sequence
 
 
-def calc_ternary_indices(t, l, r, gridsize: int, extent: Tuple[float]):
+def calc_ternary_indices(t, l, r, gridsize: int, extent: Sequence[float]):
     tmin, tmax, lmin, lmax, rmin, rmax = extent
 
     # side lengths along ternary axes
@@ -93,7 +93,7 @@ def ternary_to_serial(gridsize: int, it: int, il: int, ir: int) -> int:
     return np.where(is_inside, i, -1)
 
 
-def serial_to_ternary(gridsize: int, i: int) -> Tuple[int]:
+def serial_to_ternary(gridsize: int, i: int) -> Sequence[int]:
     """Convert ternary indices of hexagons to serial index.
 
     Parameters
