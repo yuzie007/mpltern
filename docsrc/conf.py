@@ -118,10 +118,9 @@ sphinx_gallery_conf = {
                                        '../examples/advanced',
                                        '../examples/miscellaneous']),
     'min_reported_time': 1,
+    'plot_gallery': 'True',  # sphinx-gallery/913
     'within_subsection_order': FileNameSortKey,
 }
-
-plot_gallery = True
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
