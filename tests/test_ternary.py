@@ -349,6 +349,15 @@ class TestTernaryLim:
         ax.set_ternary_lim(0.1, 0.7, 0.1, 0.6, 0.1, 0.5)
 
     @check_figures_equal(extensions=('pdf',))
+    def test_order_limits(self, fig_test, fig_ref):
+        """Test if the plot is insensitive to the orders of limits."""
+        ax = fig_test.add_subplot(projection="ternary")
+        ax.set_ternary_lim(0.1, 0.7, 0.1, 0.6, 0.1, 0.5)
+
+        ax = fig_ref.add_subplot(projection="ternary")
+        ax.set_ternary_lim(0.7, 0.1, 0.6, 0.1, 0.5, 0.1)
+
+    @check_figures_equal(extensions=('pdf',))
     def test_min_vs_max(self, fig_test, fig_ref):
         """Test if ternary_min and ternary_max give the same result."""
         ax = fig_test.add_subplot(projection="ternary")
