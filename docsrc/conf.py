@@ -176,7 +176,8 @@ html_theme_options = {
     "logo": {
        "image_light": "_static/logo_light.svg",
        "image_dark": "_static/logo_dark.svg",
-    }
+    },
+    "header_links_before_dropdown": 10,
 }
 
 # Add any paths that contain custom static files (such as style sheets) here,
