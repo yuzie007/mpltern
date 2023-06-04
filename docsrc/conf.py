@@ -120,6 +120,7 @@ sphinx_gallery_conf = {
     'min_reported_time': 1,
     'plot_gallery': 'True',  # sphinx-gallery/913
     'within_subsection_order': FileNameSortKey,
+    'capture_repr': (),
 }
 
 # Add any paths that contain templates here, relative to this directory.
