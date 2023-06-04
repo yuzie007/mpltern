@@ -511,12 +511,12 @@ class TernaryAxes(TernaryAxesBase):
             # here an alias `transOffset` is used for backword compatibility.
             # see matplotlib/matplotlib#21965
             collection = mcoll.PolyCollection(
-            [polygon],
-            edgecolors=edgecolors,
-            linewidths=linewidths,
-            offsets=offsets,
-            transOffset=mtransforms.AffineDeltaTransform(self.transData),
-        )
+                [polygon],
+                edgecolors=edgecolors,
+                linewidths=linewidths,
+                offsets=offsets,
+                transOffset=mtransforms.AffineDeltaTransform(self.transData),
+            )
 
         # Set normalizer if bins is 'log'
         if bins == 'log':
