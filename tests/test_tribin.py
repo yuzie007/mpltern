@@ -2,7 +2,8 @@ import numpy as np
 
 import matplotlib.pyplot as plt
 from matplotlib.testing.decorators import image_comparison
-import mpltern
+import mpltern  # noqa: F401
+
 
 @image_comparison(
     baseline_images=["base"],
@@ -15,6 +16,7 @@ def test_base():
     ax = plt.subplot(projection="ternary")
     # If "face" (default), small hexagons look overlapping with each other.
     ax.tribin(t, l, r, edgecolors="none")
+
 
 @image_comparison(
     baseline_images=["ternary_lim"],
@@ -33,6 +35,7 @@ def test_ternary_lim():
         0.3, 0.7,  # rmin, rmax
     )
 
+
 @image_comparison(
     baseline_images=["extent"],
     extensions=["pdf"],
@@ -45,6 +48,7 @@ def test_extent():
     extent = (0.1, 0.5, 0.2, 0.6, 0.3, 0.7)
     # If "face" (default), small hexagons look overlapping with each other.
     ax.tribin(t, l, r, gridsize=40, extent=extent, edgecolors="none")
+
 
 @image_comparison(
     baseline_images=["given_triangles"],
