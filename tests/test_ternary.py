@@ -388,23 +388,47 @@ class TestTernaryLim:
         ax.set_ternary_lim(0.1, 0.7, 0.1, 0.6, 0.1, 0.5, fix_triangle)
 
 
-@image_comparison(
-    baseline_images=['spans'],
-    extensions=['pdf'],
-    remove_text=True,
-    style='mpl20',
-)
-def test_spans():
-    fig = plt.figure()
-    ax = fig.add_subplot(projection="ternary")
+class TestSpans:
+    """Tests related to spans."""
+    @image_comparison(
+        baseline_images=['spans'],
+        extensions=['pdf'],
+        remove_text=True,
+        style='mpl20',
+    )
+    def test_spans(self):
+        """Test if spans are plotted properly."""
+        fig = plt.figure()
+        ax = fig.add_subplot(projection="ternary")
 
-    ax.axtline(0.2, c='C0')
-    ax.axlline(0.3, c='C1')
-    ax.axrline(0.4, c='C2')
+        ax.axtline(0.2, c='C0')
+        ax.axlline(0.3, c='C1')
+        ax.axrline(0.4, c='C2')
 
-    ax.axtspan(0.3, 0.5, fc='C0', alpha=0.2)
-    ax.axlspan(0.4, 0.6, fc='C1', alpha=0.2)
-    ax.axrspan(0.5, 0.7, fc='C2', alpha=0.2)
+        ax.axtspan(0.3, 0.5, fc='C0', alpha=0.2)
+        ax.axlspan(0.4, 0.6, fc='C1', alpha=0.2)
+        ax.axrspan(0.5, 0.7, fc='C2', alpha=0.2)
+
+    def test_axtline_transform(self):
+        """Test if `axtline` raises `ValueError` when getting `transform`"""
+        fig = plt.figure()
+        ax = fig.add_subplot(projection="ternary")
+        with pytest.raises(ValueError):
+            ax.axtline(0.5, transform=ax.transAxes)
+
+    def test_axlline_transform(self):
+        """Test if `axlline` raises `ValueError` when getting `transform`"""
+        fig = plt.figure()
+        ax = fig.add_subplot(projection="ternary")
+        with pytest.raises(ValueError):
+            ax.axlline(0.5, transform=ax.transAxes)
+
+    def test_axrline_transform(self):
+        """Test if `axrline` raises `ValueError` when getting `transform`"""
+        fig = plt.figure()
+        ax = fig.add_subplot(projection="ternary")
+        with pytest.raises(ValueError):
+            ax.axrline(0.5, transform=ax.transAxes)
 
 
 class TestTickDirection:
