@@ -6,9 +6,9 @@ from matplotlib.transforms import Bbox, IdentityTransform
 from mpltern.ternary.transforms import (BarycentricTransform,
                                         T2HHeightTransform,
                                         T2HWidthTransform,
-                                        PSTransform,
-                                        PCTransform,
-                                        TernaryTransform)
+                                        TernaryAxisLabelSTransform,
+                                        TernaryAxisLabelCTransform,
+                                        TernaryAxisTransform)
 
 corners_list = [
     ((0.5, 0.0), (1.0, 0.5), (0.0, 1.0)),
@@ -24,7 +24,7 @@ def test_ternary_transform(corners, index):
     points = np.random.rand(300).reshape(-1, 2)
     points /= np.sum(points, axis=1)[:, None]
 
-    trans = TernaryTransform(corners, index)
+    trans = TernaryAxisTransform(corners, index)
     points_transformed = trans.transform(points)
     points_inverted = trans.inverted().transform(points_transformed)
 
@@ -39,7 +39,7 @@ def test_label_s_transform(corners, index):
     points = np.random.rand(300).reshape(-1, 2)
     points /= np.sum(points, axis=1)[:, None]
 
-    trans = PSTransform(TernaryTransform(corners, index), IdentityTransform())
+    trans = TernaryAxisLabelSTransform(TernaryAxisTransform(corners, index), IdentityTransform())
     points_transformed = trans.transform(points)
     points_inverted = trans.inverted().transform(points_transformed)
 
@@ -54,7 +54,7 @@ def test_label_c_transform(corners, index):
     points = np.random.rand(300).reshape(-1, 2)
     points /= np.sum(points, axis=1)[:, None]
 
-    trans = PCTransform(TernaryTransform(corners, index), IdentityTransform())
+    trans = TernaryAxisLabelCTransform(TernaryAxisTransform(corners, index), IdentityTransform())
     points_transformed = trans.transform(points)
     points_inverted = trans.inverted().transform(points_transformed)
 

@@ -11,9 +11,10 @@ from matplotlib.axes import Axes
 from matplotlib import _api
 from mpltern.ternary.spines import Spine
 from mpltern.ternary.transforms import (
-    TernaryTransform, PSTransform, PCTransform,
+    TernaryAxisTransform, TernaryTickLabelShift,
+    TernaryAxisLabelSTransform, TernaryAxisLabelCTransform,
     H2THeightTransform, H2TWidthTransform,
-    BarycentricTransform, TernaryScaleTransform, TernaryShift)
+    BarycentricTransform, TernaryScaleTransform)
 from mpltern.ternary.axis import TAxis, LAxis, RAxis
 
 _log = logging.getLogger(__name__)
@@ -163,22 +164,22 @@ class TernaryAxesBase(Axes):
         h2t_r = h2t_h_r + h2t_w_r
 
         # From scaled ternary-axis coordinates to display coordinates
-        taxis_transform = TernaryTransform(corners_axes, 0) + self.transAxes
-        laxis_transform = TernaryTransform(corners_axes, 1) + self.transAxes
-        raxis_transform = TernaryTransform(corners_axes, 2) + self.transAxes
+        taxis_tr = TernaryAxisTransform(corners_axes, 0) + self.transAxes
+        laxis_tr = TernaryAxisTransform(corners_axes, 1) + self.transAxes
+        raxis_tr = TernaryAxisTransform(corners_axes, 2) + self.transAxes
 
         # For ticks and spines
-        self._taxis_transform = transTLimits + h2t_w_t + taxis_transform
-        self._laxis_transform = transLLimits + h2t_w_l + laxis_transform
-        self._raxis_transform = transRLimits + h2t_w_r + raxis_transform
+        self._taxis_transform = transTLimits + h2t_w_t + taxis_tr
+        self._laxis_transform = transLLimits + h2t_w_l + laxis_tr
+        self._raxis_transform = transRLimits + h2t_w_r + raxis_tr
 
         # For axis labels (to display coordinates)
-        self._tlabel_s_transform = PSTransform(taxis_transform, h2t_t)
-        self._llabel_s_transform = PSTransform(laxis_transform, h2t_l)
-        self._rlabel_s_transform = PSTransform(raxis_transform, h2t_r)
-        self._tlabel_c_transform = PCTransform(taxis_transform, h2t_t)
-        self._llabel_c_transform = PCTransform(laxis_transform, h2t_l)
-        self._rlabel_c_transform = PCTransform(raxis_transform, h2t_r)
+        self._tlabel_s_transform = TernaryAxisLabelSTransform(taxis_tr, h2t_t)
+        self._llabel_s_transform = TernaryAxisLabelSTransform(laxis_tr, h2t_l)
+        self._rlabel_s_transform = TernaryAxisLabelSTransform(raxis_tr, h2t_r)
+        self._tlabel_c_transform = TernaryAxisLabelCTransform(taxis_tr, h2t_t)
+        self._llabel_c_transform = TernaryAxisLabelCTransform(laxis_tr, h2t_l)
+        self._rlabel_c_transform = TernaryAxisLabelCTransform(raxis_tr, h2t_r)
 
         # From ternary coordinates to the original data coordinates
         self.transProjection = (transTernaryScale
@@ -222,7 +223,7 @@ class TernaryAxesBase(Axes):
         return self._raxis_transform
 
     def _get_axis_text_transform(self, pad_points, trans, indices):
-        pad_shift = TernaryShift(self, pad_points, indices)
+        pad_shift = TernaryTickLabelShift(self, pad_points, indices)
         # `va` and `ha` are modified in `TernaryTick`
         return trans + pad_shift, 'top', 'center'
 

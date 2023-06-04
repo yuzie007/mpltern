@@ -11,7 +11,7 @@ import numpy as np
 from matplotlib.transforms import Affine2DBase, Transform
 
 
-class TernaryTransform(Transform):
+class TernaryAxisTransform(Transform):
     """Transform convenient for ticks in TernaryAxis.
 
     Parameters
@@ -60,10 +60,10 @@ class TernaryTransform(Transform):
         return np.column_stack((x, y)).astype(float)
 
     def inverted(self):
-        return InvertedTernaryTransform(self.corners, self.index)
+        return InvertedTernaryAxisTransform(self.corners, self.index)
 
 
-class InvertedTernaryTransform(Transform):
+class InvertedTernaryAxisTransform(Transform):
     """Transform convenient for ticks in TernaryAxis."""
     input_dims = 2
     output_dims = 2
@@ -86,10 +86,10 @@ class InvertedTernaryTransform(Transform):
         return np.column_stack((s, p)).astype(float)
 
     def inverted(self):
-        return TernaryTransform(self.corners, self.index)
+        return TernaryAxisTransform(self.corners, self.index)
 
 
-class TernaryShift(Affine2DBase):
+class TernaryTickLabelShift(Affine2DBase):
     """Shift of tick labels from tick points
 
     This is essentially a wrapper of ScaledTranslation, but the direction to
@@ -115,7 +115,7 @@ class TernaryShift(Affine2DBase):
         return super().inverted()
 
 
-class PSTransform(Affine2DBase):
+class TernaryAxisLabelSTransform(Affine2DBase):
     """Transform to place axis-label at side.
 
     Parameters
@@ -166,7 +166,7 @@ class PSTransform(Affine2DBase):
         return super().inverted()
 
 
-class PCTransform(Affine2DBase):
+class TernaryAxisLabelCTransform(Affine2DBase):
     """Transform to place axis-label at corner.
 
     Parameters
