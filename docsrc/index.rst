@@ -4,12 +4,12 @@
    :hidden:
    :maxdepth: 2
 
-   release_notes.rst
    installation.rst
    basic_usage.rst
    implemented_methods.rst
    gallery/index.rst
-   conventions.rst
+   Conventions <conventions.rst>
    api.rst
-   publications.rst
-   alternatives.rst
+   Publications <publications.rst>
+   Alternatives <alternatives.rst>
+   Releases <release_notes.rst>
