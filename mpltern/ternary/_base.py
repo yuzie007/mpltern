@@ -130,9 +130,9 @@ class TernaryAxesBase(Axes):
         self.spines['lside'].register_axis(self.laxis)
         self.spines['rside'].register_axis(self.raxis)
 
-        self.spines['t1'].register_axis(self.taxis)
-        self.spines['l1'].register_axis(self.laxis)
-        self.spines['r1'].register_axis(self.raxis)
+        self.spines['tcorner'].register_axis(self.taxis)
+        self.spines['lcorner'].register_axis(self.laxis)
+        self.spines['rcorner'].register_axis(self.raxis)
 
         self._update_transScale()
 
@@ -260,9 +260,9 @@ class TernaryAxesBase(Axes):
         return mpatches.Polygon(np.repeat(self.corners_axes, 2, axis=0))
 
     def _gen_axes_spines(self, locations=None, offset=0.0, units='inches'):
-        # Use `Spine` in `mpltern`
-        return {side: Spine.linear_spine(self, side)
-                for side in ['tside', 't1', 'lside', 'l1', 'rside', 'r1']}
+        # overridden to use `Spine` in `mpltern`
+        return {side: Spine.linear_spine(self, side) for side in
+                ['tside', 'tcorner', 'lside', 'lcorner', 'rside', 'rcorner']}
 
     def get_taxis(self):
         """Return the TAxis instance"""

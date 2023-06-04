@@ -5,34 +5,31 @@ import matplotlib.spines as mspines
 
 
 class Spine(mspines.Spine):
+    """A ternary-axis spine."""
     def __init__(self, axes, spine_type, path, **kwargs):
         super().__init__(axes, spine_type, path, **kwargs)
-        if spine_type in ["tside", "t1"]:
+        if spine_type in ["tside", "tcorner"]:
             self.set_transform(self.axes.get_taxis_transform())
-        elif spine_type in ["lside", "l1"]:
+        elif spine_type in ["lside", "lcorner"]:
             self.set_transform(self.axes.get_laxis_transform())
-        elif spine_type in ["rside", "r1"]:
+        elif spine_type in ["rside", "rcorner"]:
             self.set_transform(self.axes.get_raxis_transform())
         else:
             raise ValueError(f'unknown spine_type: {spine_type}')
 
     def _adjust_location(self):
         """Automatically set spine bounds to the view interval."""
-        if self.spine_type in ["tside", "t1"]:
+        if self.spine_type in ["tside", "tcorner"]:
             low, high = self.axes.get_tlim()
-        elif self.spine_type in ["lside", "l1"]:
+        elif self.spine_type in ["lside", "lcorner"]:
             low, high = self.axes.get_llim()
-        elif self.spine_type in ["rside", "r1"]:
+        elif self.spine_type in ["rside", "rcorner"]:
             low, high = self.axes.get_rlim()
-        else:
-            raise ValueError
 
         if self.spine_type in ["tside", "lside", "rside"]:
             self._path.vertices = [[low, 0.0], [low, 1.0]]
-        elif self.spine_type in ["t1", "l1", "r1"]:
+        elif self.spine_type in ["tcorner", "lcorner", "rcorner"]:
             self._path.vertices = [[high, 0.0], [high, 1.0]]
-        else:
-            raise ValueError
 
     def get_spine_transform(self):
         return self.get_transform()
