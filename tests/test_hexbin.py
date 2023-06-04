@@ -28,7 +28,7 @@ def test_ternary_lim():
     ax = plt.subplot(projection="ternary")
     # If "face" (default), small hexagons look overlapping with each other.
     ax.hexbin(t, l, r, edgecolors="none")
-    ax.set_ternary_bounds(
+    ax.set_ternary_lim(
         0.1, 0.5,  # tmin, tmax
         0.2, 0.6,  # lmin, lmax
         0.3, 0.7,  # rmin, rmax

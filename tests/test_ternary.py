@@ -280,10 +280,10 @@ class TestTicks:
         style gives a different result.
         """
         ax = fig_test.add_subplot(projection="ternary")
-        ax.set_ternary_bounds(0.0, 0.2, 0.0, 1.0, 0.0, 1.0)
+        ax.set_ternary_lim(0.0, 0.2, 0.0, 1.0, 0.0, 1.0)
 
         ax = fig_ref.add_subplot(projection="ternary")
-        ax.set_ternary_bounds(0.0, 0.2, 0.0, 1.0, 0.0, 1.0)
+        ax.set_ternary_lim(0.0, 0.2, 0.0, 1.0, 0.0, 1.0)
         ax.taxis.set_ticks([0.0, 0.1, 0.2])
 
 
@@ -319,7 +319,7 @@ class TestTernaryLim:
         t, l, r = get_spiral()
 
         ax = fig_test.add_subplot(projection="ternary")
-        ax.set_ternary_bounds(
+        ax.set_ternary_lim(
             0.1, 0.5,  # tmin, tmax
             0.2, 0.6,  # lmin, lmax
             0.3, 0.7,  # rmin, rmax
@@ -328,7 +328,7 @@ class TestTernaryLim:
 
         ax = fig_ref.add_subplot(projection="ternary")
         ax.plot(t, l, r)
-        ax.set_ternary_bounds(
+        ax.set_ternary_lim(
             0.1, 0.5,  # tmin, tmax
             0.2, 0.6,  # lmin, lmax
             0.3, 0.7,  # rmin, rmax
@@ -339,14 +339,14 @@ class TestTernaryLim:
         t, l, r = get_spiral()
 
         ax = fig_test.add_subplot(projection="ternary")
-        ax.set_ternary_bounds(0.1, 0.7, 0.1, 0.6, 0.1, 0.5)
+        ax.set_ternary_lim(0.1, 0.7, 0.1, 0.6, 0.1, 0.5)
         ax.plot(t, l, r)
         ax.plot(t, l, r, "k", transform=ax.transTernaryAxes)
 
         ax = fig_ref.add_subplot(projection="ternary")
         ax.plot(t, l, r)
         ax.plot(t, l, r, "k", transform=ax.transTernaryAxes)
-        ax.set_ternary_bounds(0.1, 0.7, 0.1, 0.6, 0.1, 0.5)
+        ax.set_ternary_lim(0.1, 0.7, 0.1, 0.6, 0.1, 0.5)
 
     @check_figures_equal(extensions=('pdf',))
     def test_min_vs_max(self, fig_test, fig_ref):
@@ -376,7 +376,7 @@ class TestTernaryLim:
         ax.plot(t, l, r, "k", transform=ax.transTernaryAxes)
         ax.set_facecolor("0.9")
         ax.grid(True)
-        ax.set_ternary_bounds(0.1, 0.7, 0.1, 0.6, 0.1, 0.5, fix_triangle)
+        ax.set_ternary_lim(0.1, 0.7, 0.1, 0.6, 0.1, 0.5, fix_triangle)
 
 
 @image_comparison(

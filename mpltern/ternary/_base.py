@@ -1,5 +1,4 @@
 import logging
-import warnings
 
 import numpy as np
 
@@ -79,7 +78,7 @@ class TernaryAxesBase(Axes):
         self.ternary_scale = ternary_scale
         super().__init__(*args, **kwargs)
         self.set_aspect('equal', adjustable='box', anchor='C')
-        self.set_ternary_bounds(
+        self.set_ternary_lim(
             0.0, ternary_scale, 0.0, ternary_scale, 0.0, ternary_scale)
 
     @property
@@ -644,7 +643,9 @@ class TernaryAxesBase(Axes):
         bbox.update_from_data_xy(xy, ignore=True)
         return bbox
 
-    def set_ternary_lim(self, tmin, tmax, lmin, lmax, rmin, rmax):
+    def set_ternary_lim(
+        self, tmin, tmax, lmin, lmax, rmin, rmax, fix_triangle: bool = False
+    ):
         """Set ternary limits.
 
         Notes
@@ -652,23 +653,6 @@ class TernaryAxesBase(Axes):
         xmin, xmax : holizontal limits of the triangle
         ymin, ymax : bottom and top of the triangle
         """
-        msg = \
-            "The set_ternary_lim function was deprecated in Mpltern 0.6.0 " \
-            "and will be removed in 0.7.0. Use set_ternary_bounds instead."
-        warnings.warn(msg, DeprecationWarning, stacklevel=2)
-
-        scale = self.ternary_scale
-        if np.sign(tmax - tmin) != np.sign(scale):
-            raise ValueError("tmax - tmin must have the same sign as scale.")
-        if np.sign(lmax - lmin) != np.sign(scale):
-            raise ValueError("lmax - lmin must have the same sign as scale.")
-        if np.sign(rmax - rmin) != np.sign(scale):
-            raise ValueError("rmax - rmin must have the same sign as scale.")
-        self.set_ternary_bounds(tmin, tmax, lmin, lmax, rmin, rmax)
-
-    def set_ternary_bounds(
-        self, tmin, tmax, lmin, lmax, rmin, rmax, fix_triangle: bool = False
-    ):
         scale = self.ternary_scale
         if np.sign(tmax - tmin) != np.sign(scale):
             tmin, tmax = tmax, tmin
@@ -756,7 +740,7 @@ class TernaryAxesBase(Axes):
         tmax = scale - lmin - rmin
         lmax = scale - rmin - tmin
         rmax = scale - tmin - lmin
-        self.set_ternary_bounds(tmin, tmax, lmin, lmax, rmin, rmax)
+        self.set_ternary_lim(tmin, tmax, lmin, lmax, rmin, rmax)
 
     def set_ternary_max(self, tmax, lmax, rmax):
         """Set the maximum values for ternary limits."""
@@ -764,7 +748,7 @@ class TernaryAxesBase(Axes):
         tmin = (scale + tmax - lmax - rmax) * 0.5
         lmin = (scale + lmax - rmax - tmax) * 0.5
         rmin = (scale + rmax - tmax - lmax) * 0.5
-        self.set_ternary_bounds(tmin, tmax, lmin, lmax, rmin, rmax)
+        self.set_ternary_lim(tmin, tmax, lmin, lmax, rmin, rmax)
 
     def get_tlim(self):
         """Return the t-axis view limits."""
