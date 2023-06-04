@@ -604,6 +604,18 @@ class TestQuiver:
         ax.quiver(x, y, dx, dy, transform=ax.transAxes)
 
 
+@check_figures_equal(extensions=('pdf',))
+def test_grid_both(fig_test, fig_ref):
+    """Test if `grid("both") gives the expected result."""
+    ax = fig_test.add_subplot(projection="ternary")
+    ax.grid(axis="both")
+
+    ax = fig_ref.add_subplot(projection="ternary")
+    ax.grid(axis="t")
+    ax.grid(axis="l")
+    ax.grid(axis="r")
+
+
 @image_comparison(baseline_images=['legend'], extensions=['pdf'],
                   tol=0.3, style='mpl20')
 def test_legend():
