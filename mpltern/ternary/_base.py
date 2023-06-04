@@ -222,7 +222,7 @@ class TernaryAxesBase(Axes):
         return self._raxis_transform
 
     def _get_axis_text_transform(self, pad_points, trans, indices):
-        pad_shift = TernaryShift(indices, self.figure, self.axes, pad_points)
+        pad_shift = TernaryShift(self, pad_points, indices)
         # `va` and `ha` are modified in `TernaryTick`
         return trans + pad_shift, 'top', 'center'
 

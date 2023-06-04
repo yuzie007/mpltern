@@ -25,7 +25,7 @@ class TernaryTransform(Transform):
     output_dims = 2
     has_inverse = True
 
-    def __init__(self, corners, index, *args, **kwargs):
+    def __init__(self, corners, index: int, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.corners = np.asarray(corners, float)
         self.index = index
@@ -48,15 +48,15 @@ class TernaryTransform(Transform):
         -------
         (x, y) : Cartesian coordinates
         """
-        c0 = self.corners[(self.index + 0) % 3]
-        c1 = self.corners[(self.index + 1) % 3]
-        c2 = self.corners[(self.index + 2) % 3]
+        corner0 = self.corners[(self.index + 0) % 3]
+        corner1 = self.corners[(self.index + 1) % 3]
+        corner2 = self.corners[(self.index + 2) % 3]
         s = values[:, 0]
         p = values[:, 1]
-        v1 = c1 - c0
-        v2 = c2 - c0
-        x = c0[0] + (1.0 - s) * (p * v1[0] + (1.0 - p) * v2[0])
-        y = c0[1] + (1.0 - s) * (p * v1[1] + (1.0 - p) * v2[1])
+        v01 = corner1 - corner0
+        v02 = corner2 - corner0
+        x = corner0[0] + (1.0 - s) * (p * v01[0] + (1.0 - p) * v02[0])
+        y = corner0[1] + (1.0 - s) * (p * v01[1] + (1.0 - p) * v02[1])
         return np.column_stack((x, y)).astype(float)
 
     def inverted(self):
@@ -69,17 +69,17 @@ class InvertedTernaryTransform(Transform):
     output_dims = 2
     has_inverse = True
 
-    def __init__(self, corners, index, *args, **kwargs):
+    def __init__(self, corners, index: int, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.corners = np.asarray(corners, float)
         self.index = index
 
     def transform_non_affine(self, values):
-        c0 = self.corners[(self.index + 0) % 3]
-        c1 = self.corners[(self.index + 1) % 3]
-        c2 = self.corners[(self.index + 2) % 3]
-        vectors = np.column_stack((c1 - c0, c2 - c0))
-        relative_points = values - c0
+        corner0 = self.corners[(self.index + 0) % 3]
+        corner1 = self.corners[(self.index + 1) % 3]
+        corner2 = self.corners[(self.index + 2) % 3]
+        vectors = np.column_stack((corner1 - corner0, corner2 - corner0))
+        relative_points = values - corner0
         tmp = np.linalg.inv(vectors) @ relative_points.T
         s = 1.0 - (tmp[0] + tmp[1])
         p = tmp[0] / (1.0 - s)
@@ -95,19 +95,19 @@ class TernaryShift(Affine2DBase):
     This is essentially a wrapper of ScaledTranslation, but the direction to
     pad is determined on the fly when drawing.
     """
-    def __init__(self, indices, figure, axes, pad_points):
+    def __init__(self, axes, pad_points: float, indices):
         super().__init__()
-        self.indices = indices
-        self.figure = figure
         self.axes = axes
         self.pad_points = pad_points
+        self.indices = indices
 
     def get_matrix(self):
+        figure = self.axes.figure
         corners = [[1., 0., 0.], [0., 1., 0.], [0., 0., 1.]]
         points = self.axes.transTernaryAxes.transform(corners)[self.indices]
         direction = points[1] - points[0]  # outward against the triangle
         xt, yt = direction / np.linalg.norm(direction) * self.pad_points / 72.0
-        xt, yt = self.figure.dpi_scale_trans.transform((xt, yt))
+        xt, yt = figure.dpi_scale_trans.transform((xt, yt))
         return np.array([[1.0, 0.0, xt], [0.0, 1.0, yt], [0.0, 0.0, 1.0]])
 
     def inverted(self):
@@ -123,9 +123,6 @@ class PSTransform(Affine2DBase):
     trans : ``Transform``
         Transform derived from ``TernaryTransform`` is supposed to be given.
     """
-    input_dims = 2
-    output_dims = 2
-
     def __init__(self, trans: Transform, h2t: Transform, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.trans = trans
@@ -148,9 +145,10 @@ class PSTransform(Affine2DBase):
         -------
         (x, y) : Coordinates in the `display` (pixel) coordinates.
         """
-        c0, c1, c2 = self.trans.transform([[1.0, 0.5], [0.0, 1.0], [0.0, 0.0]])
-        v02 = c2 - c0
-        v21 = c1 - c2
+        corners = [[1.0, 0.5], [0.0, 1.0], [0.0, 0.0]]
+        corner0, corner1, corner2 = self.trans.transform(corners)
+        v02 = corner2 - corner0
+        v21 = corner1 - corner2
         # Obtain the vector perpendicular to v12 in the Gram-Schmidt method.
         # The obtained `vp` points outside of the triangle, regardless if the
         # triangle is defined in a clockwise or in a counterclockwise manner.
@@ -176,9 +174,6 @@ class PCTransform(Affine2DBase):
     trans : ``Transform``
         Transform derived from ``TernaryTransform`` is supposed to be given.
     """
-    input_dims = 2
-    output_dims = 2
-
     def __init__(self, trans: Transform, h2t: Transform, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.trans = trans
@@ -201,9 +196,10 @@ class PCTransform(Affine2DBase):
         -------
         (x, y) : Coordinates in the `display` (pixel) coordinates.
         """
-        c0, c1, c2 = self.trans.transform([[1.0, 0.5], [0.0, 1.0], [0.0, 0.0]])
-        v10 = c0 - c1
-        v12 = c2 - c1
+        corners = [[1.0, 0.5], [0.0, 1.0], [0.0, 0.0]]
+        corner0, corner1, corner2 = self.trans.transform(corners)
+        v10 = corner0 - corner1
+        v12 = corner2 - corner1
         # Obtain the vector perpendicular to v21 in the Gram-Schmidt method.
         # The obtained `vp` points outside of the triangle, regardless if the
         # triangle is defined in a clockwise or in a counterclockwise manner.
@@ -242,7 +238,7 @@ class BarycentricTransform(Transform):
         self.corners = np.asarray(corners, float)
 
     def transform_non_affine(self, values):
-        """Transform ternary-axis to Cartesian coordinates
+        """Transform barycentric to Cartesian coordinates
 
         Parameters
         ----------
