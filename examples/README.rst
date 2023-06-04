@@ -2,8 +2,8 @@
 
 .. _gallery:
 
-#######
-Gallery
-#######
+########
+Examples
+########
 
 This gallery contains examples of mpltern.

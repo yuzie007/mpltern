@@ -1,6 +1,5 @@
-###
-API
-###
+API Reference
+=============
 
 This page is under construction. Only a few available methods are shown.
 
