@@ -13,4 +13,3 @@
    api.rst
    publications.rst
    alternatives.rst
-   notes.rst
