@@ -173,6 +173,10 @@ html_theme = "pydata_sphinx_theme"
 
 html_theme_options = {
     "github_url": "https://github.com/yuzie007/mpltern",
+    "logo": {
+       "image_light": "_static/logo_light.svg",
+       "image_dark": "_static/logo_dark.svg",
+    }
 }
 
 # Add any paths that contain custom static files (such as style sheets) here,
@@ -221,8 +225,6 @@ def setup(app):
 
 # Path to favicon
 html_favicon = '_static/favicon.ico'
-
-html_logo = '_static/sphx_glr_logos0_002.svg'
 
 # numpydoc config
 
