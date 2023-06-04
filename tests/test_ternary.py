@@ -412,6 +412,33 @@ class TestTickDirection:
         ax.tick_params(direction=direction)
 
 
+class TestAxisLabels:
+    """Test if ternary axis labels are assigned properly."""
+    def test_tlabel(self):
+        """Test if the t-axis label is assigned properly."""
+        fig = plt.figure()
+        ax = fig.add_subplot(projection='ternary')
+        label = "T"
+        ax.set_tlabel(label)
+        assert ax.get_tlabel() == label
+
+    def test_llabel(self):
+        """Test if the l-axis label is assigned properly."""
+        fig = plt.figure()
+        ax = fig.add_subplot(projection='ternary')
+        label = "L"
+        ax.set_llabel(label)
+        assert ax.get_llabel() == label
+
+    def test_rlabel(self):
+        """Test if the r-axis label is assigned properly."""
+        fig = plt.figure()
+        ax = fig.add_subplot(projection='ternary')
+        label = "R"
+        ax.set_rlabel(label)
+        assert ax.get_rlabel() == label
+
+
 class TestAxLine:
     @check_figures_equal(extensions=('pdf',))
     def test_axline(self, fig_test, fig_ref):
