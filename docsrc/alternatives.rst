@@ -74,45 +74,34 @@ the following alternatives.
 Open-source
 ===========
 
-Python_
--------
+- Python_
         - `Plotly <https://plot.ly/python>`__
         - `python-ternary <https://github.com/marcharper/python-ternary>`_
-
-R_
---
+- R_
         - `Plotly <https://plot.ly/r>`__
         - ggtern_
         - Ternary_
         - vcd_
 
-JavaScript_
------------
+- JavaScript_
         - Plotly_
         - `d3-ternary (TypeScript) <https://github.com/davenquinn/d3-ternary>`__
-
-LaTeX_
-------
+- LaTeX_
         - PGFPlots_
 
-GUI
----
+- GUI
         - Veusz_
 
-Online
-------
+- Online
         - ternaryplot.com_ (based on d3-ternary)
 
 Proprietary
 ===========
 
-MATLAB_
--------
+- MATLAB_
         - ternary-plots_
         - alcheyst-ternplot_
-
-GUI
----
+- GUI
         - `DPlot <https://www.dplot.com/index.htm>`_
         - Grapher_
         - JMP_
