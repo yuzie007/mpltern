@@ -283,15 +283,15 @@ class TernaryScaleTransform(Transform):
     output_dims = 3
     has_inverse = True
 
-    def __init__(self, ternary_scale, *args, **kwargs):
+    def __init__(self, constant: float, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.ternary_scale = ternary_scale
+        self.constant = constant
 
     def transform_non_affine(self, values):
-        return np.asarray(values, float) / self.ternary_scale
+        return np.asarray(values, float) / self.constant
 
     def inverted(self):
-        return TernaryScaleTransform(1.0 / self.ternary_scale)
+        return TernaryScaleTransform(1.0 / self.constant)
 
 
 class H2THeightTransform(Transform):
@@ -300,9 +300,10 @@ class H2THeightTransform(Transform):
     output_dims = 2
     has_inverse = True
 
-    def __init__(self, ternary_scale, viewTernaryLims, index, *args, **kwargs):
+    def __init__(self, constant: float, viewTernaryLims: list, index: int,
+                 *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.ternary_scale = ternary_scale
+        self.constant = constant
         self.viewTernaryLims = viewTernaryLims
         self.index = index
 
@@ -327,19 +328,19 @@ class H2THeightTransform(Transform):
             ``y`` is equal to ``p``.
         """
         values = np.asarray(values)
-        scale = self.ternary_scale
+        constant = self.constant
         min0, max0 = self.viewTernaryLims[(self.index + 0) % 3].intervalx
         min1, max1 = self.viewTernaryLims[(self.index + 1) % 3].intervalx
         min2, max2 = self.viewTernaryLims[(self.index - 1) % 3].intervalx
 
-        x = values[:, 0] * (max0 - min0) + min0  # unscaling
-        x = (x - min0) / ((scale - min1 - min2) - min0)  # rescaling
+        x = values[:, 0] * (max0 - min0) + min0  # unscale
+        x = (x - min0) / ((constant - min1 - min2) - min0)  # rescale
 
         return np.column_stack((x, values[:, 1]))
 
     def inverted(self):
         return T2HHeightTransform(
-            self.ternary_scale, self.viewTernaryLims, self.index)
+            self.constant, self.viewTernaryLims, self.index)
 
 
 class T2HHeightTransform(Transform):
@@ -348,9 +349,10 @@ class T2HHeightTransform(Transform):
     output_dims = 2
     has_inverse = True
 
-    def __init__(self, ternary_scale, viewTernaryLims, index, *args, **kwargs):
+    def __init__(self, constant: float, viewTernaryLims: list, index: int,
+                 *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.ternary_scale = ternary_scale
+        self.constant = constant
         self.viewTernaryLims = viewTernaryLims
         self.index = index
 
@@ -375,19 +377,19 @@ class T2HHeightTransform(Transform):
             ``y`` is equal to ``p``.
         """
         values = np.asarray(values)
-        scale = self.ternary_scale
+        constant = self.constant
         min0, max0 = self.viewTernaryLims[(self.index + 0) % 3].intervalx
         min1, max1 = self.viewTernaryLims[(self.index + 1) % 3].intervalx
         min2, max2 = self.viewTernaryLims[(self.index - 1) % 3].intervalx
 
-        x = values[:, 0] * ((scale - min1 - min2) - min0) + min0  # unscaling
-        x = (x - min0) / (max0 - min0)  # rescaling
+        x = values[:, 0] * ((constant - min1 - min2) - min0) + min0  # unscale
+        x = (x - min0) / (max0 - min0)  # rescale
 
         return np.column_stack((x, values[:, 1]))
 
     def inverted(self):
         return H2THeightTransform(
-            self.ternary_scale, self.viewTernaryLims, self.index)
+            self.constant, self.viewTernaryLims, self.index)
 
 
 class T2HWidthTransform(Transform):
@@ -396,9 +398,10 @@ class T2HWidthTransform(Transform):
     output_dims = 2
     has_inverse = True
 
-    def __init__(self, ternary_scale, viewTernaryLims, index, *args, **kwargs):
+    def __init__(self, constant: float, viewTernaryLims: list, index: int,
+                 *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.ternary_scale = ternary_scale
+        self.constant = constant
         self.viewTernaryLims = viewTernaryLims
         self.index = index
 
@@ -421,29 +424,29 @@ class T2HWidthTransform(Transform):
             ``y == 0`` and ``y == 1`` correspond to the end points of the edge.
         """
         values = np.asarray(values)
-        scale = self.ternary_scale
+        constant = self.constant
         min0, max0 = self.viewTernaryLims[(self.index + 0) % 3].intervalx
         min1, max1 = self.viewTernaryLims[(self.index + 1) % 3].intervalx
         min2, max2 = self.viewTernaryLims[(self.index - 1) % 3].intervalx
 
-        x = values[:, 0] * ((scale - min1 - min2) - min0) + min0  # unscaling
+        x = values[:, 0] * ((constant - min1 - min2) - min0) + min0  # unscale
 
-        denominator = scale - min1 - min2 - x
+        denominator = constant - min1 - min2 - x
         out = np.zeros_like(denominator)
         where = (denominator != 0.0)
         y0 = 1.0 - np.divide(max2 - min2, denominator, out=out, where=where)
         y1 = 0.0 + np.divide(max1 - min1, denominator, out=out, where=where)
 
-        sign = np.sign(scale)
-        y0 = np.where(sign * (x - (scale - max2 - min1)) > 0.0, 0.0, y0)
-        y1 = np.where(sign * (x - (scale - max1 - min2)) > 0.0, 1.0, y1)
+        sign = np.sign(constant)
+        y0 = np.where(sign * (x - (constant - max2 - min1)) > 0.0, 0.0, y0)
+        y1 = np.where(sign * (x - (constant - max1 - min2)) > 0.0, 1.0, y1)
         y = (values[:, 1] - y0) / (y1 - y0)
 
         return np.column_stack((values[:, 0], y))
 
     def inverted(self):
         return H2TWidthTransform(
-            self.ternary_scale, self.viewTernaryLims, self.index)
+            self.constant, self.viewTernaryLims, self.index)
 
 
 class H2TWidthTransform(Transform):
@@ -452,9 +455,10 @@ class H2TWidthTransform(Transform):
     output_dims = 2
     has_inverse = True
 
-    def __init__(self, ternary_scale, viewTernaryLims, index, *args, **kwargs):
+    def __init__(self, constant: float, viewTernaryLims: list, index: int,
+                 *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.ternary_scale = ternary_scale
+        self.constant = constant
         self.viewTernaryLims = viewTernaryLims
         self.index = index
 
@@ -477,26 +481,26 @@ class H2TWidthTransform(Transform):
             ``y == 0`` and ``y == 1`` correspond to the end points of the edge.
         """
         values = np.asarray(values)
-        scale = self.ternary_scale
+        constant = self.constant
         min0, max0 = self.viewTernaryLims[(self.index + 0) % 3].intervalx
         min1, max1 = self.viewTernaryLims[(self.index + 1) % 3].intervalx
         min2, max2 = self.viewTernaryLims[(self.index - 1) % 3].intervalx
 
-        x = values[:, 0] * ((scale - min1 - min2) - min0) + min0  # unscaling
+        x = values[:, 0] * ((constant - min1 - min2) - min0) + min0  # unscale
 
-        denominator = scale - min1 - min2 - x
+        denominator = constant - min1 - min2 - x
         out = np.zeros_like(denominator)
         where = (denominator != 0.0)
         y0 = 1.0 - np.divide(max2 - min2, denominator, out=out, where=where)
         y1 = 0.0 + np.divide(max1 - min1, denominator, out=out, where=where)
 
-        sign = np.sign(scale)
-        y0 = np.where(sign * (x - (scale - max2 - min1)) > 0.0, 0.0, y0)
-        y1 = np.where(sign * (x - (scale - max1 - min2)) > 0.0, 1.0, y1)
+        sign = np.sign(constant)
+        y0 = np.where(sign * (x - (constant - max2 - min1)) > 0.0, 0.0, y0)
+        y1 = np.where(sign * (x - (constant - max1 - min2)) > 0.0, 1.0, y1)
         y = values[:, 1] * (y1 - y0) + y0
 
         return np.column_stack((values[:, 0], y))
 
     def inverted(self):
         return T2HWidthTransform(
-            self.ternary_scale, self.viewTernaryLims, self.index)
+            self.constant, self.viewTernaryLims, self.index)

@@ -19,7 +19,7 @@ ax.set_rlabel('Right')
 
 # Using ``ternary_lim``, you can limit the range of ternary axes.
 # Be sure about the consistency; the limit values must satisfy:
-# tmax + lmin + rmin = tmin + lmax + rmin = tmin + lmin + rmax = ternary_scale
+# tmax + lmin + rmin = tmin + lmax + rmin = tmin + lmin + rmax = ``constant``
 ax.set_ternary_lim(
     0.1, 0.5,  # tmin, tmax
     0.2, 0.6,  # lmin, lmax

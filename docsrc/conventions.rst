@@ -6,7 +6,7 @@ Axes and Ticks
 ==============
 
 In a ternary plot, three variables which sum to a constant
-``t + l + r = ternary_scale`` (= 1 in mpltern by default) are projected onto
+``t + l + r = constant`` (= 1 in mpltern by default) are projected onto
 a two-dimensional triangle.
 Each variable is associated with each corner of the triangle, and the value is
 represented by the scaled distance to the corner from its opposite side.
@@ -85,7 +85,7 @@ Normalization in Ternary Plots
 ==============================
 
 In most plotting methods in mpltern, the given three variables are
-automatically normalized by ``ternary_scale``.
+automatically normalized by ``constant``.
 By this convention, the three variables can be treated on an equal footing.
 The exceptions are the span-plots like ``ax.axtline``.
 Since in these methods only one of the variables is given, in principle it is

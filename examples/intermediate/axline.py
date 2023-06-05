@@ -12,7 +12,7 @@ way as Matplotlib. This may be helpful, e.g., for adding an isoproportion line.
 
 Unlike Matplotlib, ``slope`` is the displacement from the first argument and
 must be of length 3, whose sum should be zero. The sum of the first argument
-and ``slope`` is automatically scaled by ``ternary_scale``.
+and ``slope`` is automatically scaled by ``constant``.
 
 With ``matplotlib>=3.4``, a keyword argument ``transform`` can be given.
 Particularly when ``ax.transTernaryAxes`` is given, a line fixed to the

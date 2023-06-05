@@ -288,8 +288,8 @@ class TestTicks:
 
 
 @check_figures_equal(extensions=('pdf',))
-def test_ternary_scale(fig_test, fig_ref):
-    ax = fig_test.add_subplot(projection='ternary', ternary_scale=0.5)
+def test_constant(fig_test, fig_ref):
+    ax = fig_test.add_subplot(projection='ternary', constant=0.5)
     t, l, r = get_spiral()
     ax.plot(t, l, r)
     ax.set_tlabel('Top')

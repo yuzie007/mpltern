@@ -3,7 +3,7 @@
 Normalization
 =============
 
-The normalization of ternary plots can be modified using ``ternary_scale``.
+The normalization constant of ternary plots can be modified using ``constant``.
 
 .. note::
     The ternary data are automatically normalized with a few exceptions.
@@ -14,12 +14,7 @@ from mpltern.datasets import get_spiral
 
 
 fig = plt.figure()
-
-ternary_scale = 0.5
-ax = fig.add_subplot(projection='ternary', ternary_scale=ternary_scale)
-
+ax = fig.add_subplot(projection='ternary', constant=100.0)
 t, l, r = get_spiral()
-
-ax.plot(t, l, r)  # Data are automatically normalized by `ternary_scale`.
-
+ax.plot(t, l, r)  # Data are automatically normalized by `constant`.
 plt.show()

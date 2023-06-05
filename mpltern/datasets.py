@@ -4,7 +4,7 @@ from math import gamma
 import numpy as np
 
 
-def get_spiral(ternary_scale=1.0):
+def get_spiral(constant=1.0):
     """Archimedean spiral in ternary coordinates
 
     https://en.wikipedia.org/wiki/Archimedean_spiral
@@ -14,7 +14,7 @@ def get_spiral(ternary_scale=1.0):
     t = 1.0 / 3.0 + a * theta * np.sin(theta + np.pi / 3.0 * 0.0)
     l = 1.0 / 3.0 + a * theta * np.sin(theta + np.pi / 3.0 * 2.0)
     r = 1.0 / 3.0 + a * theta * np.sin(theta + np.pi / 3.0 * 4.0)
-    return t * ternary_scale, l * ternary_scale, r * ternary_scale
+    return t * constant, l * constant, r * constant
 
 
 def get_scatter_points(n=201, seed=19680801):
