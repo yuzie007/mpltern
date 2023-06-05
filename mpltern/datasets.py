@@ -55,11 +55,22 @@ def get_triangular_grid(n=11, prec=1e-6):
     return ps[:, 0], ps[:, 1], ps[:, 2]
 
 
-def get_shanon_entropies(n=11, prec=1e-6):
+def get_shanon_entropies(n=61, prec=1e-6):
+    """Shanon entropy
+
+    https://en.wikipedia.org/wiki/Entropy_(information_theory)
+
+    Parameters
+    ----------
+    n : int
+        Number of points for each coordinate, by default 61
+    prec : float
+        Tolerance for triangular points, by default 1e-6
+    """
     t, l, r = get_triangular_grid(n, prec)
     # The following works even when y == 0.
-    v = -1.0 * (np.log(t**t) + np.log(l**l) + np.log(r**r))
-    return t, l, r, v
+    entropies = -1.0 * (np.log(t**t) + np.log(l**l) + np.log(r**r))
+    return t, l, r, entropies
 
 
 def get_dirichlet_pdfs(n=61, alpha=(1.0, 1.0, 1.0), prec=1e-6):
