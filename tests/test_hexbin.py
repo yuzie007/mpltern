@@ -1,7 +1,8 @@
 import numpy as np
 
 import matplotlib.pyplot as plt
-from matplotlib.testing.decorators import image_comparison
+from matplotlib.testing.decorators import image_comparison, check_figures_equal
+from matplotlib.colors import LogNorm
 import mpltern  # noqa: F401
 
 
@@ -63,3 +64,15 @@ def test_given_triangles():
     ax = plt.subplot(projection="ternary", corners=corners, rotation=0)
     # If "face" (default), small hexagons look overlapping with each other.
     ax.hexbin(t, l, r, edgecolors="none")
+
+
+@check_figures_equal(extensions=('pdf',))
+def test_bins_and_norm(fig_test, fig_ref):
+    np.random.seed(19680801)
+    t, l, r = np.random.dirichlet(alpha=(2.0, 4.0, 8.0), size=100000).T
+
+    ax = fig_test.add_subplot(projection="ternary")
+    ax.hexbin(t, l, r, bins="log")
+
+    ax = fig_ref.add_subplot(projection="ternary")
+    ax.hexbin(t, l, r, norm=LogNorm())
