@@ -40,6 +40,7 @@ extensions = [
     'IPython.sphinxext.ipython_console_highlighting',
     'numpydoc',  # Needs to be loaded *after* autodoc.
     'sphinx_gallery.gen_gallery',
+    'matplotlib.sphinxext.plot_directive',
     'sphinxext.custom_roles',
     'sphinx_copybutton',
 ]
@@ -159,7 +160,11 @@ default_role = 'obj'
 # Plot directive configuration
 # ----------------------------
 
-plot_formats = [('png', 100), ('pdf', 100)]
+# https://matplotlib.org/stable/api/sphinxext_plot_directive_api.html
+plot_include_source = True
+plot_html_show_source_link = False
+plot_formats = ['svg']
+plot_html_show_formats = False
 
 # GitHub extension
 

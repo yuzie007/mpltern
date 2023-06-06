@@ -2,47 +2,52 @@
 Basic Usage
 ###########
 
-Import mpltern as well as Matplotlib as:
+Import mpltern together with Matplotlib as:
 
-.. code-block:: python
+.. plot::
 
     import matplotlib.pyplot as plt
     import mpltern
 
-By ``import mpltern``, a Matplotlib projection ``'ternary'`` is
-registered inside.
+With this, the projection ``"ternary"`` is registered.
+Then, make `TernaryAxes`;
 
-Then, make ``TernaryAxes`` e.g. as:
+.. plot::
 
-.. code-block:: python
+    ax = plt.subplot(projection="ternary")
 
-    ax = plt.subplot(projection='ternary')
+If you would like to have another normalization constant e.g. 100;
 
-It is already possible to create ternary plots using the methods in ``ax``.
-For example:
+.. plot::
 
-.. code-block:: python
+    ax = plt.subplot(projection="ternary", constant=100.0)
 
-    from mpltern.ternary.datasets import get_spiral
+You can make ternary plots using methods similar to Matplotlib.
+You can e.g. use `ax.plot`;
+the only difference from Matplotlib is that you need give three variables i.e.
+`t` (top), `l` (left), `r` (right) instead of `x` and `y`.
 
-    t, l, r = mpltern.datasets.get_spiral()
+.. plot::
+
+    from mpltern.datasets import get_spiral
+
+    ax = plt.subplot(projection="ternary")
+
+    t, l, r = get_spiral()
     # t: [0.33333333 0.33357906 0.33430414 ...]
     # l: [0.33333333 0.33455407 0.33543547 ...]
     # r: [0.33333333 0.33186687 0.33026039 ...]
     ax.plot(t, l, r)
+
     plt.show()
 
-You may see the following Archimedean spiral in the triangle.
+You can also make filled contour plots using `ax.tricontourf`.
 
-.. image:: basic_1.svg
+.. plot::
 
-Contour-like plots are also possible in mpltern.
+    from mpltern.datasets import get_shanon_entropies
 
-.. code-block:: python
-
-    ax = plt.subplot(projection='ternary')
-
-    from mpltern.ternary.datasets import get_shanon_entropies
+    ax = plt.subplot(projection="ternary")
 
     t, l, r, v = get_shanon_entropies()
     # t: [ 0. 0.  0.  0.  0.  0.  0.  0.  0.  0.  0.  0.1 0.1 0.1 ...]
@@ -50,10 +55,25 @@ Contour-like plots are also possible in mpltern.
     # r: [ 1. 0.9 0.8 0.7 0.6 0.5 0.4 0.3 0.2 0.1 0.  0.9 0.8 0.7 ...]
     # v: [-0. 0.32508297  0.50040242  ...]
     ax.tricontourf(t, l, r, v)
+
     plt.show()
 
-.. image:: basic_2.svg
+The ternary-axis labels can be given using e.g. `ax.set_tlabel` as
 
-See `more examples in the gallery
-<https://mpltern.readthedocs.io/en/latest/gallery/index.html>`__.
+.. plot::
 
+    from mpltern.datasets import get_scatter_points
+
+    ax = plt.subplot(projection="ternary")
+
+    t, l, r = get_scatter_points()
+    ax.scatter(t, l, r, marker="2")
+
+    ax.set_tlabel("Top")
+    ax.set_llabel("Left")
+    ax.set_rlabel("Right")
+
+    plt.show()
+
+There are more plotting methods and styles.
+:doc:`See examples <gallery/index>`.
