@@ -3,8 +3,8 @@
 Grid
 ####
 
-The grid along the tick positions can be plotted using ``ax.grid``.
-For more detailed control, see :doc:`../advanced/02.minor_ticks`.
+The grid along the tick positions can be plotted using ``ax.grid``. See also
+:doc:`tick locators <../axis_and_tick/tick-locators>` for more controls.
 """
 import matplotlib.pyplot as plt
 import mpltern  # noqa: F401
