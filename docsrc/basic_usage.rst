@@ -16,11 +16,21 @@ Then, make `TernaryAxes`;
 
     ax = plt.subplot(projection="ternary")
 
-If you would like to have another normalization constant e.g. 100;
+You can use another normalization constant e.g. 100 using `constant`.
+Ternary-axis labels can be given using e.g. `ax.set_tlabel`.
+You can also add grids with `ax.grid`.
 
 .. plot::
 
     ax = plt.subplot(projection="ternary", constant=100.0)
+
+    ax.set_tlabel("Top (%)")
+    ax.set_llabel("Left (%)")
+    ax.set_rlabel("Right (%)")
+
+    ax.grid()
+
+    plt.show()
 
 You can make ternary plots using methods similar to Matplotlib.
 You can e.g. use `ax.plot`;
@@ -49,31 +59,14 @@ You can also make filled contour plots using `ax.tricontourf`.
 
     ax = plt.subplot(projection="ternary")
 
-    t, l, r, v = get_shanon_entropies()
+    t, l, r, entropies = get_shanon_entropies()
     # t: [ 0. 0.  0.  0.  0.  0.  0.  0.  0.  0.  0.  0.1 0.1 0.1 ...]
     # l: [ 0. 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.  0.  0.1 0.2 ...]
     # r: [ 1. 0.9 0.8 0.7 0.6 0.5 0.4 0.3 0.2 0.1 0.  0.9 0.8 0.7 ...]
     # v: [-0. 0.32508297  0.50040242  ...]
-    ax.tricontourf(t, l, r, v)
+    ax.tricontourf(t, l, r, entropies)
 
     plt.show()
 
-The ternary-axis labels can be given using e.g. `ax.set_tlabel` as
-
-.. plot::
-
-    from mpltern.datasets import get_scatter_points
-
-    ax = plt.subplot(projection="ternary")
-
-    t, l, r = get_scatter_points()
-    ax.scatter(t, l, r, marker="2")
-
-    ax.set_tlabel("Top")
-    ax.set_llabel("Left")
-    ax.set_rlabel("Right")
-
-    plt.show()
-
-There are more plotting methods and styles.
+There are more plotting methods and controls.
 :doc:`See examples <gallery/index>`.
