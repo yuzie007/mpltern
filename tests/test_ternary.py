@@ -54,13 +54,17 @@ def test_plot():
 #         ax.plot(t, l, r, c='C1')
 
 
-def test_data():
+@check_figures_equal(extensions=('pdf',))
+def test_data(fig_ref, fig_test):
     """Test if the `data` argument works correctly."""
-    fig = plt.figure()
-    ax = fig.add_subplot(projection='ternary')
     tn0, tn1, tn2 = get_spiral()
+
+    ax = fig_test.add_subplot(projection='ternary')
     data = {'tn0': tn0, 'tn1': tn1, 'tn2': tn2}
     ax.plot('tn0', 'tn1', 'tn2', data=data)
+
+    ax = fig_ref.add_subplot(projection='ternary')
+    ax.plot(tn0, tn1, tn2)
 
 
 def test_data_with_five_arguments():
@@ -291,7 +295,7 @@ class TestTicks:
 
 @check_figures_equal(extensions=('pdf',))
 def test_constant(fig_test, fig_ref):
-    """Test if the "constant" argument works correctly."""
+    """Test if the `constant` argument works correctly."""
     ax = fig_test.add_subplot(projection='ternary', constant=0.5)
     tn0, tn1, tn2 = get_spiral()
     ax.plot(tn0, tn1, tn2)
@@ -537,7 +541,7 @@ class TestAxLine:
 
 @image_comparison(baseline_images=['text'], extensions=['pdf'], style='mpl20')
 def test_text():
-    """Test if the text is plotted correctly."""
+    """Test if text is plotted correctly."""
     fig = plt.figure()
     ax = fig.add_subplot(projection='ternary')
     v = 1.0 / 3.0
