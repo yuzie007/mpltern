@@ -21,8 +21,8 @@ def fix_text_kerning_factor():
 def test_plot():
     fig = plt.figure()
     ax = fig.add_subplot(projection='ternary')
-    t, l, r = get_spiral()
-    ax.plot(t, l, r)
+    tn0, tn1, tn2 = get_spiral()
+    ax.plot(tn0, tn1, tn2)
 
 
 # In Matplotlib, it is NOT allowed to exchange `x` and `y` in `ax.plot` even
@@ -55,39 +55,42 @@ def test_plot():
 
 
 def test_data():
+    """Test if the `data` argument works correctly."""
     fig = plt.figure()
     ax = fig.add_subplot(projection='ternary')
-    t, l, r = get_spiral()
-    data = {'t': t, 'l': l, 'r': r}
-    ax.plot('t', 'l', 'r', data=data)
+    tn0, tn1, tn2 = get_spiral()
+    data = {'tn0': tn0, 'tn1': tn1, 'tn2': tn2}
+    ax.plot('tn0', 'tn1', 'tn2', data=data)
 
 
 def test_data_with_five_arguments():
     # When with data, the number of positional arguments must be 3 or 4.
     fig = plt.figure()
     ax = fig.add_subplot(projection='ternary')
-    t, l, r = get_spiral()
-    data = {'t': t, 'l': l, 'r': r}
+    tn0, tn1, tn2 = get_spiral()
+    data = {'tn0': tn0, 'tn1': tn1, 'tn2': tn2}
     with pytest.raises(ValueError):
-        ax.plot('t', 'l', 'r', 'foo', 'bar', data=data)
+        ax.plot('tn0', 'tn1', 'tn2', 'foo', 'bar', data=data)
 
 
 class TestArguments:
     @image_comparison(baseline_images=['arguments_6'], extensions=['pdf'],
                       style='mpl20')
     def test_arguments_6(self):
+        """Test if 6 arguments are parsed correctly."""
         fig = plt.figure()
         ax = fig.add_subplot(projection='ternary')
-        t, l, r = get_spiral()
-        ax.plot(t, l, r, l, r, t)
+        tn0, tn1, tn2 = get_spiral()
+        ax.plot(tn0, tn1, tn2, tn1, tn2, tn0)
 
     @image_comparison(baseline_images=['arguments_7'], extensions=['pdf'],
                       style='mpl20')
     def test_arguments_7(self):
+        """Test if 7 arguments are parsed correctly."""
         fig = plt.figure()
         ax = fig.add_subplot(projection='ternary')
-        t, l, r = get_spiral()
-        ax.plot(t, l, r, 'C3:', l, r, t)
+        tn0, tn1, tn2 = get_spiral()
+        ax.plot(tn0, tn1, tn2, 'C3:', tn1, tn2, tn0)
 
     def test_no_arguments(self):
         # In Matplotlib, `ax.plot()` without any arguments returns an empty
@@ -111,8 +114,7 @@ class TestTransform:
 
 class TestAxisLabelPosition:
     positions = ['corner', 'tick1', 'tick2']
-    baseline_images_list = [
-        ['axis_label_position_{}'.format(p)] for p in positions]
+    baseline_images_list = [[f'axis_label_position_{p}'] for p in positions]
 
     @pytest.mark.parametrize('position, baseline_images',
                              zip(positions, baseline_images_list))
@@ -289,16 +291,17 @@ class TestTicks:
 
 @check_figures_equal(extensions=('pdf',))
 def test_constant(fig_test, fig_ref):
+    """Test if the "constant" argument works correctly."""
     ax = fig_test.add_subplot(projection='ternary', constant=0.5)
-    t, l, r = get_spiral()
-    ax.plot(t, l, r)
+    tn0, tn1, tn2 = get_spiral()
+    ax.plot(tn0, tn1, tn2)
     ax.set_tlabel('Top')
     ax.set_llabel('Left')
     ax.set_rlabel('Right')
 
     ax = fig_ref.add_subplot(projection='ternary')
-    t, l, r = get_spiral()
-    ax.plot(t, l, r)
+    tn0, tn1, tn2 = get_spiral()
+    ax.plot(tn0, tn1, tn2)
     ax.set_tlabel('Top')
     ax.set_llabel('Left')
     ax.set_rlabel('Right')
@@ -316,7 +319,7 @@ class TestTernaryLim:
         Check that the order of `plot` and `set_ternary_lim` does not affect
         the result.
         """
-        t, l, r = get_spiral()
+        tn0, tn1, tn2 = get_spiral()
 
         ax = fig_test.add_subplot(projection="ternary")
         ax.set_ternary_lim(
@@ -324,10 +327,10 @@ class TestTernaryLim:
             0.2, 0.6,  # lmin, lmax
             0.3, 0.7,  # rmin, rmax
         )
-        ax.plot(t, l, r)
+        ax.plot(tn0, tn1, tn2)
 
         ax = fig_ref.add_subplot(projection="ternary")
-        ax.plot(t, l, r)
+        ax.plot(tn0, tn1, tn2)
         ax.set_ternary_lim(
             0.1, 0.5,  # tmin, tmax
             0.2, 0.6,  # lmin, lmax
@@ -336,16 +339,16 @@ class TestTernaryLim:
 
     @check_figures_equal(extensions=('pdf',))
     def test_order_axes(self, fig_test, fig_ref):
-        t, l, r = get_spiral()
+        tn0, tn1, tn2 = get_spiral()
 
         ax = fig_test.add_subplot(projection="ternary")
         ax.set_ternary_lim(0.1, 0.7, 0.1, 0.6, 0.1, 0.5)
-        ax.plot(t, l, r)
-        ax.plot(t, l, r, "k", transform=ax.transTernaryAxes)
+        ax.plot(tn0, tn1, tn2)
+        ax.plot(tn0, tn1, tn2, "k", transform=ax.transTernaryAxes)
 
         ax = fig_ref.add_subplot(projection="ternary")
-        ax.plot(t, l, r)
-        ax.plot(t, l, r, "k", transform=ax.transTernaryAxes)
+        ax.plot(tn0, tn1, tn2)
+        ax.plot(tn0, tn1, tn2, "k", transform=ax.transTernaryAxes)
         ax.set_ternary_lim(0.1, 0.7, 0.1, 0.6, 0.1, 0.5)
 
     @check_figures_equal(extensions=('pdf',))
@@ -380,9 +383,9 @@ class TestTernaryLim:
         """Test if hexagonal limits are properly plotted."""
         fig = plt.figure()
         ax = fig.add_subplot(projection="ternary")
-        t, l, r = get_spiral()
-        ax.plot(t, l, r, "C0")
-        ax.plot(t, l, r, "k", transform=ax.transTernaryAxes)
+        tn0, tn1, tn2 = get_spiral()
+        ax.plot(tn0, tn1, tn2, "C0")
+        ax.plot(tn0, tn1, tn2, "k", transform=ax.transTernaryAxes)
         ax.set_facecolor("0.9")
         ax.grid(True)
         ax.set_ternary_lim(0.1, 0.7, 0.1, 0.6, 0.1, 0.5, fix_triangle)
@@ -433,8 +436,7 @@ class TestSpans:
 
 class TestTickDirection:
     directions = ['in', 'out', 'inout']
-    baseline_images_list = [
-        ['tick_direction_{}'.format(d)] for d in directions]
+    baseline_images_list = [[f'tick_direction_{d}'] for d in directions]
 
     @pytest.mark.parametrize('direction, baseline_images',
                              zip(directions, baseline_images_list))
@@ -535,6 +537,7 @@ class TestAxLine:
 
 @image_comparison(baseline_images=['text'], extensions=['pdf'], style='mpl20')
 def test_text():
+    """Test if the text is plotted correctly."""
     fig = plt.figure()
     ax = fig.add_subplot(projection='ternary')
     v = 1.0 / 3.0
@@ -545,21 +548,21 @@ class TestScatter:
     @image_comparison(baseline_images=['scatter'], extensions=['pdf'],
                       tol=1.0, style='mpl20')
     def test_scatter(self):
-        t, l, r = get_scatter_points()
+        tn0, tn1, tn2 = get_scatter_points()
         fig = plt.figure()
         ax = fig.add_subplot(projection='ternary')
-        ax.scatter(t, l, r)
+        ax.scatter(tn0, tn1, tn2)
 
     @image_comparison(baseline_images=['scatter_color'], extensions=['pdf'],
                       tol=1.0, style='mpl20')
     def test_scatter_color(self):
         fix_text_kerning_factor()
 
-        t, l, r = get_scatter_points()
+        tn0, tn1, tn2 = get_scatter_points()
         fig = plt.figure()
         fig.subplots_adjust(left=0.075, right=0.85)
         ax = fig.add_subplot(111, projection='ternary')
-        sc = ax.scatter(t, l, r, c=range(len(t)))
+        sc = ax.scatter(tn0, tn1, tn2, c=range(len(tn0)))
         cax = ax.inset_axes([1.05, 0.1, 0.05, 0.9], transform=ax.transAxes)
         colorbar = fig.colorbar(sc, cax=cax)
         colorbar.set_label('Count', rotation=270, va='baseline')
@@ -607,28 +610,28 @@ class TestQuiver:
     @image_comparison(baseline_images=['quiver'], extensions=['pdf'],
                       style='mpl20')
     def test_quiver(self):
-        t, l, r = get_triangular_grid()
-        dt = 1.0 / 3.0 - t
-        dl = 1.0 / 3.0 - l
-        dr = 1.0 / 3.0 - r
+        tn0, tn1, tn2 = get_triangular_grid()
+        dtn0 = 1.0 / 3.0 - tn0
+        dtn1 = 1.0 / 3.0 - tn1
+        dtn2 = 1.0 / 3.0 - tn2
         fig = plt.figure()
         ax = fig.add_subplot(projection='ternary')
-        ax.quiver(t, l, r, dt, dl, dr)
+        ax.quiver(tn0, tn1, tn2, dtn0, dtn1, dtn2)
 
     @image_comparison(baseline_images=['quiver_color'], extensions=['pdf'],
                       tol=0.3, style='mpl20')
     def test_quiver_color(self):
         fix_text_kerning_factor()
 
-        t, l, r = get_triangular_grid()
-        dt = 1.0 / 3.0 - t
-        dl = 1.0 / 3.0 - l
-        dr = 1.0 / 3.0 - r
-        length = np.sqrt(dt ** 2 + dl ** 2 + dr ** 2)
+        tn0, tn1, tn2 = get_triangular_grid()
+        dtn0 = 1.0 / 3.0 - tn0
+        dtn1 = 1.0 / 3.0 - tn1
+        dtn2 = 1.0 / 3.0 - tn2
+        length = np.sqrt(dtn0**2 + dtn1**2 + dtn2**2)
         fig = plt.figure()
         fig.subplots_adjust(left=0.075, right=0.85)
         ax = fig.add_subplot(projection='ternary')
-        pc = ax.quiver(t, l, r, dt, dl, dr, length)
+        pc = ax.quiver(tn0, tn1, tn2, dtn0, dtn1, dtn2, length)
         cax = ax.inset_axes([1.05, 0.1, 0.05, 0.9], transform=ax.transAxes)
         colorbar = fig.colorbar(pc, cax=cax)
         colorbar.set_label('Length', rotation=270, va='baseline')
@@ -666,7 +669,7 @@ class TestQuiver:
 
 @check_figures_equal(extensions=('pdf',))
 def test_grid_both(fig_test, fig_ref):
-    """Test if `grid("both") gives the expected result."""
+    """Test if `grid("both")` gives the expected result."""
     ax = fig_test.add_subplot(projection="ternary")
     ax.grid(axis="both")
 
@@ -679,6 +682,7 @@ def test_grid_both(fig_test, fig_ref):
 @image_comparison(baseline_images=['legend'], extensions=['pdf'],
                   tol=0.3, style='mpl20')
 def test_legend():
+    """Test if the legend is plotted correctly."""
     fig = plt.figure()
     ax = fig.add_subplot(projection='ternary')
 

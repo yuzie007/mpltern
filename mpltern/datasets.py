@@ -10,23 +10,23 @@ def get_spiral(constant=1.0):
     https://en.wikipedia.org/wiki/Archimedean_spiral
     """
     theta = np.linspace(0, np.pi * 10, 201)
-    a = 0.01
-    t = 1.0 / 3.0 + a * theta * np.sin(theta + np.pi / 3.0 * 0.0)
-    l = 1.0 / 3.0 + a * theta * np.sin(theta + np.pi / 3.0 * 2.0)
-    r = 1.0 / 3.0 + a * theta * np.sin(theta + np.pi / 3.0 * 4.0)
-    return t * constant, l * constant, r * constant
+    amp = 0.01
+    tn0 = 1.0 / 3.0 + amp * theta * np.sin(theta + np.pi / 3.0 * 0.0)
+    tn1 = 1.0 / 3.0 + amp * theta * np.sin(theta + np.pi / 3.0 * 2.0)
+    tn2 = 1.0 / 3.0 + amp * theta * np.sin(theta + np.pi / 3.0 * 4.0)
+    return tn0 * constant, tn1 * constant, tn2 * constant
 
 
 def get_scatter_points(n=201, seed=19680801):
     np.random.seed(seed)
-    t = np.random.rand(n)
-    l = np.random.rand(n)
-    r = np.random.rand(n)
-    s = t + l + r
-    t /= s
-    l /= s
-    r /= s
-    return t, l, r
+    tn0 = np.random.rand(n)
+    tn1 = np.random.rand(n)
+    tn2 = np.random.rand(n)
+    constant = tn0 + tn1 + tn2
+    tn0 /= constant
+    tn1 /= constant
+    tn2 /= constant
+    return tn0, tn1, tn2
 
 
 def get_triangular_grid(n=11, prec=1e-6):
@@ -46,13 +46,13 @@ def get_triangular_grid(n=11, prec=1e-6):
     """
     # top axis in descending order to start from the top point
     t = np.linspace(1, 0, n)
-    ps = []
+    points = []
     for tmp in itertools.product(t, repeat=3):
         if abs(sum(tmp) - 1.0) > prec:
             continue
-        ps.append(tmp)
-    ps = np.array(ps)
-    return ps[:, 0], ps[:, 1], ps[:, 2]
+        points.append(tmp)
+    points = np.array(points)
+    return points[:, 0], points[:, 1], points[:, 2]
 
 
 def get_shanon_entropies(n=61, prec=1e-6):
@@ -67,10 +67,10 @@ def get_shanon_entropies(n=61, prec=1e-6):
     prec : float
         Tolerance for triangular points, by default 1e-6
     """
-    t, l, r = get_triangular_grid(n, prec)
+    tn0, tn1, tn2 = get_triangular_grid(n, prec)
     # The following works even when y == 0.
-    entropies = -1.0 * (np.log(t**t) + np.log(l**l) + np.log(r**r))
-    return t, l, r, entropies
+    entropies = -1.0 * (np.log(tn0**tn0) + np.log(tn1**tn1) + np.log(tn2**tn2))
+    return tn0, tn1, tn2, entropies
 
 
 def get_dirichlet_pdfs(n=61, alpha=(1.0, 1.0, 1.0), prec=1e-6):
@@ -86,9 +86,9 @@ def get_dirichlet_pdfs(n=61, alpha=(1.0, 1.0, 1.0), prec=1e-6):
     prec : float
         Tolerance for triangular points, by default 1e-6
     """
-    t, l, r = get_triangular_grid(n, prec)
-    x = np.stack((t, l, r), axis=-1)
+    tn0, tn1, tn2 = get_triangular_grid(n, prec)
+    x = np.stack((tn0, tn1, tn2), axis=-1)
     alpha = np.array(alpha)
     c = gamma(np.sum(alpha)) / np.prod([gamma(_) for _ in alpha])
-    v = c * np.prod(x ** (alpha - 1.0), axis=1)
-    return t, l, r, v
+    pdfs = c * np.prod(x ** (alpha - 1.0), axis=1)
+    return tn0, tn1, tn2, pdfs
