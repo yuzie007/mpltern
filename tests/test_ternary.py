@@ -394,6 +394,30 @@ class TestTernaryLim:
         ax.grid(True)
         ax.set_ternary_lim(0.1, 0.7, 0.1, 0.6, 0.1, 0.5, fix_triangle)
 
+    @pytest.mark.parametrize("fix_triangle", [False, True])
+    @check_figures_equal(extensions=('pdf',))
+    def test_ternary_lim_vs_tlrlims_0(self, fig_test, fig_ref, fix_triangle):
+        """Test if the plot is insensitive to the orders of limits."""
+        ax = fig_test.add_subplot(projection="ternary")
+        ax.set_tlim(0.1, 0.5, fix_triangle)
+        ax.set_llim(0.2, 0.6, fix_triangle)
+        ax.set_rlim(0.3, 0.7, fix_triangle)
+
+        ax = fig_ref.add_subplot(projection="ternary")
+        ax.set_ternary_lim(0.1, 0.5, 0.2, 0.6, 0.3, 0.7, fix_triangle)
+
+    @pytest.mark.parametrize("fix_triangle", [False, True])
+    @check_figures_equal(extensions=('pdf',))
+    def test_ternary_lim_vs_tlrlims_1(self, fig_test, fig_ref, fix_triangle):
+        """Test if the plot is insensitive to the orders of limits."""
+        ax = fig_test.add_subplot(projection="ternary")
+        ax.set_tlim(0.1, 0.7, fix_triangle)
+        ax.set_llim(0.1, 0.6, fix_triangle)
+        ax.set_rlim(0.1, 0.5, fix_triangle)
+
+        ax = fig_ref.add_subplot(projection="ternary")
+        ax.set_ternary_lim(0.1, 0.7, 0.1, 0.6, 0.1, 0.5, fix_triangle)
+
 
 class TestSpans:
     """Tests related to spans."""

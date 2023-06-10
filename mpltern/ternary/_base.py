@@ -285,9 +285,9 @@ class TernaryAxesBase(Axes):
         return self.raxis
 
     def clear(self):
-        self.set_tlim(0.0, self.constant)
-        self.set_llim(0.0, self.constant)
-        self.set_rlim(0.0, self.constant)
+        self.viewTLim.intervalx = 0.0, self.constant
+        self.viewLLim.intervalx = 0.0, self.constant
+        self.viewRLim.intervalx = 0.0, self.constant
         if tuple(int(_) for _ in mpl.__version__.split('.'))[:2] < (3, 6):
             super().cla()
         else:
@@ -669,17 +669,18 @@ class TernaryAxesBase(Axes):
         if np.sign(rmax - rmin) != np.sign(scale):
             rmin, rmax = rmax, rmin
 
-        boxin = self._create_bbox_from_ternary_lim(fix_triangle)
+        xmin, xmax = self.get_xlim()
+        ymin, ymax = self.get_ylim()
+        points = [[xmin, ymin], [xmax, ymax]]
+
+        boxin = mtransforms.Bbox.unit()
+        boxin.update_from_data_xy(points)
 
         self._set_ternary_lim(tmin, tmax, lmin, lmax, rmin, rmax)
 
         boxout = self._create_bbox_from_ternary_lim(fix_triangle)
 
         trans = mtransforms.BboxTransform(boxin, boxout)
-
-        xmin, xmax = self.get_xlim()
-        ymin, ymax = self.get_ylim()
-        points = [[xmin, ymin], [xmax, ymax]]
 
         # Expand xlim or ylim to keep:
         # - the original Axes ratio
@@ -770,23 +771,26 @@ class TernaryAxesBase(Axes):
         """Return the r-axis view limits."""
         return tuple(self.viewRLim.intervalx)
 
-    def set_tlim(self, tmin, tmax):
+    def set_tlim(self, tmin, tmax, fix_triangle: bool = False):
         """Set the t-axis view limits."""
-        self.viewTLim.intervalx = (tmin, tmax)
-        self.stale = True
-        return tmin, tmax
+        lmin, lmax = self.get_llim()
+        rmin, rmax = self.get_rlim()
+        self.set_ternary_lim(tmin, tmax, lmin, lmax, rmin, rmax, fix_triangle)
+        return self.get_tlim()
 
-    def set_llim(self, lmin, lmax):
+    def set_llim(self, lmin, lmax, fix_triangle: bool = False):
         """Set the l-axis view limits."""
-        self.viewLLim.intervalx = (lmin, lmax)
-        self.stale = True
-        return lmin, lmax
+        tmin, tmax = self.get_tlim()
+        rmin, rmax = self.get_rlim()
+        self.set_ternary_lim(tmin, tmax, lmin, lmax, rmin, rmax, fix_triangle)
+        return self.get_llim()
 
-    def set_rlim(self, rmin, rmax):
+    def set_rlim(self, rmin, rmax, fix_triangle: bool = False):
         """Set the r-axis view limits."""
-        self.viewRLim.intervalx = (rmin, rmax)
-        self.stale = True
-        return rmin, rmax
+        tmin, tmax = self.get_tlim()
+        lmin, lmax = self.get_llim()
+        self.set_ternary_lim(tmin, tmax, lmin, lmax, rmin, rmax, fix_triangle)
+        return self.get_rlim()
 
     # Interactive manipulation
 
