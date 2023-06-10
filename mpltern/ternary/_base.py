@@ -641,26 +641,36 @@ class TernaryAxesBase(Axes):
             [tmin, lmin, scale - tmin - lmin],
         ]
 
-    def _create_bbox_from_ternary_lim(self, fix_triangle: bool = False):
-        if fix_triangle:
-            tlr = self._get_triangular_vertices()
-        else:
+    def _create_bbox_from_ternary_lim(self, fit: str = "rectangle"):
+        tn_sum = self.constant
+        if fit == "rectangle":
             tlr = self._get_hexagonal_vertices()
+        elif fit == "triangle":
+            tlr = self._get_triangular_vertices()
+        elif fit == "none":
+            tlr = [[tn_sum, 0.0, 0.0], [0.0, tn_sum, 0.0], [0.0, 0.0, tn_sum]]
+        else:
+            raise ValueError(f'unknown fit: {fit}')
         xy = self.transProjection.transform(tlr)
         bbox = mtransforms.Bbox.unit()
         bbox.update_from_data_xy(xy, ignore=True)
         return bbox
 
     def set_ternary_lim(
-        self, tmin, tmax, lmin, lmax, rmin, rmax, fix_triangle: bool = False
+        self, tmin, tmax, lmin, lmax, rmin, rmax, fit: str = "rectangle"
     ):
         """Set ternary limits.
 
-        Notes
-        -----
-        xmin, xmax : holizontal limits of the triangle
-        ymin, ymax : bottom and top of the triangle
+        Parameters
+        ----------
+        fit : {"rectangle", "triangle", "none"}
+            To what the plotting region is fitted.
+
+            - ``'rectangle'``: Fitted to the original rectangle.
+            - ``'triangle'``: Fitted to the original triangle.
+            - ``'none'``: The plotting region is simply cropped (or expanded).
         """
+        _api.check_in_list(['rectangle', 'triangle', 'none'], fit=fit)
         scale = self.constant
         if np.sign(tmax - tmin) != np.sign(scale):
             tmin, tmax = tmax, tmin
@@ -669,18 +679,15 @@ class TernaryAxesBase(Axes):
         if np.sign(rmax - rmin) != np.sign(scale):
             rmin, rmax = rmax, rmin
 
-        xmin, xmax = self.get_xlim()
-        ymin, ymax = self.get_ylim()
-        points = [[xmin, ymin], [xmax, ymax]]
-
-        boxin = mtransforms.Bbox.unit()
-        boxin.update_from_data_xy(points)
+        boxin = self._create_bbox_from_ternary_lim("none")
 
         self._set_ternary_lim(tmin, tmax, lmin, lmax, rmin, rmax)
 
-        boxout = self._create_bbox_from_ternary_lim(fix_triangle)
+        boxout = self._create_bbox_from_ternary_lim(fit)
 
         trans = mtransforms.BboxTransform(boxin, boxout)
+
+        points = [[-0.5 / np.sqrt(3.0), 0.0], [+0.5 / np.sqrt(3.0), 1.0]]
 
         # Expand xlim or ylim to keep:
         # - the original Axes ratio
@@ -743,21 +750,21 @@ class TernaryAxesBase(Axes):
         self.viewOuterLLim.intervalx = lmin, scale - tmin - rmin
         self.viewOuterRLim.intervalx = rmin, scale - tmin - lmin
 
-    def set_ternary_min(self, tmin, lmin, rmin):
+    def set_ternary_min(self, tmin, lmin, rmin, fit: str = "rectangle"):
         """Set the minimum values for ternary limits."""
         scale = self.constant
         tmax = scale - lmin - rmin
         lmax = scale - rmin - tmin
         rmax = scale - tmin - lmin
-        self.set_ternary_lim(tmin, tmax, lmin, lmax, rmin, rmax)
+        self.set_ternary_lim(tmin, tmax, lmin, lmax, rmin, rmax, fit)
 
-    def set_ternary_max(self, tmax, lmax, rmax):
+    def set_ternary_max(self, tmax, lmax, rmax, fit: str = "rectangle"):
         """Set the maximum values for ternary limits."""
         scale = self.constant
         tmin = (scale + tmax - lmax - rmax) * 0.5
         lmin = (scale + lmax - rmax - tmax) * 0.5
         rmin = (scale + rmax - tmax - lmax) * 0.5
-        self.set_ternary_lim(tmin, tmax, lmin, lmax, rmin, rmax)
+        self.set_ternary_lim(tmin, tmax, lmin, lmax, rmin, rmax, fit)
 
     def get_tlim(self):
         """Return the t-axis view limits."""
@@ -771,25 +778,25 @@ class TernaryAxesBase(Axes):
         """Return the r-axis view limits."""
         return tuple(self.viewRLim.intervalx)
 
-    def set_tlim(self, tmin, tmax, fix_triangle: bool = False):
+    def set_tlim(self, tmin, tmax, fit: str = "rectangle"):
         """Set the t-axis view limits."""
         lmin, lmax = self.get_llim()
         rmin, rmax = self.get_rlim()
-        self.set_ternary_lim(tmin, tmax, lmin, lmax, rmin, rmax, fix_triangle)
+        self.set_ternary_lim(tmin, tmax, lmin, lmax, rmin, rmax, fit)
         return self.get_tlim()
 
-    def set_llim(self, lmin, lmax, fix_triangle: bool = False):
+    def set_llim(self, lmin, lmax, fit: str = "rectangle"):
         """Set the l-axis view limits."""
         tmin, tmax = self.get_tlim()
         rmin, rmax = self.get_rlim()
-        self.set_ternary_lim(tmin, tmax, lmin, lmax, rmin, rmax, fix_triangle)
+        self.set_ternary_lim(tmin, tmax, lmin, lmax, rmin, rmax, fit)
         return self.get_llim()
 
-    def set_rlim(self, rmin, rmax, fix_triangle: bool = False):
+    def set_rlim(self, rmin, rmax, fit: str = "rectangle"):
         """Set the r-axis view limits."""
         tmin, tmax = self.get_tlim()
         lmin, lmax = self.get_llim()
-        self.set_ternary_lim(tmin, tmax, lmin, lmax, rmin, rmax, fix_triangle)
+        self.set_ternary_lim(tmin, tmax, lmin, lmax, rmin, rmax, fit)
         return self.get_rlim()
 
     # Interactive manipulation

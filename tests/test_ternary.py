@@ -374,8 +374,8 @@ class TestTernaryLim:
         ax.set_ternary_max(0.5, 0.6, 0.7)
 
     @pytest.mark.parametrize(
-        "fix_triangle, baseline_images",
-        [[False, ["hexagonal_False"]], [True, ["hexagonal_True"]]],
+        "fit, baseline_images",
+        [["rectangle", ["hexagonal_False"]], ["triangle", ["hexagonal_True"]]],
     )
     @image_comparison(
         baseline_images=None,
@@ -383,7 +383,7 @@ class TestTernaryLim:
         remove_text=True,
         style='mpl20',
     )
-    def test_hexagonal(self, fix_triangle, baseline_images):
+    def test_hexagonal(self, fit: str, baseline_images):
         """Test if hexagonal limits are properly plotted."""
         fig = plt.figure()
         ax = fig.add_subplot(projection="ternary")
@@ -392,31 +392,31 @@ class TestTernaryLim:
         ax.plot(tn0, tn1, tn2, "k", transform=ax.transTernaryAxes)
         ax.set_facecolor("0.9")
         ax.grid(True)
-        ax.set_ternary_lim(0.1, 0.7, 0.1, 0.6, 0.1, 0.5, fix_triangle)
+        ax.set_ternary_lim(0.1, 0.7, 0.1, 0.6, 0.1, 0.5, fit)
 
-    @pytest.mark.parametrize("fix_triangle", [False, True])
+    @pytest.mark.parametrize("fit", ["rectangle", "triangle", "none"])
     @check_figures_equal(extensions=('pdf',))
-    def test_ternary_lim_vs_tlrlims_0(self, fig_test, fig_ref, fix_triangle):
+    def test_ternary_lim_vs_tlrlims_0(self, fig_test, fig_ref, fit):
         """Test if the plot is insensitive to the orders of limits."""
         ax = fig_test.add_subplot(projection="ternary")
-        ax.set_tlim(0.1, 0.5, fix_triangle)
-        ax.set_llim(0.2, 0.6, fix_triangle)
-        ax.set_rlim(0.3, 0.7, fix_triangle)
+        ax.set_tlim(0.1, 0.5, fit)
+        ax.set_llim(0.2, 0.6, fit)
+        ax.set_rlim(0.3, 0.7, fit)
 
         ax = fig_ref.add_subplot(projection="ternary")
-        ax.set_ternary_lim(0.1, 0.5, 0.2, 0.6, 0.3, 0.7, fix_triangle)
+        ax.set_ternary_lim(0.1, 0.5, 0.2, 0.6, 0.3, 0.7, fit)
 
-    @pytest.mark.parametrize("fix_triangle", [False, True])
+    @pytest.mark.parametrize("fit", ["rectangle", "triangle", "none"])
     @check_figures_equal(extensions=('pdf',))
-    def test_ternary_lim_vs_tlrlims_1(self, fig_test, fig_ref, fix_triangle):
+    def test_ternary_lim_vs_tlrlims_1(self, fig_test, fig_ref, fit):
         """Test if the plot is insensitive to the orders of limits."""
         ax = fig_test.add_subplot(projection="ternary")
-        ax.set_tlim(0.1, 0.7, fix_triangle)
-        ax.set_llim(0.1, 0.6, fix_triangle)
-        ax.set_rlim(0.1, 0.5, fix_triangle)
+        ax.set_tlim(0.1, 0.7, fit)
+        ax.set_llim(0.1, 0.6, fit)
+        ax.set_rlim(0.1, 0.5, fit)
 
         ax = fig_ref.add_subplot(projection="ternary")
-        ax.set_ternary_lim(0.1, 0.7, 0.1, 0.6, 0.1, 0.5, fix_triangle)
+        ax.set_ternary_lim(0.1, 0.7, 0.1, 0.6, 0.1, 0.5, fit)
 
 
 class TestSpans:
