@@ -115,6 +115,7 @@ sphinx_gallery_conf = {
                                        '../examples/intermediate',
                                        '../examples/statistics',
                                        '../examples/axis_and_tick',
+                                       '../examples/limits',
                                        '../examples/triangle',
                                        '../examples/advanced',
                                        '../examples/miscellaneous']),
