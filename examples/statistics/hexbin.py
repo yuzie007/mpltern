@@ -6,6 +6,10 @@ HexBin
 `ax.hexbin` is a 2D histogram plot, in which the bins are hexagons and
 the color represents the number of data points within each bin.
 Unlike Matplotlib, `gridsize` (by default 100) can be only a single int.
+
+.. note::
+
+    Available with ``mpltern>=0.5.0``
 """
 import numpy as np
 

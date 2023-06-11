@@ -3,6 +3,10 @@
 Hexagonal limits
 ================
 
+.. note::
+
+    Available with ``mpltern>=1.0.0``
+
 Suppose we would like to crop or expand the following gray-shaded region.
 
 .. plot::

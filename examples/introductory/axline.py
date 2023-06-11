@@ -8,7 +8,7 @@ way as Matplotlib. This may be helpful, e.g., for adding an isoproportion line.
 
 .. note::
 
-    This is available with ``matplotlib>=3.3``.
+    Available with ``matplotlib>=3.3`` and ``mpltern>=0.4.0``
 
 Unlike Matplotlib, ``slope`` is the displacement from the first argument and
 must be of length 3, whose sum should be zero. The sum of the first argument
