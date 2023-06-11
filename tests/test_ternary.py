@@ -147,7 +147,7 @@ class TestTitle:
     @pytest.mark.parametrize('loc, baseline_images',
                              zip(locs, baseline_images_list),)
     @image_comparison(baseline_images=None, extensions=['pdf'], style='mpl20')
-    def test_tick_direction(self, loc, baseline_images):
+    def test_title_loc(self, loc, baseline_images):
         fix_text_kerning_factor()
 
         fig = plt.figure()
