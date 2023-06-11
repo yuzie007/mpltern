@@ -117,6 +117,7 @@ sphinx_gallery_conf = {
                                        '../examples/axis_and_tick',
                                        '../examples/limits',
                                        '../examples/triangle',
+                                       '../examples/transforms',
                                        '../examples/advanced',
                                        '../examples/miscellaneous']),
     'min_reported_time': 1,
