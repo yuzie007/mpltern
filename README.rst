@@ -33,9 +33,11 @@ based on `Matplotlib`_ specifically designed for
 
 - Direct dependence on `Matplotlib`_ only
 
-- Many plotting styles with similar method names to those in Matplotlib
+- `Compatible with multiple Matplotlib versions with a high test coverage
+  <https://app.codecov.io/gh/yuzie007/mpltern>`__
 
-- No need for ternary-to-Cartesian conversions on the user side
+- `Many plotting styles with similar method names to those in Matplotlib
+  <https://mpltern.readthedocs.io/en/latest/gallery/introductory/index.html>`__
 
 - `Automatic positioning of tick markers, tick labels, and axis labels
   consistent with Matplotlib
@@ -54,14 +56,18 @@ based on `Matplotlib`_ specifically designed for
 .. list-table::
    :widths: auto
 
-   * - .. image:: https://mpltern.readthedocs.io/en/latest/_images/sphx_glr_style_sheets_001.svg
-          :target: https://mpltern.readthedocs.io/en/latest/gallery/intermediate/style_sheets.html
-     - .. image:: https://mpltern.readthedocs.io/en/latest/_images/sphx_glr_05.inset_001.svg
-          :target: https://mpltern.readthedocs.io/en/latest/gallery/advanced/05.inset.html
-     - .. image:: https://mpltern.readthedocs.io/en/latest/_images/sphx_glr_07.polygon_001.svg
-          :target: https://mpltern.readthedocs.io/en/latest/gallery/introductory/07.polygon.html
-     - .. image:: https://mpltern.readthedocs.io/en/latest/_images/sphx_glr_02.arbitrary_triangle_001.svg
-          :target: https://mpltern.readthedocs.io/en/latest/gallery/triangle/02.arbitrary_triangle.html
+   * - .. image:: https://mpltern.readthedocs.io/en/latest/_images/sphx_glr_01.style_sheets_001.svg
+          :target: https://mpltern.readthedocs.io/en/latest/gallery/intermediate/01.style_sheets.html
+     - .. image:: https://mpltern.readthedocs.io/en/latest/_images/sphx_glr_01.hexagonal_limits_001.svg
+          :target: https://mpltern.readthedocs.io/en/latest/gallery/limits/01.hexagonal_limits.html
+     - .. image:: https://mpltern.readthedocs.io/en/latest/_images/sphx_glr_soil_texture_001.svg
+          :target: https://mpltern.readthedocs.io/en/latest/gallery/miscellaneous/soil_texture.html
+   * - .. image:: https://mpltern.readthedocs.io/en/latest/_images/sphx_glr_98.colored_axes_001.svg
+          :target: https://mpltern.readthedocs.io/en/latest/gallery/axis_and_tick/98.colored_axes.html
+     - .. image:: https://mpltern.readthedocs.io/en/latest/_images/sphx_glr_20.tick-formatters_001.svg
+          :target: https://mpltern.readthedocs.io/en/latest/gallery/axis_and_tick/20.tick-formatters.html
+     - .. image:: https://mpltern.readthedocs.io/en/latest/_images/sphx_glr_21.tick-locators_001.svg
+          :target: https://mpltern.readthedocs.io/en/latest/gallery/axis_and_tick/21.tick-locators.html
 
 .. list-table::
    :widths: auto
@@ -70,22 +76,14 @@ based on `Matplotlib`_ specifically designed for
           :target: https://mpltern.readthedocs.io/en/latest/gallery/introductory/01.scatter.html
      - .. image:: https://mpltern.readthedocs.io/en/latest/_images/sphx_glr_08.quiver_001.svg
           :target: https://mpltern.readthedocs.io/en/latest/gallery/introductory/08.quiver.html
-
-.. list-table::
-   :widths: auto
-
    * - .. image:: https://mpltern.readthedocs.io/en/latest/_images/sphx_glr_02.contour_001.svg
           :target: https://mpltern.readthedocs.io/en/latest/gallery/introductory/02.contour.html
      - .. image:: https://mpltern.readthedocs.io/en/latest/_images/sphx_glr_03.pseudocolor_001.svg
           :target: https://mpltern.readthedocs.io/en/latest/gallery/introductory/03.pseudocolor.html
-
-.. list-table::
-   :widths: auto
-
    * - .. image:: https://mpltern.readthedocs.io/en/latest/_images/sphx_glr_with_scatter_001.svg
           :target: https://mpltern.readthedocs.io/en/latest/gallery/statistics/with_scatter.html
      - .. image:: https://mpltern.readthedocs.io/en/latest/_images/sphx_glr_tick_position_001.svg
-          :target: https://mpltern.readthedocs.io/en/develop/gallery/axis_and_tick/tick_position.html
+          :target: https://mpltern.readthedocs.io/en/latest/gallery/axis_and_tick/tick_position.html
 
 Installation
 ============
@@ -109,7 +107,7 @@ Please cite mpltern via the
 `DOI <https://doi.org/10.5281/zenodo.3528354>`__
 if mpltern contributes to a scientific publication.
 
-`Matplotlib should also be acknowledged <https://matplotlib.org/citing.html>`_
+`Matplotlib should also be acknowledged <https://matplotlib.org/citing.html>`__
 when using mpltern.
 
 Author
