@@ -20,7 +20,7 @@ Using these transforms, we can e.g. plot the region where the ratio of *l* and
 import matplotlib.pyplot as plt
 import mpltern  # noqa: F401
 
-ax = plt.subplot(projection="ternary", constant=100.0)
+ax = plt.subplot(projection="ternary", ternary_sum=100.0)
 
 x0 = 0.0
 x1 = 100.0

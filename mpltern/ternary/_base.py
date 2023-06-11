@@ -50,13 +50,13 @@ class TernaryAxesBase(Axes):
     _axis_names = ("x", "y", "t", "l", "r")
     _shared_axes = {name: cbook.Grouper() for name in _axis_names}
 
-    def __init__(self, *args, constant: float = 1.0, corners=None,
+    def __init__(self, *args, ternary_sum: float = 1.0, corners=None,
                  rotation: float = None, **kwargs):
         """Build an TernaryAxes in a figure.
 
         Parameters
         ----------
-        constant : float, optional
+        ternary_sum : float, optional
             Constant to which ``t + l + r`` is normalized, by default 1.0
         corners : Sequence[float] or None, optional
             Corners of the triangle, by default None
@@ -65,10 +65,11 @@ class TernaryAxesBase(Axes):
         """
         if "ternary_scale" in kwargs:
             warnings.warn(
-                "`ternary_scale` has been renamed `constant` in mpltern 1.0.0 "
-                "and will be removed in mpltern 2.0.0."
+                "Since mpltern 1.0.0, the normalization constant for a "
+                "ternary plot has been renamed from `ternary_scale` to "
+                "`ternary_sum`. Use the latter."
             )
-            constant = kwargs.pop("ternary_scale")
+            ternary_sum = kwargs.pop("ternary_scale")
 
         # workaround for matplotlib>=3.6.0
         self._sharet = None
@@ -84,10 +85,14 @@ class TernaryAxesBase(Axes):
         # Triangle corners in the original ``Axes`` coordinates
         self.corners_axes = trans.transform(self.corners_data)
 
-        self.constant = constant
+        self.ternary_sum = ternary_sum
         super().__init__(*args, **kwargs)
         self.set_aspect('equal', adjustable='box', anchor='C')
-        self.set_ternary_lim(0.0, constant, 0.0, constant, 0.0, constant)
+        self.set_ternary_lim(
+            0.0, ternary_sum,
+            0.0, ternary_sum,
+            0.0, ternary_sum,
+        )
 
     @property
     def callbacks(self):
@@ -146,7 +151,7 @@ class TernaryAxesBase(Axes):
 
     def _set_lim_and_transforms(self):
         super()._set_lim_and_transforms()
-        transTernaryScale = TernaryScaleTransform(self.constant)
+        transTernaryScale = TernaryScaleTransform(self.ternary_sum)
         transTLimits = mtransforms.BboxTransformFrom(
             mtransforms.TransformedBbox(self.viewOuterTLim, self.transScale))
         transLLimits = mtransforms.BboxTransformFrom(
@@ -158,13 +163,13 @@ class TernaryAxesBase(Axes):
 
         ternary_limits = [self.viewTLim, self.viewLLim, self.viewRLim]
 
-        h2t_h_t = H2THeightTransform(self.constant, ternary_limits, 0)
-        h2t_h_l = H2THeightTransform(self.constant, ternary_limits, 1)
-        h2t_h_r = H2THeightTransform(self.constant, ternary_limits, 2)
+        h2t_h_t = H2THeightTransform(self.ternary_sum, ternary_limits, 0)
+        h2t_h_l = H2THeightTransform(self.ternary_sum, ternary_limits, 1)
+        h2t_h_r = H2THeightTransform(self.ternary_sum, ternary_limits, 2)
 
-        h2t_w_t = H2TWidthTransform(self.constant, ternary_limits, 0)
-        h2t_w_l = H2TWidthTransform(self.constant, ternary_limits, 1)
-        h2t_w_r = H2TWidthTransform(self.constant, ternary_limits, 2)
+        h2t_w_t = H2TWidthTransform(self.ternary_sum, ternary_limits, 0)
+        h2t_w_l = H2TWidthTransform(self.ternary_sum, ternary_limits, 1)
+        h2t_w_r = H2TWidthTransform(self.ternary_sum, ternary_limits, 2)
 
         h2t_t = h2t_h_t + h2t_w_t
         h2t_l = h2t_h_l + h2t_w_l
@@ -285,9 +290,9 @@ class TernaryAxesBase(Axes):
         return self.raxis
 
     def clear(self):
-        self.viewTLim.intervalx = 0.0, self.constant
-        self.viewLLim.intervalx = 0.0, self.constant
-        self.viewRLim.intervalx = 0.0, self.constant
+        self.viewTLim.intervalx = 0.0, self.ternary_sum
+        self.viewLLim.intervalx = 0.0, self.ternary_sum
+        self.viewRLim.intervalx = 0.0, self.ternary_sum
         if tuple(int(_) for _ in mpl.__version__.split('.'))[:2] < (3, 6):
             super().cla()
         else:
@@ -616,39 +621,40 @@ class TernaryAxesBase(Axes):
 
     def _get_hexagonal_vertices(self):
         """Get vertices of the view-limit hexagon."""
-        scale = self.constant
         tmin, tmax = self.get_tlim()
         lmin, lmax = self.get_llim()
         rmin, rmax = self.get_rlim()
         return [
-            [tmax, lmin, scale - tmax - lmin],
-            [tmax, scale - tmax - rmin, rmin],
-            [scale - lmax - rmin, lmax, rmin],
-            [tmin, lmax, scale - lmax - tmin],
-            [tmin, scale - rmax - tmin, rmax],
-            [scale - rmax - lmin, lmin, rmax],
+            [tmax, lmin, self.ternary_sum - tmax - lmin],
+            [tmax, self.ternary_sum - tmax - rmin, rmin],
+            [self.ternary_sum - lmax - rmin, lmax, rmin],
+            [tmin, lmax, self.ternary_sum - lmax - tmin],
+            [tmin, self.ternary_sum - rmax - tmin, rmax],
+            [self.ternary_sum - rmax - lmin, lmin, rmax],
         ]
 
     def _get_triangular_vertices(self):
         """Get vertices of the extrapolative triangle."""
-        scale = self.constant
         tmin = self.get_tlim()[0]
         lmin = self.get_llim()[0]
         rmin = self.get_rlim()[0]
         return [
-            [scale - lmin - rmin, lmin, rmin],
-            [tmin, scale - rmin - tmin, rmin],
-            [tmin, lmin, scale - tmin - lmin],
+            [self.ternary_sum - lmin - rmin, lmin, rmin],
+            [tmin, self.ternary_sum - rmin - tmin, rmin],
+            [tmin, lmin, self.ternary_sum - tmin - lmin],
         ]
 
     def _create_bbox_from_ternary_lim(self, fit: str = "rectangle"):
-        tn_sum = self.constant
         if fit == "rectangle":
             tlr = self._get_hexagonal_vertices()
         elif fit == "triangle":
             tlr = self._get_triangular_vertices()
         elif fit == "none":
-            tlr = [[tn_sum, 0.0, 0.0], [0.0, tn_sum, 0.0], [0.0, 0.0, tn_sum]]
+            tlr = [
+                [self.ternary_sum, 0.0, 0.0],
+                [0.0, self.ternary_sum, 0.0],
+                [0.0, 0.0, self.ternary_sum],
+            ]
         else:
             raise ValueError(f'unknown fit: {fit}')
         xy = self.transProjection.transform(tlr)
@@ -671,12 +677,11 @@ class TernaryAxesBase(Axes):
             - ``'none'``: The plotting region is simply cropped (or expanded).
         """
         _api.check_in_list(['rectangle', 'triangle', 'none'], fit=fit)
-        scale = self.constant
-        if np.sign(tmax - tmin) != np.sign(scale):
+        if np.sign(tmax - tmin) != np.sign(self.ternary_sum):
             tmin, tmax = tmax, tmin
-        if np.sign(lmax - lmin) != np.sign(scale):
+        if np.sign(lmax - lmin) != np.sign(self.ternary_sum):
             lmin, lmax = lmax, lmin
-        if np.sign(rmax - rmin) != np.sign(scale):
+        if np.sign(rmax - rmin) != np.sign(self.ternary_sum):
             rmin, rmax = rmax, rmin
 
         boxin = self._create_bbox_from_ternary_lim("none")
@@ -730,40 +735,38 @@ class TernaryAxesBase(Axes):
         The given ternary limits may be further modified to show intersections
         of (tmin, tmax), (lmin, lmax), (rmin, rmax).
         """
-        scale = self.constant
+        tn_sum = self.ternary_sum
 
-        select_min, select_max = (max, min) if scale > 0.0 else (min, max)
+        select_min, select_max = (max, min) if tn_sum > 0.0 else (min, max)
 
-        tmin = select_min(tmin, scale - lmax - rmax)
-        lmin = select_min(lmin, scale - rmax - tmax)
-        rmin = select_min(rmin, scale - tmax - lmax)
+        tmin = select_min(tmin, tn_sum - lmax - rmax)
+        lmin = select_min(lmin, tn_sum - rmax - tmax)
+        rmin = select_min(rmin, tn_sum - tmax - lmax)
 
-        tmax = select_max(tmax, scale - lmin - rmin)
-        lmax = select_max(lmax, scale - rmin - tmin)
-        rmax = select_max(rmax, scale - tmin - lmin)
+        tmax = select_max(tmax, tn_sum - lmin - rmin)
+        lmax = select_max(lmax, tn_sum - rmin - tmin)
+        rmax = select_max(rmax, tn_sum - tmin - lmin)
 
         self.viewTLim.intervalx = tmin, tmax
         self.viewLLim.intervalx = lmin, lmax
         self.viewRLim.intervalx = rmin, rmax
 
-        self.viewOuterTLim.intervalx = tmin, scale - lmin - rmin
-        self.viewOuterLLim.intervalx = lmin, scale - tmin - rmin
-        self.viewOuterRLim.intervalx = rmin, scale - tmin - lmin
+        self.viewOuterTLim.intervalx = tmin, tn_sum - lmin - rmin
+        self.viewOuterLLim.intervalx = lmin, tn_sum - tmin - rmin
+        self.viewOuterRLim.intervalx = rmin, tn_sum - tmin - lmin
 
     def set_ternary_min(self, tmin, lmin, rmin, fit: str = "rectangle"):
         """Set the minimum values for ternary limits."""
-        scale = self.constant
-        tmax = scale - lmin - rmin
-        lmax = scale - rmin - tmin
-        rmax = scale - tmin - lmin
+        tmax = self.ternary_sum - lmin - rmin
+        lmax = self.ternary_sum - rmin - tmin
+        rmax = self.ternary_sum - tmin - lmin
         self.set_ternary_lim(tmin, tmax, lmin, lmax, rmin, rmax, fit)
 
     def set_ternary_max(self, tmax, lmax, rmax, fit: str = "rectangle"):
         """Set the maximum values for ternary limits."""
-        scale = self.constant
-        tmin = (scale + tmax - lmax - rmax) * 0.5
-        lmin = (scale + lmax - rmax - tmax) * 0.5
-        rmin = (scale + rmax - tmax - lmax) * 0.5
+        tmin = (self.ternary_sum + tmax - lmax - rmax) * 0.5
+        lmin = (self.ternary_sum + lmax - rmax - tmax) * 0.5
+        rmin = (self.ternary_sum + rmax - tmax - lmax) * 0.5
         self.set_ternary_lim(tmin, tmax, lmin, lmax, rmin, rmax, fit)
 
     def get_tlim(self):

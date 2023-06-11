@@ -16,12 +16,12 @@ import matplotlib.pyplot as plt
 from matplotlib.ticker import PercentFormatter
 import mpltern
 
-constant = 100.0
+ternary_sum = 100.0
 
-ax = plt.subplot(projection="ternary", constant=constant)
+ax = plt.subplot(projection="ternary", ternary_sum=ternary_sum)
 
 np.random.seed(19680801)
-t, l, r = constant * np.random.dirichlet(alpha=(2.0, 4.0, 8.0), size=128).T
+t, l, r = ternary_sum * np.random.dirichlet(alpha=(2.0, 4.0, 8.0), size=128).T
 
 ax.scatter(t, l, r, s=64.0, c="none", edgecolors="C0")
 

@@ -16,13 +16,13 @@ Then, make `TernaryAxes`;
 
     ax = plt.subplot(projection="ternary")
 
-You can use another normalization constant e.g. 100 using `constant`.
+You can use another normalization constant e.g. 100 using `ternary_sum`.
 Ternary-axis labels can be given using e.g. `ax.set_tlabel`.
 You can also add grids with `ax.grid`.
 
 .. plot::
 
-    ax = plt.subplot(projection="ternary", constant=100.0)
+    ax = plt.subplot(projection="ternary", ternary_sum=100.0)
 
     ax.set_tlabel("Top (%)")
     ax.set_llabel("Left (%)")

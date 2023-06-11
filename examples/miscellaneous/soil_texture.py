@@ -74,7 +74,7 @@ def plot_soil_texture_classes(ax):
 
 def main():
     """Main"""
-    ax = plt.subplot(projection="ternary", constant=100.0)
+    ax = plt.subplot(projection="ternary", ternary_sum=100.0)
     plot_soil_texture_classes(ax)
     # add plot here on top of USDA soil texture classes with zorder of e.g. 2.5
     plt.show()

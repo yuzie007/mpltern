@@ -294,9 +294,9 @@ class TestTicks:
 
 
 @check_figures_equal(extensions=('pdf',))
-def test_constant(fig_test, fig_ref):
-    """Test if the `constant` argument works correctly."""
-    ax = fig_test.add_subplot(projection='ternary', constant=0.5)
+def test_ternary_sum(fig_test, fig_ref):
+    """Test if the `ternary_sum` argument works correctly."""
+    ax = fig_test.add_subplot(projection='ternary', ternary_sum=0.5)
     tn0, tn1, tn2 = get_spiral()
     ax.plot(tn0, tn1, tn2)
     ax.set_tlabel('Top')
