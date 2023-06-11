@@ -82,8 +82,8 @@ based on `Matplotlib`_ specifically designed for
           :target: https://mpltern.readthedocs.io/en/latest/gallery/introductory/03.pseudocolor.html
    * - .. image:: https://mpltern.readthedocs.io/en/latest/_images/sphx_glr_with_scatter_001.svg
           :target: https://mpltern.readthedocs.io/en/latest/gallery/statistics/with_scatter.html
-     - .. image:: https://mpltern.readthedocs.io/en/latest/_images/sphx_glr_tick_position_001.svg
-          :target: https://mpltern.readthedocs.io/en/latest/gallery/axis_and_tick/tick_position.html
+     - .. image:: https://mpltern.readthedocs.io/en/latest/_images/sphx_glr_10.tick_position_001.svg
+          :target: https://mpltern.readthedocs.io/en/latest/gallery/axis_and_tick/10.tick_position.html
 
 .. list-table::
    :widths: auto
