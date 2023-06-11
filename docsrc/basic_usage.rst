@@ -34,7 +34,7 @@ You can also add grids with `ax.grid`.
 
 You can make ternary plots using methods similar to Matplotlib.
 You can e.g. use `ax.plot`;
-the only difference from Matplotlib is that you need give three variables i.e.
+the only difference from Matplotlib is that you give three variables i.e.
 `t` (top), `l` (left), `r` (right) instead of `x` and `y`.
 
 .. plot::

@@ -91,6 +91,6 @@ automatically normalized by ``ternary_sum``.
 By this convention, the three variables can be treated on an equal footing.
 The exceptions are the span-plots like ``ax.axtline``.
 Since in these methods only one of the variables is given, in principle it is
-not possible whether the given value is already normalized or not.
+not possible to know whether the given value is already normalized or not.
 **To avoid confusions, it is strongly suggested to normalize the three
-variables beforehand outside mpltern.**
+variables on the user side.**
