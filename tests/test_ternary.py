@@ -380,8 +380,11 @@ class TestTernaryLim:
         ax.set_ternary_max(0.5, 0.6, 0.7)
 
     @pytest.mark.parametrize(
-        "fit, baseline_images",
-        [["rectangle", ["hexagonal_False"]], ["triangle", ["hexagonal_True"]]],
+        "fit, baseline_images", [
+            ["rectangle", ["fit_rectangle"]],
+            ["triangle", ["fit_triangle"]],
+            ["none", ["fit_none"]],
+        ],
     )
     @image_comparison(
         baseline_images=None,
@@ -389,7 +392,7 @@ class TestTernaryLim:
         remove_text=True,
         style='mpl20',
     )
-    def test_hexagonal(self, fit: str, baseline_images):
+    def test_fit(self, fit: str, baseline_images):
         """Test if hexagonal limits are properly plotted."""
         fig = plt.figure()
         ax = fig.add_subplot(projection="ternary")
