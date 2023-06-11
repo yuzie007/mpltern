@@ -1,6 +1,6 @@
 """
 =======================
-Fit the plotting region
+Plotting region fitting
 =======================
 
 When the ternary limits are modified, the plotting region can be expanded or
