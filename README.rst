@@ -64,10 +64,10 @@ based on `Matplotlib`_ specifically designed for
           :target: https://mpltern.readthedocs.io/en/latest/gallery/miscellaneous/soil_texture.html
    * - .. image:: https://mpltern.readthedocs.io/en/latest/_images/sphx_glr_98.colored_axes_001.svg
           :target: https://mpltern.readthedocs.io/en/latest/gallery/axis_and_tick/98.colored_axes.html
-     - .. image:: https://mpltern.readthedocs.io/en/latest/_images/sphx_glr_20.tick-formatters_001.svg
-          :target: https://mpltern.readthedocs.io/en/latest/gallery/axis_and_tick/20.tick-formatters.html
      - .. image:: https://mpltern.readthedocs.io/en/latest/_images/sphx_glr_21.tick-locators_001.svg
           :target: https://mpltern.readthedocs.io/en/latest/gallery/axis_and_tick/21.tick-locators.html
+     - .. image:: https://mpltern.readthedocs.io/en/latest/_images/sphx_glr_evolutionary_game_theory_001.svg
+          :target: https://mpltern.readthedocs.io/en/latest/gallery/miscellaneous/evolutionary_game_theory.html
 
 .. list-table::
    :widths: auto
