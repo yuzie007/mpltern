@@ -19,6 +19,7 @@ def fix_text_kerning_factor():
 
 @image_comparison(baseline_images=['plot'], extensions=['pdf'], style='mpl20')
 def test_plot():
+    """Test if `plot` works as expected."""
     fig = plt.figure()
     ax = fig.add_subplot(projection='ternary')
     tn0, tn1, tn2 = get_spiral()
@@ -68,7 +69,10 @@ def test_data(fig_ref, fig_test):
 
 
 def test_data_with_five_arguments():
-    # When with data, the number of positional arguments must be 3 or 4.
+    """Test if data with 5 arguments raise ValueError.
+
+    With data, the number of positional arguments must be 3 or 4.
+    """
     fig = plt.figure()
     ax = fig.add_subplot(projection='ternary')
     tn0, tn1, tn2 = get_spiral()
@@ -97,8 +101,7 @@ class TestArguments:
         ax.plot(tn0, tn1, tn2, 'C3:', tn1, tn2, tn0)
 
     def test_no_arguments(self):
-        # In Matplotlib, `ax.plot()` without any arguments returns an empty
-        # list. This test checks whether `mpltern` mimics this behavior.
+        """Test if `plot` with no arguments returns an empty list."""
         fig = plt.figure()
         ax = fig.add_subplot(projection='ternary')
         lines = ax.plot()
@@ -106,11 +109,10 @@ class TestArguments:
 
 
 class TestTransform:
-    # Confirm that `plot` can recognize `ax.transAxes` and handle data
-    # ax expected.
     @image_comparison(baseline_images=['transAxes'], extensions=['pdf'],
                       style='mpl20')
     def test_tranform_1(self):
+        """Test if `plot` recognizes and handle `ax.transAxes` as expected."""
         fig_test = plt.figure()
         ax = fig_test.add_subplot(111, projection='ternary')
         ax.plot([0, 1], [0, 1], transform=ax.transAxes)
@@ -156,6 +158,7 @@ class TestTitle:
 @image_comparison(baseline_images=['aspect'], extensions=['pdf'],
                   style='mpl20')
 def test_aspect():
+    """Test if `set_aspect` works."""
     fix_text_kerning_factor()
 
     fig = plt.figure()
@@ -209,10 +212,11 @@ class TestTicks:
     @image_comparison(baseline_images=['opposite_ticks'], extensions=['pdf'],
                       style='mpl20')
     def test_opposite_ticks(self):
-        # This changes only tick & label positions but does not change data
-        # visualizations.
-        # Check if the tick-markers, tick-labels, and axis-labels are shown as
-        # expected.
+        """Test if "tick2" works.
+
+        "tick2" should change the positions of tick-markers, tick-labels, and
+        axis-labels but should not change data points.
+        """
         fix_text_kerning_factor()
 
         fig = plt.figure()
@@ -243,6 +247,7 @@ class TestTicks:
     @image_comparison(baseline_images=['manual_ticks'],
                       extensions=['pdf'], style='mpl20')
     def test_manual_ticks(self):
+        """Test if ticks can be manually given."""
         fix_text_kerning_factor()
 
         fig = plt.figure()
@@ -264,6 +269,7 @@ class TestTicks:
     @image_comparison(baseline_images=['manual_ticklabels'],
                       extensions=['pdf'], style='mpl20')
     def test_manual_ticklabels(self):
+        """Test if tick-labels can be manually given."""
         fix_text_kerning_factor()
 
         fig = plt.figure()
