@@ -116,9 +116,8 @@ sphinx_gallery_conf = {
                                        '../examples/statistics',
                                        '../examples/axis_and_tick',
                                        '../examples/limits',
-                                       '../examples/triangle',
                                        '../examples/transforms',
-                                       '../examples/advanced',
+                                       '../examples/triangle',
                                        '../examples/miscellaneous']),
     'min_reported_time': 1,
     'plot_gallery': 'True',  # sphinx-gallery/913
