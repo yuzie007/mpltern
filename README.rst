@@ -85,6 +85,14 @@ based on `Matplotlib`_ specifically designed for
      - .. image:: https://mpltern.readthedocs.io/en/latest/_images/sphx_glr_tick_position_001.svg
           :target: https://mpltern.readthedocs.io/en/latest/gallery/axis_and_tick/tick_position.html
 
+.. list-table::
+   :widths: auto
+
+   * - .. image:: https://mpltern.readthedocs.io/en/latest/_images/sphx_glr_01.triangle_rotation_001.svg
+          :target: https://mpltern.readthedocs.io/en/latest/gallery/triangle/01.triangle_rotation.html
+     - .. image:: https://mpltern.readthedocs.io/en/latest/_images/sphx_glr_dirichlet_pdf_001.svg
+          :target: https://mpltern.readthedocs.io/en/latest/gallery/miscellaneous/dirichlet_pdf.html
+
 Installation
 ============
 
