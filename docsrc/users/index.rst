@@ -1,11 +1,11 @@
-##########
-User guide
-##########
+####
+Tips
+####
 
 .. toctree::
    :maxdepth: 2
 
    ../implemented_methods.rst
    ../conventions.rst
-   Alternatives <../alternatives.rst>
-   Publications <../publications.rst>
+   ../api.rst
+   ../alternatives.rst

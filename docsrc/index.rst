@@ -5,8 +5,8 @@
    :maxdepth: 2
 
    installation.rst
-   Examples <gallery/index.rst>
    Tutorials <basic_usage.rst>
-   User guide <users/index.rst>
-   Reference <api.rst>
+   Examples <gallery/index.rst>
    Releases <users/release_notes.rst>
+   Publications <publications.rst>
+   users/index.rst
