@@ -175,6 +175,13 @@ github_project_url = "https://github.com/yuzie007/mpltern/"
 # Options for HTML output
 # -----------------------
 
+# The style sheet to use for HTML and HTML Help pages. A file of that name
+# must exist either in Sphinx' static/ path, or in one of the custom paths
+# given in html_static_path.
+html_css_files = [
+    "mpl.css",
+]
+
 html_theme = "pydata_sphinx_theme"
 
 html_theme_options = {

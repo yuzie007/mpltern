@@ -1,0 +1,6 @@
+/* hide download buttons in example headers
+ * https://sphinx-gallery.github.io/stable/advanced.html#hide-the-download-buttons-in-the-example-headers
+ */
+div.sphx-glr-download-link-note {
+    display: none;
+}
