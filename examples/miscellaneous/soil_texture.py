@@ -36,7 +36,7 @@ def plot_soil_texture_classes(ax):
     """Plot soil texture classes."""
     classes = soil_texture_classes
 
-    for (key, value), color in zip(classes.items(), _Set3_data, strict=True):
+    for (key, value), color in zip(classes.items(), _Set3_data):
         tn0, tn1, tn2 = np.array(value).T
         patch = ax.fill(tn0, tn1, tn2, ec="k", fc=color, alpha=0.6, zorder=2.1)
         centroid = calculate_centroid(patch[0].get_xy())
