@@ -24,7 +24,7 @@ In mpltern, by default, the ticks are shown to the right side of the triangle
 with seeing the corresponding corner upward.
 You can put the ticks to the opposite sides using
 ``ax.taxis.set_ticks_position("tick2")`` etc.
-(:doc:`See here <gallery/axis_and_tick/tick_position>`.)
+(:doc:`See here <gallery/axis_and_tick/10.tick_position>`.)
 Notice that, although the tick positions are changed, still a point in the
 triangle corresponds to the same composition (see the red point).
 
