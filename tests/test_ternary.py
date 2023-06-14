@@ -704,6 +704,29 @@ class TestQuiver:
         ax.quiver(x, y, dx, dy, transform=ax.transAxes)
 
 
+@mpl.style.context("default")
+@check_figures_equal(extensions=('pdf',), tol=1.0)
+def test_triplot(fig_test, fig_ref):
+    """Test if `triplot` gives the expected result."""
+    ax = fig_test.add_subplot(projection="ternary")
+    tn0, tn1, tn2 = get_triangular_grid(n=6)
+    color = plt.rcParams["grid.color"]
+    linestyle = plt.rcParams["grid.linestyle"]
+    linewidth = plt.rcParams["grid.linewidth"]
+    ax.triplot(
+        tn0,
+        tn1,
+        tn2,
+        color=color,
+        linestyle=linestyle,
+        linewidth=linewidth,
+    )
+
+    ax = fig_ref.add_subplot(projection="ternary")
+    # `zorder` of ticks and grid lines may be the same and uncontrollable.
+    ax.grid(axis="both")
+
+
 @check_figures_equal(extensions=('pdf',))
 def test_grid_both(fig_test, fig_ref):
     """Test if `grid("both")` gives the expected result."""
