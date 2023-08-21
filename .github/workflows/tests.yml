@@ -6,33 +6,39 @@ on:
     - '*'
 
 jobs:
-  build:
+  test:
 
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     strategy:
       matrix:
         python-version: ["3.9"]
         matplotlib-version: [3.4.0, 3.5.0, 3.6.0, 3.7.0]
 
     steps:
-    - uses: actions/checkout@master
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v3
-      with:
-        python-version: ${{ matrix.python-version }}
-    - name: Before_install
-      run: |
-        sudo apt-get -y install ghostscript inkscape
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        python -m pip install pillow==9.0
-        python -m pip install matplotlib==${{ matrix.matplotlib-version }}
-        python -m pip install pytest>=4.6
-        python -m pip install pytest-cov
-        python -m pip install codecov coverage
-    - name: Test with pytest
-      run: |
-        python -mpytest -ra --cov=./ --log-level=DEBUG
-    - name: Upload code coverage
-      uses: codecov/codecov-action@v3
+      - uses: actions/checkout@v3
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install OS dependencies
+        run: |
+          sudo apt-get update -yy
+          sudo apt-get install -yy \
+            inkscape
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+
+          python -m pip install numpy==1.24.4
+          python -m pip install pillow==9.0
+          python -m pip install matplotlib==${{ matrix.matplotlib-version }}
+          python -m pip install pytest>=4.6
+          python -m pip install pytest-cov
+          python -m pip install codecov coverage
+      - name: Run pytest
+        run: |
+          python -mpytest -ra \
+          --cov=./ --log-level=DEBUG --color=yes
+      - name: Upload code coverage
+        uses: codecov/codecov-action@v3
