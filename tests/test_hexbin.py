@@ -20,6 +20,20 @@ def test_base():
     ax.hexbin(t, l, r, edgecolors="none")
 
 
+@check_figures_equal(extensions=('pdf',))
+def test_weights(fig_test, fig_ref):
+    """Test if the `C` option works correctly."""
+    np.random.seed(19680801)
+    size = 1000
+    t, l, r = np.random.dirichlet(alpha=(2.0, 4.0, 8.0), size=size).T
+
+    ax = fig_test.add_subplot(projection="ternary")
+    ax.hexbin(t, l, r, C=[1] * size, gridsize=10, reduce_C_function=sum)
+
+    ax = fig_ref.add_subplot(projection="ternary")
+    ax.hexbin(t, l, r, gridsize=10)
+
+
 @image_comparison(
     baseline_images=["ternary_lim"],
     extensions=["pdf"],
