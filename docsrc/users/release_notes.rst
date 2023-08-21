@@ -2,6 +2,7 @@
 Release notes
 #############
 
+.. include:: mpltern_1.0.1.rst
 .. include:: mpltern_1.0.0.rst
 
 mpltern 0.5.0 (2023-02-22)
