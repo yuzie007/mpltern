@@ -46,10 +46,10 @@ based on `Matplotlib`_ specifically designed for
 - ``tight_layout`` and ``constrained_layout``
 
 - `Easy combination with normal Matplotlib plots
-  <https://mpltern.readthedocs.io/en/latest/gallery/intermediate/with_normal_plots.html>`__
+  <https://mpltern.readthedocs.io/en/latest/gallery/intermediate/00.with_normal_plots.html>`__
 
 - `Easy application of style sheets
-  <https://mpltern.readthedocs.io/en/latest/gallery/intermediate/style_sheets.html>`__
+  <https://mpltern.readthedocs.io/en/latest/gallery/intermediate/01.style_sheets.html>`__
 
 - Interactive in, e.g., `Jupyter <http://jupyter.org>`__ notebooks
 
