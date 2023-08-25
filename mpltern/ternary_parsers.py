@@ -1,5 +1,6 @@
-import numpy as np
+import functools
 
+import numpy as np
 import matplotlib as mpl
 
 
@@ -19,6 +20,7 @@ def _parse_ternary_single(f):
     """
     Parse ternary data from the first 3 arguments.
     """
+    @functools.wraps(f)
     def parse(ax, *args, **kwargs):
         trans = kwargs.pop('transform', None)
         # If no `args` are given, return an empty list like Matplotlib
@@ -52,6 +54,7 @@ def _parse_ternary_multiple(f):
                     "multiple plotting calls instead")
         return args, kwargs
 
+    @functools.wraps(f)
     def parse(ax, *args, **kwargs):
         trans = kwargs.pop('transform', None)
         # If no `args` are given, return an empty list like Matplotlib
@@ -82,6 +85,7 @@ def _parse_ternary_vector(f):
     """
     Parse ternary data from the first 6 arguments.
     """
+    @functools.wraps(f)
     def parse(ax, *args, **kwargs):
         trans = kwargs.pop('transform', None)
         # If no `args` are given, return an empty list like Matplotlib
@@ -109,6 +113,7 @@ def _parse_ternary_vector_field(f):
     """
     Parse ternary data from the first 6 arguments.
     """
+    @functools.wraps(f)
     def parse(ax, *args, **kwargs):
         trans = kwargs.pop('transform', None)
         # If no `args` are given, return an empty list like Matplotlib
