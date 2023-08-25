@@ -704,6 +704,46 @@ class TestQuiver:
         ax.quiver(x, y, dx, dy, transform=ax.transAxes)
 
 
+class TestFill:
+    """Test `fill`"""
+    @check_figures_equal(extensions=('pdf',), tol=1.0)
+    def test_fill(self, fig_test, fig_ref):
+        """Test if `fill` gives the expected result."""
+        ax = fig_test.add_subplot(projection="ternary")
+        tn0 = [1, 0, 0]
+        tn1 = [0, 1, 0]
+        tn2 = [0, 0, 1]
+        ax.fill(tn0, tn1, tn2, "b")
+
+        ax = fig_ref.add_subplot(projection="ternary")
+        ax.set_fc("b")
+
+    @check_figures_equal(extensions=('pdf',), tol=1.0)
+    def test_data(self, fig_test, fig_ref):
+        """Test if `data` in `fill` works correctly."""
+        ax = fig_test.add_subplot(projection="ternary")
+        tn0 = [1, 0, 0]
+        tn1 = [0, 1, 0]
+        tn2 = [0, 0, 1]
+        ax.fill("t", "l", "r", "b", data={"t": tn0, "l": tn1, "r": tn2})
+
+        ax = fig_ref.add_subplot(projection="ternary")
+        ax.fill(tn0, tn1, tn2, "b")
+
+
+@check_figures_equal(extensions=('pdf',), tol=1.0)
+def test_tripcolor(fig_test, fig_ref):
+    """Test if `tripcolor` gives the expected result."""
+    ax = fig_test.add_subplot(projection="ternary")
+    tn0 = [1, 0, 0]
+    tn1 = [0, 1, 0]
+    tn2 = [0, 0, 1]
+    ax.tripcolor(tn0, tn1, tn2, [0, 0, 0], vmin=0.0, vmax=1.0, cmap="bwr")
+
+    ax = fig_ref.add_subplot(projection="ternary")
+    ax.set_fc("b")
+
+
 @mpl.style.context("default")
 @check_figures_equal(extensions=('pdf',), tol=1.0)
 def test_triplot(fig_test, fig_ref):
