@@ -22,9 +22,7 @@ class TernaryAxes(TernaryAxesBase):
     """
     name = 'ternary'
 
-    @_parse_ternary_single
-    def text(self, *args, **kwargs):
-        return super().text(*args, **kwargs)
+    text = _parse_ternary_single(TernaryAxesBase.text)
 
     def axtline(self, x=0, ymin=0, ymax=1, **kwargs):
         """
@@ -304,13 +302,8 @@ class TernaryAxes(TernaryAxesBase):
         self.add_patch(p)
         return p
 
-    @_parse_ternary_multiple
-    def plot(self, *args, **kwargs):
-        return super().plot(*args, **kwargs)
-
-    @_parse_ternary_multiple
-    def scatter(self, *args, **kwargs):
-        return super().scatter(*args, **kwargs)
+    plot = _parse_ternary_multiple(TernaryAxesBase.plot)
+    scatter = _parse_ternary_multiple(TernaryAxesBase.scatter)
 
     def hexbin(self, t, l, r, C=None, gridsize=100, bins=None,
                xscale='linear', yscale='linear', extent=None,
@@ -790,38 +783,12 @@ class TernaryAxes(TernaryAxesBase):
         self.add_collection(collection, autolim=False)
         return collection
 
-    @_parse_ternary_vector
-    def arrow(self, *args, **kwargs):
-        return super().arrow(*args, **kwargs)
-
-    @_parse_ternary_vector_field
-    def quiver(self, *args, **kwargs):
-        return super().quiver(*args, **kwargs)
-
-    @_parse_ternary_vector_field
-    def barbs(self, *args, **kwargs):
-        return super().barbs(*args, **kwargs)
-
-    @_parse_ternary_multiple
-    def fill(self, *args, **kwargs):
-        return super().fill(*args, **kwargs)
-
-    @_parse_ternary_single
-    def hist2d(self, *args, **kwargs):
-        return super().hist2d(*args, **kwargs)
-
-    @_parse_ternary_single
-    def tricontour(self, *args, **kwargs):
-        return super().tricontour(*args, **kwargs)
-
-    @_parse_ternary_single
-    def tricontourf(self, *args, **kwargs):
-        return super().tricontourf(*args, **kwargs)
-
-    @_parse_ternary_single
-    def tripcolor(self, *args, **kwargs):
-        return super().tripcolor(*args, **kwargs)
-
-    @_parse_ternary_single
-    def triplot(self, *args, **kwargs):
-        return super().triplot(*args, **kwargs)
+    arrow = _parse_ternary_vector(TernaryAxesBase.arrow)
+    quiver = _parse_ternary_vector_field(TernaryAxesBase.quiver)
+    barbs = _parse_ternary_vector_field(TernaryAxesBase.barbs)
+    fill = _parse_ternary_multiple(TernaryAxesBase.fill)
+    hist2d = _parse_ternary_single(TernaryAxesBase.hist2d)
+    tricontour = _parse_ternary_single(TernaryAxesBase.tricontour)
+    tricontourf = _parse_ternary_single(TernaryAxesBase.tricontourf)
+    tripcolor = _parse_ternary_single(TernaryAxesBase.tripcolor)
+    triplot = _parse_ternary_single(TernaryAxesBase.triplot)
