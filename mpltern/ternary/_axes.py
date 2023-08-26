@@ -8,8 +8,8 @@ import matplotlib.patches as mpatches
 import matplotlib.transforms as mtransforms
 from matplotlib import _api
 from mpltern.ternary_parsers import (
-    _parse_ternary_single, _parse_ternary_multiple,
-    _parse_ternary_vector, _parse_ternary_vector_field)
+    parse_ternary_single, parse_ternary_multiple,
+    parse_ternary_vector, parse_ternary_vector_field)
 from mpltern import hexbin_helpers
 from mpltern import tribin_helpers
 from mpltern.ternary._base import TernaryAxesBase
@@ -22,7 +22,7 @@ class TernaryAxes(TernaryAxesBase):
     """
     name = 'ternary'
 
-    text = _parse_ternary_single(TernaryAxesBase.text)
+    text = parse_ternary_single(TernaryAxesBase.text)
 
     def axtline(self, x=0, ymin=0, ymax=1, **kwargs):
         """
@@ -302,8 +302,8 @@ class TernaryAxes(TernaryAxesBase):
         self.add_patch(p)
         return p
 
-    plot = _parse_ternary_multiple(TernaryAxesBase.plot)
-    scatter = _parse_ternary_multiple(TernaryAxesBase.scatter)
+    plot = parse_ternary_multiple(TernaryAxesBase.plot)
+    scatter = parse_ternary_multiple(TernaryAxesBase.scatter)
 
     def hexbin(self, t, l, r, C=None, gridsize=100, bins=None,
                xscale='linear', yscale='linear', extent=None,
@@ -783,12 +783,12 @@ class TernaryAxes(TernaryAxesBase):
         self.add_collection(collection, autolim=False)
         return collection
 
-    arrow = _parse_ternary_vector(TernaryAxesBase.arrow)
-    quiver = _parse_ternary_vector_field(TernaryAxesBase.quiver)
-    barbs = _parse_ternary_vector_field(TernaryAxesBase.barbs)
-    fill = _parse_ternary_multiple(TernaryAxesBase.fill)
-    hist2d = _parse_ternary_single(TernaryAxesBase.hist2d)
-    tricontour = _parse_ternary_single(TernaryAxesBase.tricontour)
-    tricontourf = _parse_ternary_single(TernaryAxesBase.tricontourf)
-    tripcolor = _parse_ternary_single(TernaryAxesBase.tripcolor)
-    triplot = _parse_ternary_single(TernaryAxesBase.triplot)
+    arrow = parse_ternary_vector(TernaryAxesBase.arrow)
+    quiver = parse_ternary_vector_field(TernaryAxesBase.quiver)
+    barbs = parse_ternary_vector_field(TernaryAxesBase.barbs)
+    fill = parse_ternary_multiple(TernaryAxesBase.fill)
+    hist2d = parse_ternary_single(TernaryAxesBase.hist2d)
+    tricontour = parse_ternary_single(TernaryAxesBase.tricontour)
+    tricontourf = parse_ternary_single(TernaryAxesBase.tricontourf)
+    tripcolor = parse_ternary_single(TernaryAxesBase.tripcolor)
+    triplot = parse_ternary_single(TernaryAxesBase.triplot)

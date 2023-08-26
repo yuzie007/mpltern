@@ -16,7 +16,7 @@ def _get_xy(ax, this, trans):
     return x, y, trans_xy
 
 
-def _parse_ternary_single(f):
+def parse_ternary_single(f):
     """
     Parse ternary data from the first 3 arguments.
     """
@@ -37,7 +37,7 @@ def _parse_ternary_single(f):
     return parse
 
 
-def _parse_ternary_multiple(f):
+def parse_ternary_multiple(f):
     """
     Parse ternary data from each set of 3 (or 4 for format strings) arguments.
     """
@@ -81,7 +81,7 @@ def _parse_ternary_multiple(f):
     return parse
 
 
-def _parse_ternary_vector(f):
+def parse_ternary_vector(f):
     """
     Parse ternary data from the first 6 arguments.
     """
@@ -109,7 +109,7 @@ def _parse_ternary_vector(f):
     return parse
 
 
-def _parse_ternary_vector_field(f):
+def parse_ternary_vector_field(f):
     """
     Parse ternary data from the first 6 arguments.
     """
