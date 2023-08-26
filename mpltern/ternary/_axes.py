@@ -7,7 +7,7 @@ import matplotlib.lines as mlines
 import matplotlib.patches as mpatches
 import matplotlib.transforms as mtransforms
 from matplotlib import _api
-from mpltern.ternary_parsers import (
+from mpltern._ternary_parsers import (
     parse_ternary_single, parse_ternary_multiple,
     parse_ternary_vector, parse_ternary_vector_field)
 from mpltern import hexbin_helpers
