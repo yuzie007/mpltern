@@ -1,3 +1,5 @@
+import inspect
+
 import numpy as np
 
 import pytest
@@ -790,3 +792,29 @@ def test_legend():
         ax.scatter(*get_scatter_points(11, seed=seed), alpha=0.5, label=seed)
 
     ax.legend()
+
+
+class TestSignature:
+    """Test signatures of methods."""
+    methods = [
+        "text",
+        "plot",
+        "scatter",
+        "arrow",
+        "quiver",
+        "fill",
+        "tricontour",
+        "tricontourf",
+        "tripcolor",
+        "triplot",
+    ]
+
+    @pytest.mark.parametrize("method", methods)
+    def test_signature(self, method):
+        """Test if the signature of the method is the same as the original."""
+        fig = plt.figure()
+        ax_test = fig.add_subplot(projection="ternary")
+        ax_ref = fig.add_subplot()
+        signature_test = inspect.signature(getattr(ax_test, method))
+        signature_ref = inspect.signature(getattr(ax_ref, method))
+        assert signature_test == signature_ref
