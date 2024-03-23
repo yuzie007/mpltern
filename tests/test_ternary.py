@@ -811,6 +811,27 @@ def test_legend():
     ax.legend()
 
 
+@check_figures_equal(extensions=('pdf',))
+def test_set_view(fig_test, fig_ref):
+    """Test if `_set_view` works correctly."""
+    tn0, tn1, tn2 = get_spiral()
+
+    ax = fig_test.add_subplot(projection='ternary')
+    ax.plot(tn0, tn1, tn2)
+    xmin = -0.6 / np.sqrt(3.0)
+    xmax = +1.4 / np.sqrt(3.0)
+    ymin = 0.0
+    ymax = 1.0
+    if tuple(int(_) for _ in mpl.__version__.split('.'))[:2] < (3, 8):
+        ax._set_view((xmin, xmax, ymin, ymax))
+    else:
+        ax._set_view({"xlim": (xmin, xmax), "ylim": (ymin, ymax)})
+
+    ax = fig_ref.add_subplot(projection='ternary')
+    ax.plot(tn0, tn1, tn2)
+    ax.set_ternary_lim(0.0, 1.0, -0.2, 0.8, 0.2, 1.2)
+
+
 class TestSignature:
     """Test signatures of methods."""
     methods = [
