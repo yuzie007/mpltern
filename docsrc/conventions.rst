@@ -83,6 +83,8 @@ In mpltern by default:
 - ``T → L → R`` (CCW) for the order of triangle corners
 - CCW for the ticks progress
 
+.. _normalization-in-ternary-plots:
+
 Normalization in Ternary Plots
 ==============================
 
