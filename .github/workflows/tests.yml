@@ -42,3 +42,5 @@ jobs:
           --cov=./ --log-level=DEBUG --color=yes
       - name: Upload code coverage
         uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
