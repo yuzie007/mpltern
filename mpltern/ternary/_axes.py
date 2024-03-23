@@ -420,6 +420,8 @@ class TernaryAxes(TernaryAxesBase):
         --------
         tribin : 2D histogram triangular bins
         """
+        t, l, r = _normalize_tlr(t, l, r, self.ternary_sum)
+
         self._process_unit_info(
             [("t", t), ("l", l), ("r", r)], kwargs, convert=False)
 
@@ -660,6 +662,8 @@ class TernaryAxes(TernaryAxesBase):
         --------
         hexbin : 2D histogram hexagonal bins
         """
+        t, l, r = _normalize_tlr(t, l, r, self.ternary_sum)
+
         self._process_unit_info(
             [("t", t), ("l", l), ("r", r)], kwargs, convert=False)
 
@@ -792,3 +796,17 @@ class TernaryAxes(TernaryAxesBase):
     tricontourf = parse_ternary_single(TernaryAxesBase.tricontourf)
     tripcolor = parse_ternary_single(TernaryAxesBase.tripcolor)
     triplot = parse_ternary_single(TernaryAxesBase.triplot)
+
+
+def _normalize_tlr(t, l, r, ternary_sum):
+    """Normalize ternary values
+
+    This is used only in `hexbin` and `tribin` because in these methods ternary
+    values must be analyzed inside.
+    In the other methods ternary values are normalized in parsers beforehand.
+    """
+    scale = ternary_sum / (t + l + r)
+    t *= scale
+    l *= scale
+    r *= scale
+    return t, l, r

@@ -21,6 +21,25 @@ def test_base():
 
 
 @check_figures_equal(extensions=('pdf',))
+def test_ternary_normalization(fig_test, fig_ref):
+    """Test if ternary values are automatically normalized correctly."""
+    np.random.seed(19680801)
+    size = 1000
+    t, l, r = np.random.dirichlet(alpha=(2.0, 4.0, 8.0), size=size).T
+
+    ax = fig_ref.add_subplot(projection="ternary")
+    ax.hexbin(t, l, r, gridsize=10, edgecolors="none")
+
+    scale = np.arange(1, size + 1)
+    t *= scale
+    l *= scale
+    r *= scale
+
+    ax = fig_test.add_subplot(projection="ternary")
+    ax.hexbin(t, l, r, gridsize=10, edgecolors="none")
+
+
+@check_figures_equal(extensions=('pdf',))
 def test_weights(fig_test, fig_ref):
     """Test if the `C` option works correctly."""
     np.random.seed(19680801)
