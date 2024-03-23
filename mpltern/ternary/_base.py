@@ -15,7 +15,7 @@ from mpltern.ternary.transforms import (
     TernaryAxisTransform, TernaryTickLabelShift,
     TernaryAxisLabelSTransform, TernaryAxisLabelCTransform,
     H2THeightTransform, H2TWidthTransform,
-    BarycentricTransform, TernaryScaleTransform)
+    BarycentricTransform)
 from mpltern.ternary.axis import TAxis, LAxis, RAxis
 
 _log = logging.getLogger(__name__)
@@ -151,7 +151,6 @@ class TernaryAxesBase(Axes):
 
     def _set_lim_and_transforms(self):
         super()._set_lim_and_transforms()
-        transTernaryScale = TernaryScaleTransform(self.ternary_sum)
         transTLimits = mtransforms.BboxTransformFrom(
             mtransforms.TransformedBbox(self.viewOuterTLim, self.transScale))
         transLLimits = mtransforms.BboxTransformFrom(
@@ -194,8 +193,7 @@ class TernaryAxesBase(Axes):
         self._rlabel_c_transform = TernaryAxisLabelCTransform(raxis_tr, h2t_r)
 
         # From ternary coordinates to the original data coordinates
-        self.transProjection = (transTernaryScale
-                                + BarycentricTransform(self.corners_data))
+        self.transProjection = BarycentricTransform(self.corners_data)
 
         # From ternary coordinates to the original Axes coordinates
         self._ternary_axes_transform = self.transProjection + self.transLimits

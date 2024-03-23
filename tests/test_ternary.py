@@ -324,6 +324,23 @@ def test_ternary_sum(fig_test, fig_ref):
     ax.raxis.set_ticks(ticks, ticklabels)
 
 
+@check_figures_equal(extensions=('pdf',))
+def test_ternary_normalization(fig_test, fig_ref):
+    """Test if ternary values are automatically normalized correctly."""
+    tn0, tn1, tn2 = get_spiral()
+
+    ax = fig_ref.add_subplot(projection='ternary')
+    ax.plot(tn0, tn1, tn2)
+
+    scale = np.arange(1, len(tn0) + 1)
+    tn0 *= scale
+    tn1 *= scale
+    tn2 *= scale
+
+    ax = fig_test.add_subplot(projection='ternary')
+    ax.plot(tn0, tn1, tn2)
+
+
 class TestTernaryLim:
     @check_figures_equal(extensions=('pdf',))
     def test_order_data(self, fig_test, fig_ref):

@@ -275,25 +275,6 @@ class InvertedBarycentricTransform(Transform):
         return BarycentricTransform(self.corners)
 
 
-class TernaryScaleTransform(Transform):
-    """
-    viewTernaryScale : Bbox
-    """
-    input_dims = 3
-    output_dims = 3
-    has_inverse = True
-
-    def __init__(self, ternary_sum: float, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.ternary_sum = ternary_sum
-
-    def transform_non_affine(self, values):
-        return np.asarray(values, float) / self.ternary_sum
-
-    def inverted(self):
-        return TernaryScaleTransform(1.0 / self.ternary_sum)
-
-
 class H2THeightTransform(Transform):
     """Transform from scaled hexagonal-axis to ternary-axis coordinates."""
     input_dims = 2
