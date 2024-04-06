@@ -8,7 +8,7 @@ from mpl_toolkits.mplot3d.axes3d import Axes3D
 from matplotlib import _api
 from mpltern.ternary.transforms import BarycentricTransform
 from mpltern.ternary._base import _create_corners
-from mpltern._ternary_parsers import _get_xy
+from mpltern._ternary_parsers import parse_ternary_single
 
 
 class TernaryAxes3D(Axes3D):
@@ -238,9 +238,8 @@ class TernaryAxes3D(Axes3D):
         self.set_ternary_lim(tmin, tmax, lmin, lmax, rmin, rmax, fit)
         return self.get_rlim()
 
-    def plot(self, *args, **kwargs):
-        trans = kwargs.pop('transform', None)
-        this, args = args[:3], args[3:]
-        x, y, kwargs['transform'] = _get_xy(self, this, trans)
-        args = (x, y, *args)
-        return super().plot(*args, **kwargs)
+    plot = parse_ternary_single(Axes3D.plot)
+    plot_trisurf = parse_ternary_single(Axes3D.plot_trisurf)
+    tricontour = parse_ternary_single(Axes3D.tricontour)
+    tricontourf = parse_ternary_single(Axes3D.tricontourf)
+    scatter = parse_ternary_single(Axes3D.scatter)
