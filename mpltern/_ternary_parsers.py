@@ -1,4 +1,5 @@
 import functools
+from collections.abc import Iterable
 
 import numpy as np
 import matplotlib as mpl
@@ -13,6 +14,12 @@ def _get_xy(ax, this, trans):
     else:
         trans_xy = ax.transData
         x, y = ax.transProjection.transform(tlr).T
+    # If t, l, r are scalar, x, y are also converted to scalar.
+    # This is to address `DeprecationWarning` raised since NumPy 1.25.0.
+    # https://github.com/numpy/numpy/pull/10615
+    if not any(isinstance(_, Iterable) for _ in (t, l, r)):
+        x = x.item()
+        y = y.item()
     return x, y, trans_xy
 
 
@@ -103,7 +110,7 @@ def parse_ternary_vector(f):
         x1, y1, kwargs['transform'] = _get_xy(ax, tlr1, trans)
         dx = x1 - x0
         dy = y1 - y0
-        args = (x0.item(), y0.item(), dx.item(), dy.item(), *args)
+        args = (x0, y0, dx, dy, *args)
         return f(ax, *args, **kwargs)
 
     return parse
