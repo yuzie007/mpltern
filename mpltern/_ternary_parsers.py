@@ -114,31 +114,3 @@ def parse_ternary_vector(f):
         return f(ax, *args, **kwargs)
 
     return parse
-
-
-def parse_ternary_vector_field(f):
-    """
-    Parse ternary data from the first 6 arguments.
-    """
-    @functools.wraps(f)
-    def parse(ax, *args, **kwargs):
-        trans = kwargs.pop('transform', None)
-        # If no `args` are given, return an empty list like Matplotlib
-        # by calling the superclass method via `f`.
-        if not args or (trans is not None and trans.input_dims == 2):
-            kwargs['transform'] = trans
-            return f(ax, *args, **kwargs)
-
-        tlr0, args = args[:3], args[3:]
-        tlr1, args = args[:3], args[3:]
-        tlr0 = np.asarray(tlr0)
-        tlr1 = np.asarray(tlr1)
-        tlr1 += tlr0
-        x0, y0, kwargs['transform'] = _get_xy(ax, tlr0, trans)
-        x1, y1, kwargs['transform'] = _get_xy(ax, tlr1, trans)
-        dx = x1 - x0
-        dy = y1 - y0
-        args = (x0, y0, dx, dy, *args)
-        return f(ax, *args, **kwargs)
-
-    return parse

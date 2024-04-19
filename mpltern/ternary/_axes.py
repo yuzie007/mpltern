@@ -8,8 +8,10 @@ import matplotlib.patches as mpatches
 import matplotlib.transforms as mtransforms
 from matplotlib import _api
 from mpltern._ternary_parsers import (
-    parse_ternary_single, parse_ternary_multiple,
-    parse_ternary_vector, parse_ternary_vector_field)
+    parse_ternary_single,
+    parse_ternary_multiple,
+    parse_ternary_vector,
+)
 from mpltern import hexbin_helpers
 from mpltern import tribin_helpers
 from mpltern.ternary._base import TernaryAxesBase
@@ -788,8 +790,8 @@ class TernaryAxes(TernaryAxesBase):
         return collection
 
     arrow = parse_ternary_vector(TernaryAxesBase.arrow)
-    quiver = parse_ternary_vector_field(TernaryAxesBase.quiver)
-    barbs = parse_ternary_vector_field(TernaryAxesBase.barbs)
+    quiver = parse_ternary_vector(TernaryAxesBase.quiver)
+    barbs = parse_ternary_vector(TernaryAxesBase.barbs)
     fill = parse_ternary_multiple(TernaryAxesBase.fill)
     hist2d = parse_ternary_single(TernaryAxesBase.hist2d)
     tricontour = parse_ternary_single(TernaryAxesBase.tricontour)
