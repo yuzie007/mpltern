@@ -96,7 +96,7 @@ class TernaryAxesBase(Axes):
 
     @property
     def callbacks(self):
-        if tuple(int(_) for _ in mpl.__version__.split('.'))[:2] < (3, 6):
+        if tuple(int(_) for _ in mpl.__version__.split('.')[:2]) < (3, 6):
             return cbook.CallbackRegistry()
         else:
             return cbook.CallbackRegistry(
@@ -291,7 +291,7 @@ class TernaryAxesBase(Axes):
         self.viewTLim.intervalx = 0.0, self.ternary_sum
         self.viewLLim.intervalx = 0.0, self.ternary_sum
         self.viewRLim.intervalx = 0.0, self.ternary_sum
-        if tuple(int(_) for _ in mpl.__version__.split('.'))[:2] < (3, 6):
+        if tuple(int(_) for _ in mpl.__version__.split('.')[:2]) < (3, 6):
             super().cla()
         else:
             super().clear()
@@ -300,7 +300,7 @@ class TernaryAxesBase(Axes):
         self.set_xlim(xmin, xmax)
         self.set_ylim(0.0, 1.0)
 
-    if tuple(int(_) for _ in mpl.__version__.split('.'))[:2] < (3, 6):
+    if tuple(int(_) for _ in mpl.__version__.split('.')[:2]) < (3, 6):
         cla = clear
 
     def autoscale_view(self, *args, **kwargs):

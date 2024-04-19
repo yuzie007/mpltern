@@ -822,7 +822,7 @@ def test_set_view(fig_test, fig_ref):
     xmax = +1.4 / np.sqrt(3.0)
     ymin = 0.0
     ymax = 1.0
-    if tuple(int(_) for _ in mpl.__version__.split('.'))[:2] < (3, 8):
+    if tuple(int(_) for _ in mpl.__version__.split('.')[:2]) < (3, 8):
         ax._set_view((xmin, xmax, ymin, ymax))
     else:
         ax._set_view({"xlim": (xmin, xmax), "ylim": (ymin, ymax)})
