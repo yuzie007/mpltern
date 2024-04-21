@@ -5,6 +5,7 @@ import pytest
 from matplotlib.transforms import Bbox, IdentityTransform
 from mpltern.ternary.transforms import (
     BarycentricTransform,
+    InvertedBarycentricTransform,
     T2HHeightTransform,
     T2HWidthTransform,
     TernaryAxisLabelSTransform,
@@ -131,6 +132,19 @@ def test_barycentric_transform(corners):
     points /= np.sum(points, axis=1)[:, None]  # normalized
 
     trans = BarycentricTransform(corners)
+    points_transformed = trans.transform(points)
+    points_inverted = trans.inverted().transform(points_transformed)
+
+    np.testing.assert_almost_equal(points_inverted, points)
+
+
+@pytest.mark.parametrize("corners", corners_list)
+def test_inverted_barycentric_transform(corners):
+    """Test InvertedBarycentricTransform."""
+    np.random.seed(1986)
+    points = np.random.rand(300).reshape(-1, 2)
+
+    trans = InvertedBarycentricTransform(corners)
     points_transformed = trans.transform(points)
     points_inverted = trans.inverted().transform(points_transformed)
 
