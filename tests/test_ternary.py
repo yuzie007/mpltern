@@ -821,12 +821,13 @@ def test_legend():
     ax.legend()
 
 
+@pytest.mark.parametrize('ternary_sum', (1.0, 2.0, -1.0, -2.0))
 @check_figures_equal(extensions=('pdf',))
-def test_set_view(fig_test, fig_ref):
+def test_set_view(fig_test, fig_ref, ternary_sum: float):
     """Test if `_set_view` works correctly."""
     tn0, tn1, tn2 = get_spiral()
 
-    ax = fig_test.add_subplot(projection='ternary')
+    ax = fig_test.add_subplot(projection='ternary', ternary_sum=ternary_sum)
     ax.plot(tn0, tn1, tn2)
     xmin = -0.6 / np.sqrt(3.0)
     xmax = +1.4 / np.sqrt(3.0)
@@ -837,9 +838,10 @@ def test_set_view(fig_test, fig_ref):
     else:
         ax._set_view({"xlim": (xmin, xmax), "ylim": (ymin, ymax)})
 
-    ax = fig_ref.add_subplot(projection='ternary')
+    ax = fig_ref.add_subplot(projection='ternary', ternary_sum=ternary_sum)
     ax.plot(tn0, tn1, tn2)
-    ax.set_ternary_lim(0.0, 1.0, -0.2, 0.8, 0.2, 1.2)
+    ternary_lim = ternary_sum * np.array((0.0, 1.0, -0.2, 0.8, 0.2, 1.2))
+    ax.set_ternary_lim(*ternary_lim)
 
 
 class TestSignature:
