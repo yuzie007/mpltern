@@ -6,6 +6,7 @@ from matplotlib.transforms import Bbox, IdentityTransform
 from mpltern.ternary.transforms import (
     BarycentricTransform,
     InvertedBarycentricTransform,
+    InvertedTernaryAxisTransform,
     T2HHeightTransform,
     T2HWidthTransform,
     TernaryAxisLabelSTransform,
@@ -29,6 +30,21 @@ def test_ternary_transform(corners, index):
     points /= np.sum(points, axis=1)[:, None]
 
     trans = TernaryAxisTransform(corners, index)
+    points_transformed = trans.transform(points)
+    points_inverted = trans.inverted().transform(points_transformed)
+
+    np.testing.assert_almost_equal(points_inverted, points)
+
+
+@pytest.mark.parametrize("corners", corners_list)
+@pytest.mark.parametrize("index", [0, 1, 2])
+def test_inverted_ternary_transform(corners, index):
+    """Test InvertedTernaryTransform."""
+    np.random.seed(1986)
+    points = np.random.rand(300).reshape(-1, 2)
+    points /= np.sum(points, axis=1)[:, None]
+
+    trans = InvertedTernaryAxisTransform(corners, index)
     points_transformed = trans.transform(points)
     points_inverted = trans.inverted().transform(points_transformed)
 
