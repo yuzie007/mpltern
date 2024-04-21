@@ -11,6 +11,44 @@ import numpy as np
 from matplotlib.transforms import Affine2DBase, Transform
 
 
+class TernaryLinearTransform(Transform):
+    """Transform to modify ternary coordinates.
+
+    Its inverse is particularly important to get back the original ternary
+    coordinates from barycentric coordinates.
+
+    Parameters
+    ----------
+    ternary_sum : float
+        Value by which ternary coordinates are divided to be suitable for the
+        input to BarycentricTransform.
+    """
+    input_dims = output_dims = 3
+    has_inverse = True
+
+    def __init__(self, ternary_sum: float, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.ternary_sum = ternary_sum
+
+    def transform_non_affine(self, values):
+        """Transform ternary coordinates.
+
+        Parameters
+        ----------
+        values : (N, 3) array_like
+            Ternary coordinates before division.
+
+        Returns
+        -------
+        (N, 3) np.ndarray
+            Ternary coordinates after division.
+        """
+        return values / self.ternary_sum
+
+    def inverted(self):
+        return TernaryLinearTransform(1.0 / self.ternary_sum)
+
+
 class TernaryAxisTransform(Transform):
     """Transform convenient for ticks in TernaryAxis.
 
