@@ -1,4 +1,5 @@
 import inspect
+import itertools
 
 import numpy as np
 
@@ -120,14 +121,19 @@ class TestTransform:
         ax.plot([0, 1], [0, 1], transform=ax.transAxes)
 
 
-class TestAxisLabelPosition:
+class TestAxisLabel:
+    """Test for axis-label position and rotation."""
     positions = ['corner', 'tick1', 'tick2']
-    baseline_images_list = [[f'axis_label_position_{p}'] for p in positions]
+    rotations = ['axis', 'horizontal']
+    expected = [
+        (p, r, [f'axis_label_{p}_{r}'])
+        for p, r in itertools.product(positions, rotations)
+    ]
 
-    @pytest.mark.parametrize('position, baseline_images',
-                             zip(positions, baseline_images_list))
+    @pytest.mark.parametrize('position, rotation, baseline_images', expected)
     @image_comparison(baseline_images=None, extensions=['pdf'], style='mpl20')
-    def test_axis_label_position(self, position, baseline_images):
+    def test_axis_label(self, position, rotation, baseline_images):
+        """Test axis-label position and rotation."""
         fix_text_kerning_factor()
 
         fig = plt.figure()
@@ -140,6 +146,10 @@ class TestAxisLabelPosition:
         ax.taxis.set_label_position(position)
         ax.laxis.set_label_position(position)
         ax.raxis.set_label_position(position)
+
+        ax.taxis.set_label_rotation_mode(rotation)
+        ax.laxis.set_label_rotation_mode(rotation)
+        ax.raxis.set_label_rotation_mode(rotation)
 
 
 class TestTitle:
