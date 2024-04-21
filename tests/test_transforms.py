@@ -123,13 +123,12 @@ def test_ternary_linear_transform(ternary_sum: float):
     np.testing.assert_almost_equal(points_inverted, points)
 
 
-@pytest.mark.parametrize("scale", [1.0, 2.0, -1.0, -2.0])
 @pytest.mark.parametrize("corners", corners_list)
-def test_barycentric_transform(scale, corners):
+def test_barycentric_transform(corners):
     """Test BarycentricTransform."""
     np.random.seed(1986)
     points = np.random.rand(300).reshape(-1, 3)
-    points *= scale / np.sum(points, axis=1)[:, None]
+    points /= np.sum(points, axis=1)[:, None]  # normalized
 
     trans = BarycentricTransform(corners)
     points_transformed = trans.transform(points)

@@ -287,9 +287,7 @@ class BarycentricTransform(Transform):
         -------
         (x, y) : Cartesian coordinates
         """
-        values = np.asarray(values, float)
-        values /= np.sum(values, axis=1)[:, np.newaxis]
-        return np.dot(values, self.corners)
+        return (values / np.sum(values, axis=1)[:, None]) @ self.corners
 
     def inverted(self):
         return InvertedBarycentricTransform(self.corners)
