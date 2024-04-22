@@ -27,9 +27,9 @@ class Spine(mspines.Spine):
             low, high = self.axes.get_rlim()
 
         if self.spine_type in ["tside", "lside", "rside"]:
-            self._path.vertices = [[low, 0.0], [low, 1.0]]
+            self._path.vertices[:, 0] = low
         elif self.spine_type in ["tcorner", "lcorner", "rcorner"]:
-            self._path.vertices = [[high, 0.0], [high, 1.0]]
+            self._path.vertices[:, 0] = high
 
     def get_spine_transform(self):
         return self.get_transform()
