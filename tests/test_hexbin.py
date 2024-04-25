@@ -109,3 +109,18 @@ def test_bins_and_norm(fig_test, fig_ref):
 
     ax = fig_ref.add_subplot(projection="ternary")
     ax.hexbin(t, l, r, norm=LogNorm())
+
+
+def test_ndarray_cast():
+    """Test if non-float ndarray can be passed without errors.
+
+    https://github.com/yuzie007/mpltern/issues/15
+    https://numpy.org/doc/stable/reference/arrays.dtypes.html
+    """
+    tn0 = np.array((1,), dtype='>u2')
+    tn1 = np.array((0,), dtype='>u2')
+    tn2 = np.array((0,), dtype='>u2')
+
+    fig = plt.figure()
+    ax = fig.add_subplot(projection="ternary")
+    ax.hexbin(tn0, tn1, tn2, gridsize=10, edgecolors="none")

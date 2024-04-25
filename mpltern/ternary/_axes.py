@@ -422,8 +422,6 @@ class TernaryAxes(TernaryAxesBase):
         --------
         tribin : 2D histogram triangular bins
         """
-        t, l, r = _normalize_tlr(t, l, r, self.ternary_sum)
-
         self._process_unit_info(
             [("t", t), ("l", l), ("r", r)], kwargs, convert=False)
 
@@ -433,6 +431,8 @@ class TernaryAxes(TernaryAxesBase):
         t = np.asarray(t, float)
         l = np.asarray(l, float)
         r = np.asarray(r, float)
+
+        t, l, r = _normalize_tlr(t, l, r, self.ternary_sum)
 
         if extent is not None:
             tmin, tmax, lmin, lmax, rmin, rmax = extent
@@ -664,8 +664,6 @@ class TernaryAxes(TernaryAxesBase):
         --------
         hexbin : 2D histogram hexagonal bins
         """
-        t, l, r = _normalize_tlr(t, l, r, self.ternary_sum)
-
         self._process_unit_info(
             [("t", t), ("l", l), ("r", r)], kwargs, convert=False)
 
@@ -675,6 +673,8 @@ class TernaryAxes(TernaryAxesBase):
         t = np.asarray(t, float)
         l = np.asarray(l, float)
         r = np.asarray(r, float)
+
+        t, l, r = _normalize_tlr(t, l, r, self.ternary_sum)
 
         if extent is not None:
             tmin, tmax, lmin, lmax, rmin, rmax = extent
