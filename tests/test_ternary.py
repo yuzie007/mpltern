@@ -542,7 +542,8 @@ class TestAxisLabels:
 
 class TestAxLine:
     @check_figures_equal(extensions=('pdf',))
-    def test_axline(self, fig_test, fig_ref):
+    def test_axline_vertical(self, fig_test, fig_ref):
+        """Test if vertical infinite line can be plotted."""
         ax = fig_test.add_subplot(projection='ternary')
         ax.axline((1.0, 0.0, 0.0), (0.0, 0.5, 0.5))
 
@@ -551,8 +552,18 @@ class TestAxLine:
 
     @check_figures_equal(extensions=('pdf',))
     def test_axline_slope(self, fig_test, fig_ref):
+        """Test if infinite line can be plotted via `slope`."""
         ax = fig_test.add_subplot(projection='ternary')
-        ax.axline((1.0, 0.0, 0.0), slope=(-1.0, 0.5, 0.5))
+        ax.axline((0.1, 0.8, 0.1), slope=(-0.3, +0.6, -0.3))
+
+        ax = fig_ref.add_subplot(projection='ternary')
+        ax.axline((0.1, 0.8, 0.1), (0.4, 0.2, 0.4))
+
+    @check_figures_equal(extensions=('pdf',))
+    def test_axline_slope_vertical(self, fig_test, fig_ref):
+        """Test if vertical infinite line can be plotted via `slope`."""
+        ax = fig_test.add_subplot(projection='ternary')
+        ax.axline((1.0, 0.0, 0.0), slope=(-1.0, +0.5, +0.5))
 
         ax = fig_ref.add_subplot(projection='ternary')
         ax.plot([1.0, 0.0], [0.0, 0.5], [0.0, 0.5])
