@@ -221,6 +221,18 @@ def test_tick_labels_inside_triangle():
 
 
 class TestTicks:
+    @check_figures_equal(extensions=('pdf',))
+    def test_both(self, fig_test, fig_ref):
+        """Test if "tick_params(axis='both')" works."""
+        ax = fig_test.add_subplot(projection='ternary')
+
+        ax.tick_params(axis='t')
+        ax.tick_params(axis='l')
+        ax.tick_params(axis='r')
+
+        ax = fig_ref.add_subplot(projection='ternary')
+        ax.tick_params(axis='both')
+
     @image_comparison(baseline_images=['opposite_ticks'], extensions=['pdf'],
                       style='mpl20')
     def test_opposite_ticks(self):
