@@ -3,12 +3,14 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.testing.decorators import image_comparison, check_figures_equal
 from matplotlib.colors import LogNorm
-import mpltern  # noqa: F401
+
+from mpltern.testing import tol
 
 
 @image_comparison(
     baseline_images=["base"],
     extensions=["pdf"],
+    tol=tol,
     style="mpl20",
 )
 def test_base():
@@ -55,6 +57,7 @@ def test_weights(fig_test, fig_ref):
 @image_comparison(
     baseline_images=["ternary_lim"],
     extensions=["pdf"],
+    tol=tol,
     style="mpl20",
 )
 def test_ternary_lim():
@@ -73,6 +76,7 @@ def test_ternary_lim():
 @image_comparison(
     baseline_images=["extent"],
     extensions=["pdf"],
+    tol=tol,
     style="mpl20",
 )
 def test_extent():
@@ -87,6 +91,7 @@ def test_extent():
 @image_comparison(
     baseline_images=["given_triangles"],
     extensions=["pdf"],
+    tol=tol,
     style="mpl20",
 )
 def test_given_triangles():
