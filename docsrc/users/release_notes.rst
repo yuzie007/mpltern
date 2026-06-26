@@ -2,6 +2,7 @@
 Release notes
 #############
 
+.. include:: mpltern_1.0.5.rst
 .. include:: mpltern_1.0.4.rst
 .. include:: mpltern_1.0.3.rst
 .. include:: mpltern_1.0.2.rst
