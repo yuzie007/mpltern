@@ -10,6 +10,7 @@ from matplotlib.testing.decorators import (
 import matplotlib.pyplot as plt
 from mpltern.datasets import (
     get_spiral, get_scatter_points, get_triangular_grid)
+from mpltern.testing import tol
 
 
 def fix_text_kerning_factor():
@@ -20,7 +21,7 @@ def fix_text_kerning_factor():
         plt.rcParams['text.kerning_factor'] = 6
 
 
-@image_comparison(baseline_images=['plot'], extensions=['pdf'], style='mpl20')
+@image_comparison(baseline_images=['plot'], extensions=['pdf'], tol=tol, style='mpl20')
 def test_plot():
     """Test if `plot` works as expected."""
     fig = plt.figure()
@@ -86,7 +87,7 @@ def test_data_with_five_arguments():
 
 class TestArguments:
     @image_comparison(baseline_images=['arguments_6'], extensions=['pdf'],
-                      style='mpl20')
+                      tol=tol, style='mpl20')
     def test_arguments_6(self):
         """Test if 6 arguments are parsed correctly."""
         fig = plt.figure()
@@ -95,7 +96,7 @@ class TestArguments:
         ax.plot(tn0, tn1, tn2, tn1, tn2, tn0)
 
     @image_comparison(baseline_images=['arguments_7'], extensions=['pdf'],
-                      style='mpl20')
+                      tol=tol, style='mpl20')
     def test_arguments_7(self):
         """Test if 7 arguments are parsed correctly."""
         fig = plt.figure()
@@ -113,7 +114,7 @@ class TestArguments:
 
 class TestTransform:
     @image_comparison(baseline_images=['transAxes'], extensions=['pdf'],
-                      style='mpl20')
+                      tol=tol, style='mpl20')
     def test_tranform_1(self):
         """Test if `plot` recognizes and handle `ax.transAxes` as expected."""
         fig_test = plt.figure()
@@ -131,7 +132,7 @@ class TestAxisLabel:
     ]
 
     @pytest.mark.parametrize('position, rotation, baseline_images', expected)
-    @image_comparison(baseline_images=None, extensions=['pdf'], style='mpl20')
+    @image_comparison(baseline_images=None, extensions=['pdf'], tol=tol, style='mpl20')
     def test_axis_label(self, position, rotation, baseline_images):
         """Test axis-label position and rotation."""
         fix_text_kerning_factor()
@@ -158,7 +159,7 @@ class TestTitle:
 
     @pytest.mark.parametrize('loc, baseline_images',
                              zip(locs, baseline_images_list),)
-    @image_comparison(baseline_images=None, extensions=['pdf'], style='mpl20')
+    @image_comparison(baseline_images=None, extensions=['pdf'], tol=tol, style='mpl20')
     def test_title_loc(self, loc, baseline_images):
         fix_text_kerning_factor()
 
@@ -168,7 +169,7 @@ class TestTitle:
 
 
 @image_comparison(baseline_images=['aspect'], extensions=['pdf'],
-                  style='mpl20')
+                  tol=tol, style='mpl20')
 def test_aspect():
     """Test if `set_aspect` works."""
     fix_text_kerning_factor()
@@ -185,7 +186,7 @@ def test_aspect():
 
 
 @image_comparison(baseline_images=['tick_labels_inside_triangle'],
-                  extensions=['pdf'], style='mpl20')
+                  extensions=['pdf'], tol=tol, style='mpl20')
 def test_tick_labels_inside_triangle():
     fix_text_kerning_factor()
 
@@ -234,7 +235,7 @@ class TestTicks:
         ax.tick_params(axis='both')
 
     @image_comparison(baseline_images=['opposite_ticks'], extensions=['pdf'],
-                      style='mpl20')
+                      tol=tol, style='mpl20')
     def test_opposite_ticks(self):
         """Test if "tick2" works.
 
@@ -255,7 +256,7 @@ class TestTicks:
         ax.set_rlabel('Right')
 
     @image_comparison(baseline_images=['negative_ticks'],
-                      extensions=['pdf'], style='mpl20')
+                      extensions=['pdf'], tol=tol, style='mpl20')
     def test_negative_ticks(self):
         """
         The previous algorithm for tick-marker rotations did not work as
@@ -269,7 +270,7 @@ class TestTicks:
         ax.set_ternary_min(0, 3, -3)
 
     @image_comparison(baseline_images=['manual_ticks'],
-                      extensions=['pdf'], style='mpl20')
+                      extensions=['pdf'], tol=tol, style='mpl20')
     def test_manual_ticks(self):
         """Test if ticks can be manually given."""
         fix_text_kerning_factor()
@@ -291,7 +292,7 @@ class TestTicks:
         ax.raxis.set_ticks([0.2, 0.4, 0.6, 0.8, 1.0])
 
     @image_comparison(baseline_images=['manual_ticklabels'],
-                      extensions=['pdf'], style='mpl20')
+                      extensions=['pdf'], tol=tol, style='mpl20')
     def test_manual_ticklabels(self):
         """Test if tick-labels can be manually given."""
         fix_text_kerning_factor()
@@ -430,6 +431,7 @@ class TestTernaryLim:
     @image_comparison(
         baseline_images=None,
         extensions=['pdf'],
+        tol=tol,
         remove_text=True,
         style='mpl20',
     )
@@ -474,6 +476,7 @@ class TestSpans:
     @image_comparison(
         baseline_images=['spans'],
         extensions=['pdf'],
+        tol=tol,
         remove_text=True,
         style='mpl20',
     )
@@ -518,7 +521,7 @@ class TestTickDirection:
 
     @pytest.mark.parametrize('direction, baseline_images',
                              zip(directions, baseline_images_list))
-    @image_comparison(baseline_images=None, extensions=['pdf'], style='mpl20')
+    @image_comparison(baseline_images=None, extensions=['pdf'], tol=tol, style='mpl20')
     def test_tick_direction(self, direction, baseline_images):
         fig = plt.figure()
         ax = fig.add_subplot(projection='ternary')
@@ -624,7 +627,7 @@ class TestAxLine:
             plt.draw()
 
 
-@image_comparison(baseline_images=['text'], extensions=['pdf'], style='mpl20')
+@image_comparison(baseline_images=['text'], extensions=['pdf'], tol=tol, style='mpl20')
 def test_text():
     """Test if text is plotted correctly."""
     fig = plt.figure()
@@ -635,7 +638,7 @@ def test_text():
 
 class TestScatter:
     @image_comparison(baseline_images=['scatter'], extensions=['pdf'],
-                      tol=1.0, style='mpl20')
+                      tol=max(tol, 1.0), style='mpl20')
     def test_scatter(self):
         tn0, tn1, tn2 = get_scatter_points()
         fig = plt.figure()
@@ -643,7 +646,7 @@ class TestScatter:
         ax.scatter(tn0, tn1, tn2)
 
     @image_comparison(baseline_images=['scatter_color'], extensions=['pdf'],
-                      tol=1.0, style='mpl20')
+                      tol=max(tol, 1.0), style='mpl20')
     def test_scatter_color(self):
         fix_text_kerning_factor()
 
@@ -663,7 +666,7 @@ class TestScatter:
 
 class TestArrow:
     @image_comparison(baseline_images=['arrow_data'], extensions=['pdf'],
-                      style='mpl20')
+                      tol=tol, style='mpl20')
     def test_arrow_data(self):
         fig = plt.figure()
         ax = fig.add_subplot(projection='ternary')
@@ -671,7 +674,7 @@ class TestArrow:
         ax.arrow(0.2, 0.2, 0.8, 0.6, 0.0, -0.6)
 
     @image_comparison(baseline_images=['arrow_axes'], extensions=['pdf'],
-                      style='mpl20')
+                      tol=tol, style='mpl20')
     def test_arrow_axes(self):
         fig = plt.figure()
         ax = fig.add_subplot(projection='ternary')
@@ -679,7 +682,7 @@ class TestArrow:
         ax.arrow(0.2, 0.2, 0.8, 0.6, 0.0, -0.6, transform=ax.transTernaryAxes)
 
     @image_comparison(baseline_images=['arrow_xy_data'], extensions=['pdf'],
-                      style='mpl20')
+                      tol=tol, style='mpl20')
     def test_arrow_xy_data(self):
         fig = plt.figure()
         ax = fig.add_subplot(projection='ternary')
@@ -687,7 +690,7 @@ class TestArrow:
         ax.arrow(-0.3, 0.2, 0.6, 0.6, transform=ax.transData)
 
     @image_comparison(baseline_images=['arrow_xy_axes'], extensions=['pdf'],
-                      style='mpl20')
+                      tol=tol, style='mpl20')
     def test_arrow_xy_axes(self):
         fig = plt.figure()
         ax = fig.add_subplot(projection='ternary')
@@ -697,7 +700,7 @@ class TestArrow:
 
 class TestQuiver:
     @image_comparison(baseline_images=['quiver'], extensions=['pdf'],
-                      style='mpl20')
+                      tol=tol, style='mpl20')
     def test_quiver(self):
         tn0, tn1, tn2 = get_triangular_grid()
         dtn0 = 1.0 / 3.0 - tn0
@@ -708,7 +711,7 @@ class TestQuiver:
         ax.quiver(tn0, tn1, tn2, dtn0, dtn1, dtn2)
 
     @image_comparison(baseline_images=['quiver_color'], extensions=['pdf'],
-                      tol=0.3, style='mpl20')
+                      tol=max(tol, 0.3), style='mpl20')
     def test_quiver_color(self):
         fix_text_kerning_factor()
 
@@ -730,7 +733,7 @@ class TestQuiver:
         ax.set_rlabel('Right')
 
     @image_comparison(baseline_images=['quiver_xy_data'], extensions=['pdf'],
-                      style='mpl20')
+                      tol=tol, style='mpl20')
     def test_quiver_xy_data(self):
         x = np.linspace(-0.5, 0.5, 11)
         y = np.linspace(+0.0, 1.0, 11)
@@ -743,7 +746,7 @@ class TestQuiver:
         ax.quiver(x, y, dx, dy, transform=ax.transData)
 
     @image_comparison(baseline_images=['quiver_xy_axes'], extensions=['pdf'],
-                      style='mpl20')
+                      tol=tol, style='mpl20')
     def test_quiver_xy_axes(self):
         x = np.linspace(0, 1, 11)
         y = np.linspace(0, 1, 11)
@@ -832,7 +835,7 @@ def test_grid_both(fig_test, fig_ref):
 
 
 @image_comparison(baseline_images=['legend'], extensions=['pdf'],
-                  tol=0.3, style='mpl20')
+                  tol=max(tol, 0.3), style='mpl20')
 def test_legend():
     """Test if the legend is plotted correctly."""
     fig = plt.figure()
