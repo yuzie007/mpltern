@@ -12,8 +12,6 @@ mpltern: Ternary plots with Matplotlib
    :target: https://anaconda.org/conda-forge/mpltern
 .. |GitHubActions| image:: https://github.com/yuzie007/mpltern/actions/workflows/tests.yml/badge.svg
    :target: https://github.com/yuzie007/mpltern/actions?query=workflow%3ATests
-.. |CircleCI| image:: https://circleci.com/gh/yuzie007/mpltern.svg?style=shield
-   :target: https://circleci.com/gh/yuzie007/mpltern
 .. |DOI| image:: https://zenodo.org/badge/DOI/10.5281/zenodo.3528354.svg
    :target: https://doi.org/10.5281/zenodo.3528354
 .. |Codecov| image:: https://codecov.io/gh/yuzie007/mpltern/branch/master/graph/badge.svg
@@ -21,7 +19,7 @@ mpltern: Ternary plots with Matplotlib
 
 |PyPI version| |Downloads| |Conda Version| |Conda Downloads|
 
-|GitHubActions| |CircleCI| |Codecov|
+|GitHubActions| |Codecov|
 
 |DOI|
 
