@@ -27,7 +27,7 @@ def calculate_centroid(vertices):
     """
     roll0 = np.roll(vertices, 0, axis=0)
     roll1 = np.roll(vertices, 1, axis=0)
-    cross = np.cross(roll0, roll1)
+    cross = roll0[:, 0] * roll1[:, 1] - roll0[:, 1] * roll1[:, 0]
     area = 0.5 * np.sum(cross)
     return np.sum((roll0 + roll1) * cross[:, None], axis=0) / (6.0 * area)
 
