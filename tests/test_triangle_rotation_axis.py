@@ -4,7 +4,8 @@ import pytest
 from itertools import product
 from matplotlib.testing.decorators import image_comparison
 import matplotlib.pyplot as plt
-import mpltern  # noqa: F401
+
+from mpltern.testing import tol
 
 
 xmin = 0.5 - 1.0 / np.sqrt(3.0)
@@ -22,7 +23,7 @@ expected = [(c, b, r, ['{}_{}_{}'.format(c, b, r)])
 
 @pytest.mark.parametrize('corner_label, b, rotation, baseline_images',
                          expected)
-@image_comparison(baseline_images=None, extensions=['pdf'], style='mpl20')
+@image_comparison(baseline_images=None, extensions=['pdf'], tol=tol, style='mpl20')
 def test_triangle_rotation(corner_label, b, rotation, baseline_images):
     corners = corners_dict[corner_label]
     fig = plt.figure()

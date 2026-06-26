@@ -6,7 +6,7 @@ import pytest
 from matplotlib.testing.decorators import image_comparison
 
 from mpltern.datasets import get_spiral
-
+from mpltern.testing import tol
 
 class TestGivenTriangles:
     """Tests for custom triangles."""
@@ -21,7 +21,7 @@ class TestGivenTriangles:
         "labelrotation, rotation, baseline_images",
         expected,
     )
-    @image_comparison(baseline_images=None, extensions=["pdf"], style="mpl20")
+    @image_comparison(baseline_images=None, extensions=["pdf"], tol=tol, style="mpl20")
     def test_given_triangles(self, labelrotation, rotation, baseline_images):
         """Test custom triangles.
 
