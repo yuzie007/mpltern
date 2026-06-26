@@ -3,6 +3,7 @@ Classes for t-, l-, r-axis.
 """
 import numpy as np
 
+import matplotlib as mpl
 from matplotlib import _api
 from matplotlib.axis import XAxis
 import matplotlib.text as mtext
@@ -387,15 +388,6 @@ def _get_points_surrounding_text(text: mtext.Text, renderer):
 
     This method is extracted and modified from ``mtext._get_textbox``.
 
-    ``parts`` is the list of:
-        - ``t`` : string of each line
-        - ``wh`` : width and height of ``text`` without rotation. In the
-          height, the descent is not included and therefore have to be
-          subtracted to get ``ymin``.
-        - ``x`` and ``y`` : ``xmin`` and ``ymax`` relative to ``position``
-          after the ``text`` rotation and alignment. (0, 0) is the rotation
-          center.
-
     ``position`` : absolute position of ``text`` in the display coordinates.
         The ``parts`` above are relative coordinates to ``position``.
 
@@ -408,7 +400,7 @@ def _get_points_surrounding_text(text: mtext.Text, renderer):
     """
     tr = Affine2D().rotate_deg(-text.get_rotation())
 
-    _, parts, d = text._get_layout(renderer)
+    ww, hh, dd, xx, yy = _get_layout(text, renderer)
 
     # In ``Text.get_window_extent``, if the empty text is given, it just
     # returns ``Bbox`` with no width and no height.
@@ -419,9 +411,7 @@ def _get_points_surrounding_text(text: mtext.Text, renderer):
     else:
         projected_xs = []
         projected_ys = []
-        for t, wh, x, y in parts:
-            w, h = wh
-
+        for w, h, d, x, y in zip(ww, hh, dd, xx, yy):
             xt1, yt1 = tr.transform_point((x, y))
             yt1 -= d
             xt2, yt2 = xt1 + w, yt1 + h
@@ -435,3 +425,41 @@ def _get_points_surrounding_text(text: mtext.Text, renderer):
     position = text.get_transform().transform(text.get_position())
     points = np.array([[xmin, ymin], [xmax, ymin], [xmax, ymax], [xmin, ymax]])
     return tr.inverted().transform(points) + position
+
+
+def _get_layout(text: mtext.Text, renderer):
+    """Get layout of ``text``.
+
+    Returns
+    -------
+    ww : list
+        widths of the characters without rotation.
+    hh : list
+        heights of the characters without rotation.
+        The descent is not included and have to be subtracted to get ``ymin``.
+    dd : list
+        descents of the characters.
+    xx : list
+        xmin-coords of the characters after rotation and alignment.
+        (0, 0) is the rotation center.
+    yy : list
+        ymax-coords of the characters after rotation and alignment.
+        (0, 0) is the rotation center.
+
+    """
+    if tuple(int(_) for _ in mpl.__version__.split('.')[:2]) < (3, 11):
+        _, parts, d = text._get_layout(renderer)
+        dd = [d] * len(parts)
+        ww = [_[1][0] for _ in parts]
+        hh = [_[1][1] for _ in parts]
+        xx = [_[2] for _ in parts]
+        yy = [_[3] for _ in parts]
+    else:
+        _, parts, _ = text._get_layout(renderer)
+        ww = [_[1][0] for _ in parts]
+        aa = [_[1][1] for _ in parts]
+        dd = [_[1][2] for _ in parts]
+        hh = [a + d for a, d in zip(aa, dd)]
+        xx = [_[2][0] for _ in parts]
+        yy = [_[2][1] for _ in parts]
+    return ww, hh, dd, xx, yy
