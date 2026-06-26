@@ -512,7 +512,8 @@ class TernaryAxes(TernaryAxesBase):
                 edgecolors=edgecolors,
                 linewidths=linewidths,
                 offsets=offsets,
-                transOffset=mtransforms.AffineDeltaTransform(self.transData),
+                transform=mtransforms.AffineDeltaTransform(self.transData),
+                transOffset=self.transData,
             )
 
         # Set normalizer if bins is 'log'
